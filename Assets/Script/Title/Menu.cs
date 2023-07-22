@@ -6,12 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
-    private float wait_time; //シーン移動時に使用する処理待機時間(SEが鳴り終わるまで)
+    private float waitTime; //シーン移動時に使用する処理待機時間(SEが鳴り終わるまで)
 
     // Start is called before the first frame update
     void Start()
     {
-        wait_time = 2.0f;
+        waitTime = 2.0f;
     }
 
     // Update is called once per frame
@@ -25,7 +25,7 @@ public class Menu : MonoBehaviour
 
     private IEnumerator GotoGameScene()
     {
-        yield return new WaitForSecondsRealtime(wait_time); //処理を待機 シーン時の音を鳴らすため
+        yield return new WaitForSecondsRealtime(waitTime); //処理を待機 シーン時の音を鳴らすため
         SceneManager.LoadScene("GameScene");
     } 
 }
