@@ -40,20 +40,16 @@ public class Menu : MonoBehaviour
     [SerializeField] private float interval;
 
 
-    #region シーン系
-    [Tooltip("シーン移動フラグ")]
-    [SerializeField] private bool pushScene;
-    [Tooltip("シーン移動時の待機時間(この間にSEが鳴る)")]
-    [SerializeField] private float waitTime; //シーン移動時に使用する処理待機時間(SEが鳴り終わるまで)
-    #endregion
+   
 
-    private float fps;
+    //private float fps;
 
     // Start is called before the first frame update
     void Start()
     {
         #region オブジェクト系
         menu = this.gameObject;
+        menu.SetActive(true);
         cursor = transform.Find("Cursor").gameObject; //子オブジェクトのカーソルを取得
         cursorRT = transform.Find("Cursor").gameObject.GetComponent<RectTransform>();
         #endregion
@@ -61,29 +57,21 @@ public class Menu : MonoBehaviour
         menuName = menuItems.GAME;
         if(interval == 0) { interval = 10; }
         //interval = 10;
-        #region シーン系
-        pushScene = false;
-        waitTime = 2.0f;
-        #endregion
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        fps = 1f / Time.deltaTime;
-        Debug.Log(fps);
+        //fps = 1f / Time.deltaTime;
+        //Debug.Log(fps);
 
-        if (pushScene == false)
-        {
-            CursorMove();
-        }
+        
+        CursorMove();
         
         if (menuName == menuItems.GAME && Gamepad.current.aButton.isPressed)
         {
-            Debug.Log("シーン移動");
-            pushScene = true;
-            StartCoroutine("GotoGameScene");
+            menu.SetActive(false);
         }
     }
     void CursorMove()
@@ -154,9 +142,5 @@ public class Menu : MonoBehaviour
         #endregion
     }
 
-    private IEnumerator GotoGameScene()
-    {
-        yield return new WaitForSecondsRealtime(waitTime); //処理を待機 シーン時の音を鳴らすため
-        SceneManager.LoadScene("GameScene");
-    } 
+   
 }

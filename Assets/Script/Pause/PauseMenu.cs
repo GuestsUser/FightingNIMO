@@ -10,7 +10,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private float waitTime; // シーン移動時に使用する処理待機時間(SEが鳴り終わるまで)
     [SerializeField] private GameObject pauseMenu;
 
-    private float fps;
+    //private float fps;
     private void Awake()
     {
         pauseMenu = GameObject.Find("PauseMenu");
@@ -26,8 +26,8 @@ public class PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        fps = 1f / Time.deltaTime;
-        Debug.Log(fps);
+        //fps = 1f / Time.deltaTime;
+        //Debug.Log(fps);
 
         /* 【表示状態】 */
         if (show)
