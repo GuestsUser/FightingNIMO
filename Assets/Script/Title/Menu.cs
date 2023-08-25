@@ -14,21 +14,25 @@ using System;
 
 public class Menu : MonoBehaviour
 {
-    private enum menuItems // 扱うメニューの項目名
-    {
-        GAME = 0,
-        CREDIT = 1,
-        CONTROLS = 2,
-        EXIT = 3
-    }
 
     #region インスペクターからの代入が必要or調整をするもの
-    [Header("【事前に入れるの必須】")]
-        [Tooltip("メニューの項目のUIオブジェクトを入れてください")]
-        [SerializeField] private GameObject[] menuItem;
+    [Header("【事前に入れるもの】")]
+        /*【事前の代入が必須】*/
+        [Tooltip("メニューの項目の数を指定し、UIオブジェクトを入れてください")]
+        [SerializeField] private GameObject[] menuObj;
+        [Tooltip("メニューグループ(空の親オブジェクト)の子要素のカーソルを入れてください")]
+        [SerializeField] private GameObject cursor;
+        // 音
+        private AudioSource audioSouce;
+        [SerializeField] private AudioClip desisionSE;
+        [SerializeField] private AudioClip cancelSE;
+        [SerializeField] private AudioClip moveSE;
+        [SerializeField] private AudioClip openMenuSE;
+        [SerializeField] private AudioClip closeMenuSE;
 
-        /*【調整するところ】*/
-        [Tooltip("項目同士の縦の間隔(正の値を入力してください)")]
+    /*--------------------*/
+    /*【調整するところ】*/
+    [Tooltip("項目同士の縦の間隔(正の値を入力してください)")]
         [SerializeField] private float itemSpace;
         [Tooltip("カーソル移動時の時間間隔")]
         [SerializeField] private float interval;
@@ -36,26 +40,26 @@ public class Menu : MonoBehaviour
         [SerializeField] private Color selectionItemColor;
         [Tooltip("非選択項目のカラー")]
         [SerializeField] private Color notSelectionItemColor;
-        /*-------------*/
+    /*------------------*/
     #endregion
 
     #region 動作確認用に表示するもの
     [Header("【動作確認用】")]
         [Tooltip("このスクリプトがアタッチされているオブジェクトが入る")]
         [SerializeField] private GameObject menu;
-        [Tooltip("このスクリプトがアタッチされているオブジェクトの子要素のカーソルオブジェクトが入る")]
-        [SerializeField] private GameObject cursor;
         [Tooltip("カーソルのレンダートランスフォーム情報が入る")]
         [SerializeField] private RectTransform cursorRT;
         [Tooltip("現在選択されているメニュー番号")]
-        [SerializeField] private menuItems menuName;
+        [SerializeField] private int menuNum;
+        [Tooltip("現在選択されているメニュー名")]
+        [SerializeField] private string menuName;
         [Tooltip("上下どちらかの入力がされているか")]
         [SerializeField] private bool push;
         [Tooltip("入力継続時間")]
         [SerializeField] private float count;
     #endregion
 
-    private string[] item;
+    private string[] item; // 使用されているメニュー項目名を保存するstring型配列
     //private float fps;
 
     // Start is called before the first frame update
@@ -64,33 +68,43 @@ public class Menu : MonoBehaviour
         /*【オブジェクト情報の取得】*/
         menu = this.gameObject;
         menu.SetActive(true);
-        cursor = transform.Find("Cursor").gameObject; //子オブジェクトのカーソルを取得
+        if(cursor == null) { Debug.LogError("カーソルオブジェクトがアタッチされていません"); }
         cursorRT = cursor.GetComponent<RectTransform>();
+        audioSouce = GetComponent<AudioSource>();
         /*-------------------*/
 
-        /*【その他変数の初期化】*/
-        menuName = menuItems.GAME;
-        push = false;
-        count = 0;
-        /*----------------*/
 
-        /*【事前の調整が必要な値が未調整だった場合のデフォルトの値】*/
+        /*【事前の調整が必要な値が未調整だった場合】*/
+        for (int i = 0; i < menuObj.Length; i++)
+        {
+            if (menuObj[i] == null) { Debug.LogError($"menuObj[{i}]にオブジェクトがアタッチされていません"); }
+        }
         if (interval == 0) { interval = 10; }                                                                                           // 長押しでの選択項目を移動する時間間隔の設定
         if (itemSpace == 0) { itemSpace = 120; }                                                                                        // メニューの項目同士のY座標間隔
         if (selectionItemColor.a == 0) { selectionItemColor.a = 1; }                                                                    // 透明度をマックスに設定
         if (notSelectionItemColor.a == 0) { notSelectionItemColor.a = 1; }                                                              // 透明度をマックスに設定
         if (selectionItemColor == new Color(0, 0, 0, 1)) { ColorUtility.TryParseHtmlString("#008fd9", out selectionItemColor); }        // 水色に設定
         if (notSelectionItemColor == new Color(0, 0, 0, 1)) { ColorUtility.TryParseHtmlString("#ffffff", out notSelectionItemColor); }  // 白色に設定
-        /*----------------------------------------------*/
+        
+        /*------------------------------------------*/
 
         /*【自動調節系】*/
-        Array.Resize(ref item, menuItem.Length);                                                         // 配列のサイズをメニュー項目と同じ数に設定
-        for (int i = 0;i < menuItem.Length; i++)
+        Array.Resize(ref item, menuObj.Length);                                                          // 配列のサイズをメニュー項目と同じ数に設定
+        
+        for (int i = 0; i < menuObj.Length; i++)
         {
-            menuItem[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0,i * -itemSpace);  // メニュー項目同士のY座標間隔を指定した間隔に設定
-            item[i] = menuItem[i].name;                                                                  // 配列の中にメニュー項目の名前を代入
+            menuObj[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, i * -itemSpace);  // メニュー項目同士のY座標間隔を指定した間隔に設定
+            item[i] = menuObj[i].name;                                                                   // 配列の中にメニュー項目の名前を代入
         }
-        /*----------------------------------------------*/
+        /*--------------*/
+
+        /*【その他変数の初期化】*/
+        menuName = item[0];
+        menuNum = 0;
+        push = false;
+        count = 0;
+        /*----------------------*/
+        
     }
 
     // Update is called once per frame
@@ -102,11 +116,8 @@ public class Menu : MonoBehaviour
         // カーソル移動関数
         CursorMove();
 
-        // GAME項目が選択されている状態で決定を押した時
-        if (menuName == menuItems.GAME && Gamepad.current.aButton.wasPressedThisFrame)
-        {
-            menu.SetActive(false);
-        }
+        Decision();
+        
     }
     void CursorMove()
     {
@@ -117,14 +128,18 @@ public class Menu : MonoBehaviour
             if (push == false) // 押された時の処理
             {
                 push = true;
-                if (--menuName < menuItems.GAME) menuName = menuItems.EXIT;
+                if (--menuNum < 0) menuNum = menuObj.Length - 1;
+                audioSouce.clip = moveSE;
+                audioSouce.PlayOneShot(moveSE);
             }
             else               // 長押し時の処理
             {
                 count++;
                 if (count % interval == 0)
                 {
-                    if (--menuName < menuItems.GAME) menuName = menuItems.EXIT;
+                    if (--menuNum < 0) menuNum = menuObj.Length - 1;
+                    audioSouce.clip = moveSE;
+                    audioSouce.PlayOneShot(moveSE);
                 }
             }
 
@@ -135,14 +150,18 @@ public class Menu : MonoBehaviour
             if (push == false)
             {
                 push = true;
-                if (++menuName > menuItems.EXIT) menuName = menuItems.GAME;
+                if (++menuNum > menuObj.Length - 1) menuNum = 0;
+                audioSouce.clip = moveSE;
+                audioSouce.PlayOneShot(moveSE);
             }
             else
             {
                 count++;
                 if (count % interval == 0)
                 {
-                    if (++menuName > menuItems.EXIT) menuName = menuItems.GAME;
+                    if (++menuNum > menuObj.Length - 1) menuNum = 0;
+                    audioSouce.clip = moveSE;
+                    audioSouce.PlayOneShot(moveSE);
                 }
             }
         }
@@ -151,76 +170,40 @@ public class Menu : MonoBehaviour
             push = false;
             count = 0;
         }
+        menuName = item[menuNum];
         #endregion
 
-        #region カーソルのポジションの変更とメニュー項目の色の変更
-        switch (menuName)
+        #region カーソルの移動処理(項目の数によって自動でループ数が変更され、移動できるポジションも増減する)
+        for (int i = 0;i < menuObj.Length;i++)
         {
-            case (menuItems)0:
+            if(menuName == item[i])
+            {
                 // カーソル位置の変更
-                cursorRT.position = menuItem[(int)menuName].GetComponent<RectTransform>().position;
+                cursorRT.position = menuObj[i].GetComponent<RectTransform>().position;
 
                 // 文字の色の変更
-                menuItem[(int)menuName].GetComponent<Text>().color = selectionItemColor;
-                for(menuItems i = menuItems.GAME; i < menuItems.EXIT + 1; i++)
+                menuObj[i].GetComponent<Text>().color = selectionItemColor;
+                for (int j = 0; j < menuObj.Length; j++)
                 {
-                    if(i != menuName)
+                    if (item[j] != menuName)
                     {
-                        menuItem[(int)i].GetComponent<Text>().color = notSelectionItemColor;
+                        menuObj[j].GetComponent<Text>().color = notSelectionItemColor;
                     }
                 }
-                break;
-
-            case (menuItems)1:
-                // カーソル位置の変更
-                cursorRT.position = menuItem[(int)menuName].gameObject.GetComponent<RectTransform>().position;
-
-                // 文字の色の変更
-                menuItem[(int)menuName].GetComponent<Text>().color = selectionItemColor;
-                for (menuItems i = menuItems.GAME; i < menuItems.EXIT + 1; i++)
-                {
-                    if (i != menuName)
-                    {
-                        menuItem[(int)i].GetComponent<Text>().color = notSelectionItemColor;
-                    }
-                }
-                break;
-
-            case (menuItems)2:
-                // カーソル位置の変更
-                cursorRT.position = menuItem[(int)menuName].gameObject.GetComponent<RectTransform>().position;
-
-                // 文字の色の変更
-                menuItem[(int)menuName].GetComponent<Text>().color = selectionItemColor;
-                for (menuItems i = menuItems.GAME; i < menuItems.EXIT + 1; i++)
-                {
-                    if (i != menuName)
-                    {
-                        menuItem[(int)i].GetComponent<Text>().color = notSelectionItemColor;
-                    }
-                }
-                break;
-
-            case (menuItems)3:
-                // カーソル位置の変更
-                cursorRT.position = menuItem[(int)menuName].gameObject.GetComponent<RectTransform>().position;
-
-                // 文字の色の変更
-                menuItem[(int)menuName].GetComponent<Text>().color = selectionItemColor;
-                for (menuItems i = menuItems.GAME; i < menuItems.EXIT + 1; i++)
-                {
-                    if (i != menuName)
-                    {
-
-                        menuItem[(int)i].GetComponent<Text>().color = notSelectionItemColor;
-                    }
-                }
-                break;
-
-            default:
-                break;
+            }
         }
         #endregion
+    }
+
+    void Decision()
+    {
+        
+        // 一番上の項目が選択されている状態で決定を押した時
+        if (menuName == item[0] && Gamepad.current.aButton.wasPressedThisFrame)
+        {
+            menu.SetActive(false);
+        }
+
     }
 
    
