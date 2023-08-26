@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -20,6 +21,9 @@ public class GameStart : MonoBehaviour
     [Tooltip("準備okフラグ(このフラグがオンの時スタートボタンを押すとゲームシーンに移動)")]
     [SerializeField] private bool ready;
 
+    [SerializeField] private ReceiveNotificationExample receiveNotificationExample;
+    private bool[] isSubmit;
+
 
     // Start is called before the first frame update
     void Start()
@@ -35,7 +39,10 @@ public class GameStart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(pushScene == false)
+        Array.Resize(ref isSubmit, receiveNotificationExample.playerNum);
+
+
+        if (pushScene == false)
         {
             if (ready == true && Gamepad.current.startButton.isPressed)
             {
@@ -46,6 +53,17 @@ public class GameStart : MonoBehaviour
         }
        
     }
+
+    private void CheckReady()
+    {
+        for(int i = 0; i < receiveNotificationExample.playerNum; i++)
+        {
+            isSubmit[i] = GameObject.Find("Player" + i).GetComponent<SelectCharacter>().charSubmitFlg;
+        }
+
+        
+    }
+
     private IEnumerator GotoGameScene()
     {
         yield return new WaitForSecondsRealtime(waitTime); //処理を待機 シーン時の音を鳴らすため

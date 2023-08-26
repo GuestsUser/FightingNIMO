@@ -32,6 +32,9 @@ public class SelectCharacter : MonoBehaviour
     [SerializeField] private RectTransform cursorRT;
     [Tooltip("現在選択されているメニュー番号")]
     [SerializeField] private int menuNum;
+    [Tooltip("キャラクター確定フラグ")]
+    [SerializeField] public bool charSubmitFlg;
+
     //[Tooltip("現在選択されているメニュー名")]
     //[SerializeField] private string menuName;
     //[Tooltip("項目同士の縦の間隔(正の値を入力してください)")]
@@ -95,6 +98,7 @@ public class SelectCharacter : MonoBehaviour
         }
 
         getCharacter = false;
+        charSubmitFlg = false;
     }
 
     // Update is called once per frame
@@ -147,7 +151,7 @@ public class SelectCharacter : MonoBehaviour
     {
         //Debug.Log($"{this.name}:{value.Get<float>()}");
         //var value = context.ReadValue<Vector2>();
-        if (gameStart.onCharaSelect == true && gameStart._pushScene == false)
+        if (gameStart.onCharaSelect == true && charSubmitFlg == false)
         {
             if (value.Get<float>() > 0)
             {
@@ -223,12 +227,20 @@ public class SelectCharacter : MonoBehaviour
     {
         Debug.Log("プレイキャラクターを確定");
         // プレイキャラクターを確定
+        if (!charSubmitFlg)
+        {
+            charSubmitFlg = true;
+        }
         // 確定フラグ = true
     }
 
     public void OnCancel(InputValue value)
     {
         //if(確定フラグ == true) 確定フラグ = false
+        if (charSubmitFlg)
+        {
+            charSubmitFlg = false;
+        }
     }
 
     
