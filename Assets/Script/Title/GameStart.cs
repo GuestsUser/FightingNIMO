@@ -22,7 +22,8 @@ public class GameStart : MonoBehaviour
     [SerializeField] private bool ready;
 
     [SerializeField] private ReceiveNotificationExample receiveNotificationExample;
-    private bool[] isSubmit;
+    private bool allSubmit;
+    [SerializeField] private bool[] isSubmit;
 
 
     // Start is called before the first frame update
@@ -41,6 +42,7 @@ public class GameStart : MonoBehaviour
     {
         Array.Resize(ref isSubmit, receiveNotificationExample.playerNum);
 
+        CheckReady();
 
         if (pushScene == false)
         {
@@ -58,10 +60,32 @@ public class GameStart : MonoBehaviour
     {
         for(int i = 0; i < receiveNotificationExample.playerNum; i++)
         {
-            isSubmit[i] = GameObject.Find("Player" + i).GetComponent<SelectCharacter>().charSubmitFlg;
+            Debug.Log($"Player{i}");
+            if(receiveNotificationExample.count == 0)
+            {
+                isSubmit[i] = GameObject.Find($"Player{i}").GetComponent<SelectCharacter>().charSubmitFlg;
+            }
+            
         }
 
-        
+        for (int i = 0; i < receiveNotificationExample.playerNum; i++)
+        {
+
+            if (isSubmit[i] == false)
+            {
+                // ひとつでもfalseであればfor文を抜ける
+                Debug.Log("キャラクター選択中です");
+                ready = false;
+                break;
+            }
+
+            // 最後のフラグにたどり着いたとき
+            if (isSubmit[receiveNotificationExample.playerNum-1])
+            {
+                Debug.Log("準備ok");
+                ready = true;
+            }
+        }
     }
 
     private IEnumerator GotoGameScene()

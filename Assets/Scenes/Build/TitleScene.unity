@@ -194,6 +194,8 @@ MonoBehaviour:
   pushScene: 0
   waitTime: 0
   ready: 0
+  receiveNotificationExample: {fileID: 759492721}
+  isSubmit: 
 --- !u!4 &152774128
 Transform:
   m_ObjectHideFlags: 0
@@ -207,7 +209,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &260698771
 GameObject:
@@ -660,6 +662,7 @@ MonoBehaviour:
   - {fileID: 1676138172}
   - {fileID: 1676138172}
   - {fileID: 1676138172}
+  count: 0
 --- !u!114 &759492722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -749,7 +752,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &763483330
 GameObject:
@@ -2246,5 +2249,5 @@ Transform:
   - {fileID: 735884862}
   - {fileID: 376475300}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

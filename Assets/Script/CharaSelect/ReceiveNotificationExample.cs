@@ -16,7 +16,8 @@ public class ReceiveNotificationExample : MonoBehaviour
 
     //public string[] controllerNames;
     //int controllerCount;
-  
+
+    public int count;
 
     private void Awake()
     {
@@ -25,17 +26,19 @@ public class ReceiveNotificationExample : MonoBehaviour
 
     private void Start()
     {
+        count = 2;
     }
 
     private void Update()
     {
-
+        if (--count < 0) { count = 0; }
     }
 
     //プレイヤー入室時に受け取る通知
     //ゲームパッドまたはキーボードのAボタンを押すことでプレイヤーを作成
     public void OnPlayerJoined(PlayerInput playerInput)
     {
+        count = 2;
         //プレイヤー番号を0ではなく１から始めるようにしている
         playerNum = playerInput.playerIndex + 1;
 

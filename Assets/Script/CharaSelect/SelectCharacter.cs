@@ -59,12 +59,12 @@ public class SelectCharacter : MonoBehaviour
         
         /*【キャラクターアイコンUI】*/
         Array.Resize(ref characterUI, maxChara); // 配列のサイズをキャラクターの数で初期化
-       
+
         //characterObj[2] = GameObject.Find("");
         //characterObj[3] = GameObject.Find("");
         /*--------------------*/
 
-        
+        transform.SetSiblingIndex(transform.GetSiblingIndex() - 1);
     }
 
     // Start is called before the first frame update
@@ -198,29 +198,30 @@ public class SelectCharacter : MonoBehaviour
                 push = false;
                 count = 0;
             }
-        }
-        
-
-        #region カーソルの移動処理(項目の数によって自動でループ数が変更され、移動できるポジションも増減する)
-        for (int i = 0; i < maxChara; i++)
-        {
-            if (menuNum == i)
+            #region カーソルの移動処理(項目の数によって自動でループ数が変更され、移動できるポジションも増減する)
+            for (int i = 0; i < maxChara; i++)
             {
-                // カーソル位置の変更
-                cursorRT.position = characterUI[i].GetComponent<RectTransform>().position;
+                if (menuNum == i)
+                {
+                    // カーソル位置の変更
+                    cursorRT.position = characterUI[i].GetComponent<RectTransform>().position;
 
-                // 文字の色の変更
-                //characterObj[i].GetComponent<Text>().color = selectionItemColor;
-                //for (int j = 0; j < menuObj.Length; j++)
-                //{
-                //    if (item[j] != menuName)
-                //    {
-                //        characterObj[j].GetComponent<Text>().color = notSelectionItemColor;
-                //    }
-                //}
+                    // 文字の色の変更
+                    //characterObj[i].GetComponent<Text>().color = selectionItemColor;
+                    //for (int j = 0; j < menuObj.Length; j++)
+                    //{
+                    //    if (item[j] != menuName)
+                    //    {
+                    //        characterObj[j].GetComponent<Text>().color = notSelectionItemColor;
+                    //    }
+                    //}
+                }
             }
+            #endregion
         }
-        #endregion
+
+
+
     }
 
     public void OnSubmit(InputValue value)
