@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class GameStart : MonoBehaviour
 {
+    [Tooltip("準備okフラグ(このフラグがオンの時スタートボタンを押すとゲームシーンに移動)")]
+    [SerializeField] public bool onCharaSelect;
 
     #region シーン系
     [Tooltip("シーン移動フラグ")]
@@ -27,6 +29,7 @@ public class GameStart : MonoBehaviour
         waitTime = 2.0f;
         #endregion
         ready = false;
+        onCharaSelect = false;
     }
 
     // Update is called once per frame

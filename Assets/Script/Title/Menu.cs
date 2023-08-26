@@ -18,19 +18,27 @@ public class Menu : MonoBehaviour
     #region インスペクターからの代入が必要or調整をするもの
     [Header("【事前に入れるもの】")]
         /*【事前の代入が必須】*/
+        [Tooltip("GameStartスクリプトをアタッチしてください")]
+        [SerializeField] private GameStart gameStart;
+        [Tooltip("メニューグループ(空の親オブジェクト)の子要素のカーソルを入れてください")]
+        [SerializeField] private GameObject cursor;
         [Tooltip("メニューの項目の数を指定し、UIオブジェクトを入れてください")]
         [SerializeField] private GameObject[] menuObj;
         [Tooltip("メニューグループ(空の親オブジェクト)の子要素のカーソルを入れてください")]
-        [SerializeField] private GameObject cursor;
-        // 音
-        private AudioSource audioSouce;
+        [SerializeField] private GameObject logo;
+        [Tooltip("選べるキャラクター")]
+        [SerializeField] private GameObject[] characterUI;
+        [Tooltip("プレイヤーインプットマネージャーを入れてください")]
+        [SerializeField] private PlayerInputManager PIManeger;
+    // 音
+    private AudioSource audioSouce;
         [SerializeField] private AudioClip desisionSE;
         [SerializeField] private AudioClip cancelSE;
         [SerializeField] private AudioClip moveSE;
         [SerializeField] private AudioClip openMenuSE;
         [SerializeField] private AudioClip closeMenuSE;
 
-    /*--------------------*/
+        /*--------------------*/
     /*【調整するところ】*/
         [Tooltip("項目同士の縦の間隔(正の値を入力してください)")]
         [SerializeField] private float itemSpace;
@@ -95,6 +103,10 @@ public class Menu : MonoBehaviour
         {
             menuObj[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, i * -itemSpace);  // メニュー項目同士のY座標間隔を指定した間隔に設定
             item[i] = menuObj[i].name;                                                                   // 配列の中にメニュー項目の名前を代入
+        }
+        for(int i = 0;i < characterUI.Length; i++)
+        {
+            characterUI[i].SetActive(false);
         }
         /*--------------*/
 
@@ -201,6 +213,13 @@ public class Menu : MonoBehaviour
         // 一番上の項目が選択されている状態で決定を押した時
         if (menuName == item[0] && Gamepad.current.aButton.wasPressedThisFrame)
         {
+            gameStart.onCharaSelect = true;
+            for (int i = 0; i < characterUI.Length; i++)
+            {
+                characterUI[i].SetActive(true);
+            }
+            PIManeger.joinAction.action.AddBinding(Gamepad.current.aButton);
+            logo.SetActive(false);
             menu.SetActive(false);
         }
 
