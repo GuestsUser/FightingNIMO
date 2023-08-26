@@ -72,21 +72,21 @@ public class SelectCharacter : MonoBehaviour
         //　プレイヤーカーソルテキストをP1/P2/P3/P4に設定
         PlayerNum.text = "P" + (input.user.index + 1);
 
-        //switch (input.user.index)
-        //{
-        //    case 0:
-                
-        //        break;
-        //    case 1:
-
-        //        break;
-        //    case 2:
-
-        //        break;
-        //    case 3:
-
-        //        break;
-        //}
+        switch (input.user.index)
+        {
+            case 0:
+                cursorText.anchoredPosition = new Vector2(-80,50);
+                break;
+            case 1:
+                cursorText.anchoredPosition = new Vector2(80, 50);
+                break;
+            case 2:
+                cursorText.anchoredPosition = new Vector2(-80, -50);
+                break;
+            case 3:
+                cursorText.anchoredPosition = new Vector2(80, -50);
+                break;
+        }
     }
 
     // Update is called once per frame
