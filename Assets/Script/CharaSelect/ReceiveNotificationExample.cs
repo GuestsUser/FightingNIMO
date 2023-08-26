@@ -10,12 +10,12 @@ public class ReceiveNotificationExample : MonoBehaviour
 
     public int playerNum;       //プレイヤー番号情報
     public int characterNum;    //キャラクター番号
-    //private Transform[] playerSpawnPos; //プレイヤースポーン位置配列
+    public Transform[] playerSpawnPos; //プレイヤースポーン位置配列
 
     public Button[] button;
 
-    public string[] controllerNames;
-    int controllerCount;
+    //public string[] controllerNames;
+    //int controllerCount;
   
 
     private void Awake()
@@ -40,10 +40,33 @@ public class ReceiveNotificationExample : MonoBehaviour
         playerNum = playerInput.playerIndex + 1;
 
         //OnClickボタンの項目にキャラクターセレクト関数を追加（ファイル内のPrefabからでもOK）
-        button[0].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(0));
-        button[1].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(1));
+        //button[0].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(0));
+        //sbutton[1].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(1));
         //button[2].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(2));
         //button[3].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(3));
+
+        switch (playerNum)
+        {
+            //Player1
+            case 1:
+                playerInput.gameObject.transform.position = playerSpawnPos[0].position;
+                break;
+            //Player2
+            case 2:
+                playerInput.gameObject.transform.position = playerSpawnPos[1].position;
+                break;
+            //Player3
+            case 3:
+                playerInput.gameObject.transform.position = playerSpawnPos[2].position;
+                break;
+            //Player4
+            case 4:
+                playerInput.gameObject.transform.position = playerSpawnPos[3].position;
+                break;
+            //何もない
+            default:
+                return;
+        }
 
         //接続されたかどうかの確認ログ
         Debug.Log("プレイヤー" + playerNum + "が入室しました");
