@@ -32,7 +32,7 @@ public class Menu : MonoBehaviour
 
     /*--------------------*/
     /*y’²®‚·‚é‚Æ‚±‚ëz*/
-    [Tooltip("€–Ú“¯m‚Ìc‚ÌŠÔŠu(³‚Ì’l‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢)")]
+        [Tooltip("€–Ú“¯m‚Ìc‚ÌŠÔŠu(³‚Ì’l‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢)")]
         [SerializeField] private float itemSpace;
         [Tooltip("ƒJ[ƒ\ƒ‹ˆÚ“®‚ÌŠÔŠÔŠu")]
         [SerializeField] private float interval;

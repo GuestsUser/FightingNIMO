@@ -42,8 +42,8 @@ public class ReceiveNotificationExample : MonoBehaviour
         //OnClickボタンの項目にキャラクターセレクト関数を追加（ファイル内のPrefabからでもOK）
         button[0].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(0));
         button[1].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(1));
-        button[2].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(2));
-        button[3].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(3));
+        //button[2].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(2));
+        //button[3].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(3));
 
         //接続されたかどうかの確認ログ
         Debug.Log("プレイヤー" + playerNum + "が入室しました");
