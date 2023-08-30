@@ -209,7 +209,6 @@ public class Menu : MonoBehaviour
 
     void Decision()
     {
-        
         // 一番上の項目が選択されている状態で決定を押した時
         if (menuName == item[0] && Gamepad.current.aButton.wasPressedThisFrame)
         {
@@ -223,7 +222,14 @@ public class Menu : MonoBehaviour
             menu.SetActive(false);
         }
 
+        // 四番目の項目が選択されている状態で決定を押した時（switchでまとめれるかも）
+        if(menuName == item[3] && Gamepad.current.aButton.wasPressedThisFrame)
+        {
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                Application.Quit();
+            #endif
+        }
     }
-
-   
 }
