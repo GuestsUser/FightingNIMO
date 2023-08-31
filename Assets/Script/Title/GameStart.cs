@@ -25,6 +25,8 @@ public class GameStart : MonoBehaviour
     private bool allSubmit;
     [SerializeField] private bool[] isSubmit;
 
+    [SerializeField] private GameObject readyUI;
+
 
     // Start is called before the first frame update
     void Start()
@@ -75,6 +77,7 @@ public class GameStart : MonoBehaviour
             {
                 // ひとつでもfalseであればfor文を抜ける
                 Debug.Log("キャラクター選択中です");
+                readyUI.SetActive(false);
                 ready = false;
                 break;
             }
@@ -83,6 +86,7 @@ public class GameStart : MonoBehaviour
             if (isSubmit[receiveNotificationExample.playerNum-1])
             {
                 Debug.Log("準備ok");
+                readyUI.SetActive(true);
                 ready = true;
             }
         }

@@ -243,6 +243,4 @@ public class SelectCharacter : MonoBehaviour
             charSubmitFlg = false;
         }
     }
-
-    
 }
