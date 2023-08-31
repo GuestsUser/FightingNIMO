@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class GameStart : MonoBehaviour
 {
-    [Tooltip("準備okフラグ(このフラグがオンの時スタートボタンを押すとゲームシーンに移動)")]
+    [Tooltip("現在の画面がキャラクターセレクト画面かどうか")]
     [SerializeField] public bool onCharaSelect;
 
     #region シーン系

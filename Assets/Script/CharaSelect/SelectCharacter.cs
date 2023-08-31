@@ -65,6 +65,8 @@ public class SelectCharacter : MonoBehaviour
         /*--------------------*/
 
         transform.SetSiblingIndex(transform.GetSiblingIndex() - 1);
+
+        
     }
 
     // Start is called before the first frame update
@@ -84,19 +86,23 @@ public class SelectCharacter : MonoBehaviour
         switch (input.user.index)
         {
             case 0:
-                cursorText.anchoredPosition = new Vector2(-80,50);
+                cursorText.anchoredPosition = new Vector2(-160, 100);
+                //cursorText.localPosition = new Vector2(-160, 100);
                 break;
             case 1:
-                cursorText.anchoredPosition = new Vector2(80, 50);
+                cursorText.anchoredPosition = new Vector2(160, 100);
+                //cursorText.localPosition = new Vector2(160, 100);
                 break;
             case 2:
-                cursorText.anchoredPosition = new Vector2(-80, -50);
+                cursorText.anchoredPosition = new Vector2(-160, -100);
+                //cursorText.localPosition = new Vector2(-160, -100);
                 break;
             case 3:
-                cursorText.anchoredPosition = new Vector2(80, -50);
+                cursorText.anchoredPosition = new Vector2(160, -100);
+                //cursorText.localPosition = new Vector2(160, -100);
                 break;
         }
-
+        cursor.SetActive(false);
         getCharacter = false;
         charSubmitFlg = false;
     }
@@ -135,14 +141,42 @@ public class SelectCharacter : MonoBehaviour
         
         if (gameStart.onCharaSelect == true)
         {
-            if(getCharacter == false)
+            /*【characterUIの取得とカーソルの表示】*/
+            if (getCharacter == false)
             {
                 getCharacter = true;
                 characterUI[0] = GameObject.Find("BaseButton");
                 characterUI[1] = GameObject.Find("SharkButton");
+                //characterUI[2] = GameObject.Find("BaseButton");
+                //characterUI[3] = GameObject.Find("SharkButton");
                 Debug.Log("キャラクターUI取得");
+                cursor.SetActive(true);
             }
+            /*------------------------------*/
+
+            #region カーソルの移動処理(項目の数によって自動でループ数が変更され、移動できるポジションも増減する)
+            for (int i = 0; i < maxChara; i++)
+            {
+                if (menuNum == i)
+                {
+                    // カーソル位置の変更
+                    cursorRT.position = characterUI[i].GetComponent<RectTransform>().position;
+
+                    // 文字の色の変更
+                    //characterObj[i].GetComponent<Text>().color = selectionItemColor;
+                    //for (int j = 0; j < menuObj.Length; j++)
+                    //{
+                    //    if (item[j] != menuName)
+                    //    {
+                    //        characterObj[j].GetComponent<Text>().color = notSelectionItemColor;
+                    //    }
+                    //}
+                }
+            }
+            #endregion
         }
+
+
     }
 
     /*【On+Action名(InputValue value)←でアクションマップのコールバック関数を定義】*/
@@ -198,26 +232,7 @@ public class SelectCharacter : MonoBehaviour
                 push = false;
                 count = 0;
             }
-            #region カーソルの移動処理(項目の数によって自動でループ数が変更され、移動できるポジションも増減する)
-            for (int i = 0; i < maxChara; i++)
-            {
-                if (menuNum == i)
-                {
-                    // カーソル位置の変更
-                    cursorRT.position = characterUI[i].GetComponent<RectTransform>().position;
-
-                    // 文字の色の変更
-                    //characterObj[i].GetComponent<Text>().color = selectionItemColor;
-                    //for (int j = 0; j < menuObj.Length; j++)
-                    //{
-                    //    if (item[j] != menuName)
-                    //    {
-                    //        characterObj[j].GetComponent<Text>().color = notSelectionItemColor;
-                    //    }
-                    //}
-                }
-            }
-            #endregion
+            
         }
 
 
@@ -226,13 +241,15 @@ public class SelectCharacter : MonoBehaviour
 
     public void OnSubmit(InputValue value)
     {
-        Debug.Log("プレイキャラクターを確定");
-        // プレイキャラクターを確定
-        if (!charSubmitFlg)
+        if (gameStart.onCharaSelect)
         {
-            charSubmitFlg = true;
+            Debug.Log("プレイキャラクターを確定");
+            // プレイキャラクターを確定
+            if (!charSubmitFlg)
+            {
+                charSubmitFlg = true;
+            }
         }
-        // 確定フラグ = true
     }
 
     public void OnCancel(InputValue value)
