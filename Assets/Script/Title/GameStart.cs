@@ -26,7 +26,7 @@ public class GameStart : MonoBehaviour
     [SerializeField] private bool[] isSubmit;
 
     [SerializeField] private GameObject readyUI;
-
+    private Gamepad[] gamePad; // 接続されているゲームパッドを保存するstring型配列
 
     // Start is called before the first frame update
     void Start()
@@ -35,8 +35,15 @@ public class GameStart : MonoBehaviour
         pushScene = false;
         waitTime = 2.0f;
         #endregion
+
         ready = false;
         onCharaSelect = false;
+
+        Array.Resize(ref gamePad, Gamepad.all.Count);
+        for (int i = 0; i < Gamepad.all.Count; i++)
+        {
+            gamePad[i] = Gamepad.all[i];
+        }
     }
 
     // Update is called once per frame
@@ -48,7 +55,7 @@ public class GameStart : MonoBehaviour
 
         if (pushScene == false)
         {
-            if (ready == true && Gamepad.current.startButton.isPressed)
+            if (ready == true && gamePad[0].startButton.wasPressedThisFrame)
             {
                 pushScene = true;
                 //Debug.Log("start");

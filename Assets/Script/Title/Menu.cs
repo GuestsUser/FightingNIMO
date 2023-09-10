@@ -24,7 +24,7 @@ public class Menu : MonoBehaviour
         [SerializeField] private GameObject cursor;
         [Tooltip("メニューの項目の数を指定し、UIオブジェクトを入れてください")]
         [SerializeField] private GameObject[] menuObj;
-        [Tooltip("メニューグループ(空の親オブジェクト)の子要素のカーソルを入れてください")]
+        [Tooltip("ロゴを入れてください")]
         [SerializeField] private GameObject logo;
         [Tooltip("選べるキャラクター")]
         [SerializeField] private GameObject[] characterUI;
@@ -68,6 +68,7 @@ public class Menu : MonoBehaviour
     #endregion
 
     private string[] item; // 使用されているメニュー項目名を保存するstring型配列
+    private Gamepad[] gamePad; // 接続されているゲームパッドを保存するstring型配列
     //private float fps;
 
     // Start is called before the first frame update
@@ -98,13 +99,18 @@ public class Menu : MonoBehaviour
 
         /*【自動調節系】*/
         Array.Resize(ref item, menuObj.Length);                                                          // 配列のサイズをメニュー項目と同じ数に設定
+        Array.Resize(ref gamePad, Gamepad.all.Count);
         
         for (int i = 0; i < menuObj.Length; i++)
         {
             menuObj[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, i * -itemSpace);  // メニュー項目同士のY座標間隔を指定した間隔に設定
             item[i] = menuObj[i].name;                                                                   // 配列の中にメニュー項目の名前を代入
         }
-        for(int i = 0;i < characterUI.Length; i++)
+        for (int i = 0; i < Gamepad.all.Count; i++)
+        {
+            gamePad[i] = Gamepad.all[i];
+        }
+        for (int i = 0;i < characterUI.Length; i++)
         {
             characterUI[i].SetActive(false);
         }
@@ -135,7 +141,7 @@ public class Menu : MonoBehaviour
     {
         #region 選択項目の変更
         // 左スティック上入力時 or 十字キー上入力時
-        if (Gamepad.current.leftStick.y.ReadValue() > 0 || Gamepad.current.dpad.up.isPressed)
+        if (gamePad[0].leftStick.y.ReadValue() > 0 || gamePad[0].dpad.up.isPressed)
         {
             if (push == false) // 押された時の処理
             {
@@ -157,7 +163,7 @@ public class Menu : MonoBehaviour
 
         }
         // 左スティック下入力時 or 十字キー下入力時
-        else if (Gamepad.current.leftStick.y.ReadValue() < 0 || Gamepad.current.dpad.down.isPressed)
+        else if (gamePad[0].leftStick.y.ReadValue() < 0 || gamePad[0].dpad.down.isPressed)
         {
             if (push == false)
             {
@@ -210,20 +216,21 @@ public class Menu : MonoBehaviour
     void Decision()
     {
         // 一番上の項目が選択されている状態で決定を押した時
-        if (menuName == item[0] && Gamepad.current.aButton.wasPressedThisFrame)
+        if (menuName == item[0] && gamePad[0].buttonSouth.wasPressedThisFrame)
         {
             gameStart.onCharaSelect = true;
             for (int i = 0; i < characterUI.Length; i++)
             {
                 characterUI[i].SetActive(true);
             }
-            PIManeger.joinAction.action.AddBinding(Gamepad.current.aButton);
+            //PIManeger.joinAction.action.AddBinding(Gamepad.current.buttonSouth); // プレイヤーのログイン方法をaボタンに設定
+            //PIManeger.joinAction.action.AddBinding(Gamepad.);
             logo.SetActive(false);
             menu.SetActive(false);
         }
 
         // 四番目の項目が選択されている状態で決定を押した時（switchでまとめれるかも）
-        if(menuName == item[3] && Gamepad.current.aButton.wasPressedThisFrame)
+        if(menuName == item[3] && gamePad[0].buttonSouth.wasPressedThisFrame)
         {
             #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
