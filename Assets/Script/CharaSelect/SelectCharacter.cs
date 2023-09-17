@@ -87,19 +87,15 @@ public class SelectCharacter : MonoBehaviour
         {
             case 0:
                 cursorText.anchoredPosition = new Vector2(-160, 100);
-                //cursorText.localPosition = new Vector2(-160, 100);
                 break;
             case 1:
                 cursorText.anchoredPosition = new Vector2(160, 100);
-                //cursorText.localPosition = new Vector2(160, 100);
                 break;
             case 2:
                 cursorText.anchoredPosition = new Vector2(-160, -100);
-                //cursorText.localPosition = new Vector2(-160, -100);
                 break;
             case 3:
                 cursorText.anchoredPosition = new Vector2(160, -100);
-                //cursorText.localPosition = new Vector2(160, -100);
                 break;
         }
         cursor.SetActive(false);
@@ -232,11 +228,7 @@ public class SelectCharacter : MonoBehaviour
                 push = false;
                 count = 0;
             }
-            
         }
-
-
-
     }
 
     public void OnSubmit(InputValue value)

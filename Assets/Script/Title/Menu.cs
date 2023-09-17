@@ -65,11 +65,18 @@ public class Menu : MonoBehaviour
         [SerializeField] private bool push;
         [Tooltip("入力継続時間")]
         [SerializeField] private float count;
+        [Tooltip("何かしら項目を押したか")]
+        [SerializeField] private bool decision;
     #endregion
 
     private string[] item; // 使用されているメニュー項目名を保存するstring型配列
     private Gamepad[] gamePad; // 接続されているゲームパッドを保存するstring型配列
     //private float fps;
+
+    //private void Awake()
+    //{
+    //    gameObject.GetComponent<UnityEngine.UI.Text>().CrossFadeAlpha(0f,0f,true);
+    //}
 
     // Start is called before the first frame update
     void Start()
@@ -104,6 +111,7 @@ public class Menu : MonoBehaviour
         for (int i = 0; i < menuObj.Length; i++)
         {
             menuObj[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, i * -itemSpace);  // メニュー項目同士のY座標間隔を指定した間隔に設定
+            menuObj[i].GetComponent<Text>().CrossFadeColor(notSelectionItemColor,0f,true,true);
             item[i] = menuObj[i].name;                                                                   // 配列の中にメニュー項目の名前を代入
         }
         for (int i = 0; i < Gamepad.all.Count; i++)
@@ -121,8 +129,9 @@ public class Menu : MonoBehaviour
         menuNum = 0;
         push = false;
         count = 0;
+        decision = false;
         /*----------------------*/
-        
+
     }
 
     // Update is called once per frame
@@ -132,8 +141,10 @@ public class Menu : MonoBehaviour
         //Debug.Log(fps);
 
         // カーソル移動関数
-        CursorMove();
-
+        if (decision == false)
+        {
+            CursorMove();
+        }
         Decision();
         
     }
@@ -192,41 +203,39 @@ public class Menu : MonoBehaviour
         #endregion
 
         #region カーソルの移動処理(項目の数によって自動でループ数が変更され、移動できるポジションも増減する)
-        for (int i = 0;i < menuObj.Length;i++)
+        for (int i = 0; i < menuObj.Length; i++)
         {
-            if(menuName == item[i])
+            if (menuName == item[i])
             {
                 // カーソル位置の変更
                 cursorRT.position = menuObj[i].GetComponent<RectTransform>().position;
 
                 // 文字の色の変更
-                menuObj[i].GetComponent<Text>().color = selectionItemColor;
+                //menuObj[i].GetComponent<Text>().color = selectionItemColor;
+                menuObj[i].GetComponent<Text>().CrossFadeColor(selectionItemColor, 0.0f, true, true);
                 for (int j = 0; j < menuObj.Length; j++)
                 {
                     if (item[j] != menuName)
                     {
-                        menuObj[j].GetComponent<Text>().color = notSelectionItemColor;
+                        //menuObj[j].GetComponent<Text>().color = notSelectionItemColor;
+                        menuObj[j].GetComponent<Text>().CrossFadeColor(notSelectionItemColor, 0.0f, true, true);
                     }
                 }
             }
         }
         #endregion
     }
+    
 
     void Decision()
     {
+        
         // 一番上の項目が選択されている状態で決定を押した時
         if (menuName == item[0] && gamePad[0].buttonSouth.wasPressedThisFrame)
         {
-            gameStart.onCharaSelect = true;
-            for (int i = 0; i < characterUI.Length; i++)
-            {
-                characterUI[i].SetActive(true);
-            }
-            //PIManeger.joinAction.action.AddBinding(Gamepad.current.buttonSouth); // プレイヤーのログイン方法をaボタンに設定
-            //PIManeger.joinAction.action.AddBinding(Gamepad.);
-            logo.SetActive(false);
-            menu.SetActive(false);
+            decision = true;
+            StartCoroutine("PushGame");
+            
         }
 
         // 四番目の項目が選択されている状態で決定を押した時（switchでまとめれるかも）
@@ -238,5 +247,25 @@ public class Menu : MonoBehaviour
                 Application.Quit();
             #endif
         }
+    }
+
+    void CursorFade()
+    {
+        cursor.GetComponent<RawImage>().CrossFadeAlpha(0, 0.25f, true);                           // カーソルを徐々に消す
+        menuObj[0].GetComponent<Text>().CrossFadeColor(notSelectionItemColor, 0.25f, true, true); // 文字を徐々に白色に戻す
+    }
+    private IEnumerator PushGame()
+    {
+        CursorFade();
+
+        yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
+
+        gameStart.onCharaSelect = true;
+        for (int i = 0; i < characterUI.Length; i++)
+        {
+            characterUI[i].SetActive(true);
+        }
+        logo.SetActive(false);
+        menu.SetActive(false);
     }
 }
