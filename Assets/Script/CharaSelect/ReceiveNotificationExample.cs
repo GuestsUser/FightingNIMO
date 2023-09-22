@@ -8,14 +8,9 @@ using UnityEngine.InputSystem;
 public class ReceiveNotificationExample : MonoBehaviour
 {
 
-    public int playerNum;       //プレイヤー番号情報
-    public int characterNum;    //キャラクター番号
+    public int playerNum;       //プレイヤー総数
     public Transform[] playerSpawnPos; //プレイヤースポーン位置配列
 
-    public Button[] button;
-
-    //public string[] controllerNames;
-    //int controllerCount;
 
     public int count;
 
@@ -32,6 +27,8 @@ public class ReceiveNotificationExample : MonoBehaviour
     private void Update()
     {
         if (--count < 0) { count = 0; }
+
+        
     }
 
     //プレイヤー入室時に受け取る通知
@@ -39,15 +36,10 @@ public class ReceiveNotificationExample : MonoBehaviour
     public void OnPlayerJoined(PlayerInput playerInput)
     {
         count = 2;
-        //プレイヤー番号を0ではなく１から始めるようにしている
-        playerNum = playerInput.playerIndex + 1;
+        
+        playerNum = playerInput.playerIndex + 1;    //プレイヤー総数を0ではなく１から始めるようにしている
 
-        //OnClickボタンの項目にキャラクターセレクト関数を追加（ファイル内のPrefabからでもOK）
-        //button[0].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(0));
-        //sbutton[1].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(1));
-        //button[2].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(2));
-        //button[3].onClick.AddListener(() => playerInput.gameObject.GetComponent<CharacterCreation>().Select(3));
-
+        //プレイヤー番号によって配置位置を変更している
         switch (playerNum)
         {
             //Player1
