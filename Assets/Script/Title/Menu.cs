@@ -18,6 +18,8 @@ public class Menu : MonoBehaviour
     #region インスペクターからの代入が必要or調整をするもの
     [Header("【事前に入れるもの】")]
         /*【事前の代入が必須】*/
+        [Tooltip("UIという名前のオブジェクトをアタッチしてください")]
+        [SerializeField] private RectTransform ui;
         [Tooltip("GameStartスクリプトをアタッチしてください")]
         [SerializeField] private GameStart gameStart;
         [Tooltip("メニューグループ(空の親オブジェクト)の子要素のカーソルを入れてください")]
@@ -65,8 +67,10 @@ public class Menu : MonoBehaviour
         [SerializeField] private bool push;
         [Tooltip("入力継続時間")]
         [SerializeField] private float count;
-        [Tooltip("何かしら項目を押したか")]
-        [SerializeField] private bool decision;
+        [Tooltip("CreditかControlsを押したときの緩急の進み具合")]
+        [SerializeField] private bool easTime;
+        [Tooltip("CreditかControlsを押したときの切り替わり時間")]
+        [SerializeField] private float duration;
     #endregion
 
     private string[] item; // 使用されているメニュー項目名を保存するstring型配列
@@ -114,10 +118,7 @@ public class Menu : MonoBehaviour
             menuObj[i].GetComponent<Text>().CrossFadeColor(notSelectionItemColor,0f,true,true);
             item[i] = menuObj[i].name;                                                                   // 配列の中にメニュー項目の名前を代入
         }
-        for (int i = 0; i < Gamepad.all.Count; i++)
-        {
-            gamePad[i] = Gamepad.all[i];
-        }
+        
         for (int i = 0;i < characterUI.Length; i++)
         {
             characterUI[i].SetActive(false);
@@ -137,6 +138,10 @@ public class Menu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        for (int i = 0; i < Gamepad.all.Count; i++)
+        {
+            gamePad[i] = Gamepad.all[i];
+        }
         //fps = 1f / Time.deltaTime;
         //Debug.Log(fps);
 
@@ -144,8 +149,9 @@ public class Menu : MonoBehaviour
         if (decision == false)
         {
             CursorMove();
+            Decision();
         }
-        Decision();
+        
         
     }
     void CursorMove()
@@ -212,13 +218,13 @@ public class Menu : MonoBehaviour
 
                 // 文字の色の変更
                 //menuObj[i].GetComponent<Text>().color = selectionItemColor;
-                menuObj[i].GetComponent<Text>().CrossFadeColor(selectionItemColor, 0.0f, true, true);
+                menuObj[i].GetComponent<Text>().CrossFadeColor(selectionItemColor, 0.1f, true, true);
                 for (int j = 0; j < menuObj.Length; j++)
                 {
                     if (item[j] != menuName)
                     {
                         //menuObj[j].GetComponent<Text>().color = notSelectionItemColor;
-                        menuObj[j].GetComponent<Text>().CrossFadeColor(notSelectionItemColor, 0.0f, true, true);
+                        menuObj[j].GetComponent<Text>().CrossFadeColor(notSelectionItemColor, 0.1f, true, true);
                     }
                 }
             }
@@ -229,24 +235,65 @@ public class Menu : MonoBehaviour
 
     void Decision()
     {
-        
-        // 一番上の項目が選択されている状態で決定を押した時
-        if (menuName == item[0] && gamePad[0].buttonSouth.wasPressedThisFrame)
+
+        // 決定ボタン(aボタン)を押したとき
+        if (gamePad[0].aButton.wasPressedThisFrame)
         {
-            decision = true;
-            StartCoroutine("PushGame");
-            
+            decision = true; // 決定フラグON
+
+            switch (menuNum)
+            {
+                /*【GAME】*/
+                case 0:
+                    StartCoroutine("PushGame");
+                    break;
+                /*-------*/
+
+                /*【CREDIT】*/
+                case 1:
+                    StartCoroutine("PushCredit");
+                    break;
+                /*---------*/
+
+                /*【CONTROLS】*/
+                case 2:
+                    StartCoroutine("PushControls");
+                    break;
+                /*-----------*/
+
+                /*【EXIT】*/
+                case 3:
+                    #if UNITY_EDITOR
+                        UnityEditor.EditorApplication.isPlaying = false;
+                    #else
+                        Application.Quit();
+                    #endif
+                    break;
+                /*-------*/
+
+                default:
+                    break;
+            }
         }
 
-        // 四番目の項目が選択されている状態で決定を押した時（switchでまとめれるかも）
-        if(menuName == item[3] && gamePad[0].buttonSouth.wasPressedThisFrame)
-        {
-            #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-            #else
-                Application.Quit();
-            #endif
-        }
+
+        //// 一番上の項目が選択されている状態で決定を押した時
+        //if (menuName == item[0] && gamePad[0].buttonSouth.wasPressedThisFrame)
+        //{
+        //    decision = true;
+        //    StartCoroutine("PushGame");
+            
+        //}
+
+        //// 四番目の項目が選択されている状態で決定を押した時（switchでまとめれるかも）
+        //if(menuName == item[3] && gamePad[0].buttonSouth.wasPressedThisFrame)
+        //{
+        //    #if UNITY_EDITOR
+        //        UnityEditor.EditorApplication.isPlaying = false;
+        //    #else
+        //        Application.Quit();
+        //    #endif
+        //}
     }
 
     void CursorFade()
@@ -267,5 +314,33 @@ public class Menu : MonoBehaviour
         }
         logo.SetActive(false);
         menu.SetActive(false);
+    }
+    private IEnumerator PushCredit()
+    {
+        CursorFade();
+
+        yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
+
+        /*【CREDITを実装したときの処理】*/
+        ui.anchoredPosition = new Vector2(1920, 0);
+        /*--------------------------*/
+
+        //logo.SetActive(false);
+        //menu.SetActive(false);
+    }
+
+    private IEnumerator PushControls()
+    {
+        CursorFade();
+
+        yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
+
+        /*【CONTROLSを選択したときの処理】*/
+       
+        ui.anchoredPosition = new Vector2(-1920, 0);
+        /*--------------------------*/
+
+        //logo.SetActive(false);
+        //menu.SetActive(false);
     }
 }
