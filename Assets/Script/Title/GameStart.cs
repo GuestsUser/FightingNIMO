@@ -51,7 +51,7 @@ public class GameStart : MonoBehaviour
     {
         Array.Resize(ref isSubmit, Gamepad.all.Count);
 
-        CheckReady();
+        if(onCharaSelect) CheckReady();
 
         if (pushScene == false)
         {

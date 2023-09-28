@@ -1856,6 +1856,10 @@ MonoBehaviour:
   push: 0
   count: 0
   decision: 0
+  easTime: 0
+  duration: 0.5
+  backUI: 0
+  moveUI: 0
 --- !u!82 &1641679171
 AudioSource:
   m_ObjectHideFlags: 0

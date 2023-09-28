@@ -67,10 +67,16 @@ public class Menu : MonoBehaviour
         [SerializeField] private bool push;
         [Tooltip("入力継続時間")]
         [SerializeField] private float count;
-        [Tooltip("CreditかControlsを押したときの緩急の進み具合")]
-        [SerializeField] private bool easTime;
-        [Tooltip("CreditかControlsを押したときの切り替わり時間")]
+        [Tooltip("CreditかControlsを押したときの緩急の進み具合(0~1の点P)")]
+        [SerializeField] private bool decision;
+        [Tooltip("CreditかControlsを押したときの緩急の進み具合(0~1の点P)")]
+        [SerializeField] private float easTime;
+        [Tooltip("CreditかControlsを押したときの切り替わり時間(秒)")]
         [SerializeField] private float duration;
+        [Tooltip("UIを戻すかどうか")]
+        [SerializeField] private bool backUI;
+        [Tooltip("UIを動かすかどうか")]
+        [SerializeField] private bool moveUI;
     #endregion
 
     private string[] item; // 使用されているメニュー項目名を保存するstring型配列
@@ -131,6 +137,8 @@ public class Menu : MonoBehaviour
         push = false;
         count = 0;
         decision = false;
+        backUI = true;
+        moveUI = false;
         /*----------------------*/
 
     }
@@ -150,8 +158,65 @@ public class Menu : MonoBehaviour
         {
             CursorMove();
             Decision();
+            easTime = 0;
+            moveUI = false; // 戻りながら連打をするとなぜかdecisionはfalseなのにmoveUIはtrueになるという問題があったためここでもfalseにする
         }
-        
+
+        else if(decision == true && (menuNum > 0 && menuNum < menuObj.Length - 1) && moveUI)
+        {
+            easTime++;
+            if (easTime / 60.0f > duration)
+            {
+                easTime = duration * 60.0f;
+            }
+            //Debug.Log($"イージングタイム{easTime / 60.0f}");
+            //Debug.Log($"いーじんぐ{easing(duration, easTime)}");
+
+            /*【CREDITまたはCONTROLSに移動する処理】*/
+            //if(Mathf.Abs(ui.anchoredPosition.x) == 1920)
+            //{
+            //    complete = true;
+            //}
+            if(backUI == false)
+            {
+                switch (menuNum)
+                {
+                    case 1:
+                        ui.anchoredPosition = new Vector2(easing(duration, easTime) * 1920, 0);
+                        break;
+                    case 2:
+                        ui.anchoredPosition = new Vector2(easing(duration, easTime) * -1920, 0);
+                        break;
+                }
+                if (gamePad[0].bButton.wasPressedThisFrame)
+                {
+                    backUI = true;
+                    easTime = 0;
+                }
+            }
+            else
+            {
+                /*【MENUに戻る処理】*/
+                Debug.Log("戻る");
+                switch (menuNum)
+                {
+                    case 1:
+
+                        ui.anchoredPosition = new Vector2(1920 - (easing(duration, easTime) * 1920), 0);
+                        break;
+                    case 2:
+                        ui.anchoredPosition = new Vector2(-1920 + (easing(duration, easTime) * 1920), 0);
+                        break;
+                }
+                
+               
+                Debug.Log($"UIポジション{ui.anchoredPosition.x - easing(duration, easTime) * 1920}");
+                StartCoroutine("BackMenu");
+                
+            }
+           
+        }
+        Debug.Log(cursor.GetComponent<RawImage>().color.a);
         
     }
     void CursorMove()
@@ -240,7 +305,7 @@ public class Menu : MonoBehaviour
         if (gamePad[0].aButton.wasPressedThisFrame)
         {
             decision = true; // 決定フラグON
-
+            backUI = false;
             switch (menuNum)
             {
                 /*【GAME】*/
@@ -321,8 +386,13 @@ public class Menu : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
 
+        moveUI = true;
+
+        yield return new WaitForSecondsRealtime(duration);                                                     // 処理を待機 UIが移動する演出のため
+
         /*【CREDITを実装したときの処理】*/
-        ui.anchoredPosition = new Vector2(1920, 0);
+
+        //ui.anchoredPosition = new Vector2(easing(duration,easTime) * 1920, 0);
         /*--------------------------*/
 
         //logo.SetActive(false);
@@ -335,12 +405,31 @@ public class Menu : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
 
+        moveUI = true;
+
+        yield return new WaitForSecondsRealtime(duration);                                                     // 処理を待機 UIが移動する演出のため
+
         /*【CONTROLSを選択したときの処理】*/
-       
-        ui.anchoredPosition = new Vector2(-1920, 0);
+
+        //ui.anchoredPosition = new Vector2(-1920, 0);
         /*--------------------------*/
 
         //logo.SetActive(false);
         //menu.SetActive(false);
+    }
+    private IEnumerator BackMenu()
+    {
+
+        yield return new WaitForSecondsRealtime(duration);
+        cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.1f, true);                           // カーソルを徐々に戻す
+        decision = false;
+        backUI = false;
+        moveUI = false;
+    }
+    float easing(float duration,float time)
+    {
+        float t = Mathf.Clamp01((easTime / 60.0f) / duration);
+
+        return (float)Math.Round(Mathf.Sin(t * Mathf.PI * 0.5f),4, MidpointRounding.AwayFromZero);
     }
 }
