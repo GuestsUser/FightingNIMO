@@ -618,6 +618,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.5
   animatorObj: {fileID: 8791980554639194731}
+  stickJoint: {fileID: 2177274487205925756}
+  anotherPlayer: 0
+  pInput: {fileID: 0}
+  hipJoint: {fileID: 1913799955612954535}
+  downJoint:
+  - {fileID: 3981713834861955845}
+  - {fileID: 7832396651444823267}
+  - {fileID: 216878330211960670}
+  - {fileID: 7952389689874896127}
+  - {fileID: 4718357582332973102}
+  downPower: 20
 --- !u!1 &1301552326341642963
 GameObject:
   m_ObjectHideFlags: 0
