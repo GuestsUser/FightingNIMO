@@ -114,7 +114,7 @@ public class Menu : MonoBehaviour
     void Start()
     {
         /*【オブジェクト情報の取得】*/
-        menu = this.gameObject;
+        //menu = this.gameObject;
         menu.SetActive(true);
         if(cursor == null) { Debug.LogError("カーソルオブジェクトがアタッチされていません"); }
         cursorRT = cursor.GetComponent<RectTransform>();
@@ -277,22 +277,32 @@ public class Menu : MonoBehaviour
                 easTime = 0.8f * 60.0f;
                 cam.transform.position = TPos;
             }
-
+            
             //Debug.Log($"easTime{easTime}");
 
             Zoom(0.8f, easTime);
 
-            if (Gamepad.current.bButton.wasReleasedThisFrame)
+            if(backUI == false)
             {
-                for (int i = 0; i < characterUI.Length; i++)
+                if (Gamepad.current.bButton.wasReleasedThisFrame)
                 {
-                    characterUI[i].SetActive(false);
+                    for (int i = 0; i < characterUI.Length; i++)
+                    {
+                        characterUI[i].SetActive(false);
+                    }
+
+                    gameStart.onCharaSelect = false;
+
+                    logo.SetActive(true);
+                    menu.SetActive(true);
+                    backUI = true;
+                    easTime = 0;
                 }
-
-                gameStart.onCharaSelect = false;
-
-                logo.SetActive(true);
-                menu.SetActive(true);
+            }
+            else
+            {
+                Debug.Log("メニューに戻る");
+                ZoomOut(0.8f, easTime);
             }
         }
         /*------------------------*/
@@ -559,12 +569,16 @@ public class Menu : MonoBehaviour
 
     void Zoom(float duration,float time)
     {
-        Debug.Log("zoom中");
+        Debug.Log("ZoomIn中");
 
         /*【カメラとUIのminとmaxのポジション、スケールの設定】*/
         //float[] cam_posX = { (125.0f / 6.0f) * 0.3f, cSPos.x - 0 };  // { min, max }
-        cam_posY = new float[2] { (50.0f / 6.0f) * 0.3f, cSPos.y - 5.0f - 2.5f };
-        cam_posZ = new float[2] { (-200.0f / 6.0f) * 0.3f, cSPos.z + 20.0f + 10.0f };
+        //cam_posY = new float[2] { (50.0f / 6.0f) * 0.3f, cSPos.y - 5.0f - 2.5f };
+        //cam_posZ = new float[2] { (-200.0f / 6.0f) * 0.3f, cSPos.z + 20.0f + 10.0f };
+
+        // 0,5,-20
+        cam_posY = new float[2] { (50.0f * 0.7f), cSPos.y - 5.0f - (50.0f * 0.3f) };
+        cam_posZ = new float[2] { (-200.0f * 0.7f), cSPos.z - 20.0f - (-200.0f * 0.3f) };
 
         ui_zoom_scale = new float[2] { 1.0f - 0.7f, 40.0f - (1.0f - 0.7f) }; // { min, max }
         //float ui_out_scale = 1 - 0.7f;              // UIのmin
@@ -574,8 +588,8 @@ public class Menu : MonoBehaviour
         float length = 1.5f; // 扱うSin(波の長さ)
 
         //float cam_scaleX = cSPos.x + easing(duration, easTime, (length)) * cam_posX[0] - Mathf.Abs((easing(duration, easTime, (length)) - 1.0f) / 2.0f) * cam_posX[1] * Convert.ToInt32(TPRate >= 0.5);
-        cam_scaleY = cSPos.y + easing(duration, time, (length)) * cam_posY[0] - Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posY[1] * Convert.ToInt32(TPRate >= 0.5f);
-        cam_scaleZ = cSPos.z + easing(duration, time, (length)) * cam_posZ[0] - Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posZ[1] * Convert.ToInt32(TPRate >= 0.5f);
+        cam_scaleY = cSPos.y + cam_posY[0] * easing(duration, time, (length)) -  Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posY[1] * Convert.ToInt32(TPRate >= 0.5f);
+        cam_scaleZ = cSPos.z + cam_posZ[0] * easing(duration, time, (length)) -  Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posZ[1] * Convert.ToInt32(TPRate >= 0.5f);
         
         ui_scale = 1.0f - easing(duration, time, (length)) * ui_zoom_scale[0] + Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * ui_zoom_scale[1] * Convert.ToInt32(TPRate >= 0.5f);
 
@@ -620,5 +634,67 @@ public class Menu : MonoBehaviour
         }
         /*-----------------------------------------*/
     }
+    void ZoomOut(float duration, float time)
+    {
+        Debug.Log("ZoomIn中");
 
+        /*【カメラとUIのminとmaxのポジション、スケールの設定】*/
+        //float[] cam_posX = { (125.0f / 6.0f) * 0.3f, cSPos.x - 0 };  // { min, max }
+        cam_posY = new float[2] { (50.0f / 6.0f) * 0.3f, cSPos.y - 5.0f - 2.5f };
+        cam_posZ = new float[2] { (-200.0f / 6.0f) * 0.3f, cSPos.z + 20.0f + 10.0f };
+
+        ui_zoom_scale = new float[2] { 1.0f - 0.7f, 40.0f - (1.0f - 0.7f) }; // { min, max }
+        //float ui_out_scale = 1 - 0.7f;              // UIのmin
+        //float ui_in_scale = 40.0f - zoom_out_scale; // UIのmax
+
+
+        float length = 1.5f; // 扱うSin(波の長さ)
+
+        //float cam_scaleX = cSPos.x + easing(duration, easTime, (length)) * cam_posX[0] - Mathf.Abs((easing(duration, easTime, (length)) - 1.0f) / 2.0f) * cam_posX[1] * Convert.ToInt32(TPRate >= 0.5);
+        cam_scaleY = cSPos.y - easing(duration, time, (length)) * cam_posY[0] + Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posY[1] * Convert.ToInt32(TPRate >= 0.5f);
+        cam_scaleZ = cSPos.z - easing(duration, time, (length)) * cam_posZ[0] + Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posZ[1] * Convert.ToInt32(TPRate >= 0.5f);
+
+        ui_scale = ui.transform.localScale.x - easing(duration, time, (length)) * ui_zoom_scale[0] + Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * ui_zoom_scale[1] * Convert.ToInt32(TPRate >= 0.5f);
+
+        //Debug.Log($"cam_scaleY{cam_scaleY},cam_scaleZ{cam_scaleZ},ui_scale{ui_scale}");
+
+
+        cam.transform.position = new Vector3(0, cam_scaleY, cam_scaleZ);
+
+        ui.transform.localScale = new Vector3(ui_scale, ui_scale, ui_scale);
+
+
+        /*【UIが通り過ぎる演出】*/
+        if (ui.transform.localScale.x > 26.0f)  //10
+        {
+            //logo.SetActive(false);
+            //menu.SetActive(false);
+            for (int i = 0; i < menuObj.Length; i++)
+            {
+                menuObj[i].GetComponent<Text>().CrossFadeAlpha(1.0f, 0f, true);
+            }
+
+        }
+        /*----------------------*/
+
+        ///*【キャラクターセレクト画面のUIの有効化】*/
+        //if (cam.transform.position == TPos)
+        //{
+        //    //Debug.Log("キャラクターセレクトオン");
+        //    for (int i = 0; i < characterUI.Length; i++)
+        //    {
+        //        characterUI[i].SetActive(true);
+        //    }
+
+        //    gameStart.onCharaSelect = true;
+
+        //    logo.SetActive(false);
+        //    menu.SetActive(false);
+        //}
+        //else
+        //{
+        //    //Debug.Log($"{cam.transform.position}");
+        //}
+        ///*-----------------------------------------*/
+    }
 }
