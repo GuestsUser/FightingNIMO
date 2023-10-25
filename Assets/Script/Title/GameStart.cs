@@ -49,9 +49,9 @@ public class GameStart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Array.Resize(ref isSubmit, receiveNotificationExample.playerNum);
+        Array.Resize(ref isSubmit, Gamepad.all.Count);
 
-        CheckReady();
+        //if(onCharaSelect) CheckReady();
 
         if (pushScene == false)
         {
@@ -67,7 +67,7 @@ public class GameStart : MonoBehaviour
 
     private void CheckReady()
     {
-        for(int i = 0; i < receiveNotificationExample.playerNum; i++)
+        for(int i = 0; i < Gamepad.all.Count; i++)
         {
             Debug.Log($"Player{i}");
             if(receiveNotificationExample.count == 0)
