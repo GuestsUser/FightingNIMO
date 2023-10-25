@@ -254,17 +254,10 @@ public class CharSelectManager : MonoBehaviour
         {
 			if(dataRetation.playerList[i] == null)
             {
+				dataRetation.playerID[i] = input.playerIndex + 1;
 				dataRetation.playerList[i] = this.gameObject;
 				break;
             }
-        }
-
-		for(int i = 0; i < dataRetation.deviceList.Length; i++)
-        {
-			if(dataRetation.deviceList[i] == null)
-            {
-				dataRetation.deviceList[i] = input.devices[0];
-			}
         }
     }
 
