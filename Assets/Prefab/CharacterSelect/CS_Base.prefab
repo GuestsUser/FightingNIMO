@@ -402,13 +402,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 421828136598702146}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff363acf3197ce5448907a5f37e6fb32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.5
   animatorObj: {fileID: 7263956451958978769}
+  stickJoint: {fileID: 0}
+  anotherPlayer: 0
+  pInput: {fileID: 0}
+  hipJoint: {fileID: 0}
+  downJoint: []
+  downPower: 0
 --- !u!1 &804571046691423538
 GameObject:
   m_ObjectHideFlags: 0
