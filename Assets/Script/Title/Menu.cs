@@ -21,7 +21,7 @@ public class Menu : MonoBehaviour
         [Tooltip("UIという名前のオブジェクトをアタッチしてください")]
         [SerializeField] private RectTransform ui;
         [Tooltip("GameStartスクリプトをアタッチしてください")]
-        [SerializeField] private GameStart gameStart;
+        [SerializeField] private GameStartSystem gameStart;
         [Tooltip("メニューグループ(空の親オブジェクト)の子要素のカーソルを入れてください")]
         [SerializeField] private GameObject cursor;
         [Tooltip("メニューの項目の数を指定し、UIオブジェクトを入れてください")]
@@ -291,7 +291,7 @@ public class Menu : MonoBehaviour
                         characterUI[i].SetActive(false);
                     }
 
-                    gameStart.onCharaSelect = false;
+                    gameStart.isCharSelect = false;
 
                     logo.SetActive(true);
                     menu.SetActive(true);
@@ -623,7 +623,7 @@ public class Menu : MonoBehaviour
                 characterUI[i].SetActive(true);
             }
 
-            gameStart.onCharaSelect = true;
+            gameStart.isCharSelect = true;
 
             logo.SetActive(false);
             menu.SetActive(false);
