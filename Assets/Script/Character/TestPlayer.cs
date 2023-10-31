@@ -17,6 +17,11 @@ public class TestPlayer : MonoBehaviour
     [SerializeField] [Tooltip("ダウン時に戻る力を弱める対象とするジョイント")] ConfigurableJoint[] downJoint;
     [SerializeField] [Tooltip("ダウン時の戻る力")] float downPower;
 
+    [SerializeField] [Tooltip("方向入力で90度回るまでに掛かる時間、フレーム単位")] float turnTime;
+
+    private PlayerInput playerInput;
+
+
     JointDrive[] iniXDrive; //ダウン用ジョイントの初期のx軸の戻す力を記憶
     JointDrive[] iniYZDrive; //上記のyz用
 
@@ -32,6 +37,8 @@ public class TestPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //print(transform.eulerAngles.y);
+        //print(MathF.Atan2(0f, 0f) * Mathf.Rad2Deg);
         //animator.keepAnimatorControllerStateOnDisable = true;
         stickRb = stickJoint.gameObject.GetComponent<Rigidbody>();
         animator = animatorObj.GetComponent<Animator>(); //アニメーター取得
@@ -48,6 +55,17 @@ public class TestPlayer : MonoBehaviour
             iniXDrive[i] = downJoint[i].angularXDrive;
             iniYZDrive[i] = downJoint[i].angularYZDrive;
         }
+
+        playerInput = GetComponent<PlayerInput>();
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        Vector2 move = context.ReadValue<Vector2>();
+        Vector3 result=Vector3.zero;
+        result.x = move.x * speed;
+        result.z = move.y * speed;
+        transform.position += result;
     }
 
     // Update is called once per frame
@@ -58,6 +76,8 @@ public class TestPlayer : MonoBehaviour
         bool downRun = false;
         if (anotherPlayer) { downRun = keyboard.qKey.isPressed; }
         else { downRun = keyboard.eKey.isPressed; }
+
+        playerInput.devices[0].IsPressed();
 
         //戻す処理の作成を行う
         if (downRun)
@@ -93,6 +113,13 @@ public class TestPlayer : MonoBehaviour
 
         }
 
+        Vector2 move = pInput.actions["Move"].ReadValue<Vector2>();
+        float nowDirection = transform.eulerAngles.y;
+        float direction = (MathF.Atan2(move.y, move.x) * Mathf.Rad2Deg - 90) * -1; //進行方向
+        float moveAg = 90 / turnTime; //動作する角度量
+        float norm = MathF.Abs(move.x) + MathF.Abs(move.y); //スティックの倒し具合である合計動作量の取得
+
+        float sub = nowDirection - direction;//進行方向の符号決めから
 
         Vector3 moving = Vector3.zero; //今回の移動量入れ
 
