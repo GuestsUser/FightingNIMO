@@ -111,6 +111,8 @@ public class CharSelectManager : MonoBehaviour
 		getCharacter = false;		//‰Šú‰»
 		isCharSelected = false;     //‰Šú‰»
 		isTrigger = false;          //‰Šú‰»
+
+		Debug.Log(input.user.index);
 	}
 
 	private void Update()
@@ -350,7 +352,8 @@ public class CharSelectManager : MonoBehaviour
         {
             if (dataRetation.characterNum[i] != -1 && dataRetation.playerList[i] == this.gameObject)
             {
-                dataRetation.characterNum[i] = -1;
+				dataRetation.playerID[i] = -1;
+				dataRetation.characterNum[i] = -1;
 				break;
             }
         }

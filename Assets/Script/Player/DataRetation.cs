@@ -6,9 +6,24 @@ using UnityEngine;
 
 public class DataRetation : MonoBehaviour
 {
+    public static DataRetation instance;
+
     public GameObject[] playerList; //プレイヤー番号順に格納するための配列
-    public int[] playerID;          //
+    public int[] playerID;          //プレイヤー番号を格納するための配列
     public int[] characterNum;      //各プレイヤーが選択したキャラクター番号を格納するための配列
+
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -19,6 +34,11 @@ public class DataRetation : MonoBehaviour
         for (int i = 0; i < characterNum.Length; i++)
         {
             characterNum[i] = -1;
+        }
+
+        for (int i = 0; i < playerID.Length; i++)
+        {
+            playerID[i] = -1;
         }
     }
 }
