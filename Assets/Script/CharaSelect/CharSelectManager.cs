@@ -111,14 +111,12 @@ public class CharSelectManager : MonoBehaviour
 		getCharacter = false;		//初期化
 		isCharSelected = false;     //初期化
 		isTrigger = false;          //初期化
-
-		Debug.Log(input.user.index);
 	}
 
 	private void Update()
 	{
 		AddCharacterNum();		//キャラクター番号保持関数
-		PlayerDestroy();		//プレイヤー削除関数
+		RemovePlayer();		//プレイヤー削除関数
 		CharacterVisibility();  ////キャラクター（表示/非表示）関数
 
 		//現在がキャラクターセレクトできる状態なら
@@ -147,6 +145,130 @@ public class CharSelectManager : MonoBehaviour
 		}
 	}
 
+	//プレイヤー追加関数
+	private void AddPlayer()
+	{
+		for (int i = 0; i < dataRetation.playerList.Length; i++)
+		{
+			if (dataRetation.playerList[i] == null)
+			{
+				//dataRetation.controllerID[i] = input.playerIndex + 1;
+				dataRetation.controllerID[i] = input.devices[0].deviceId;   //デバイスIDを格納する
+				dataRetation.playerList[i] = this.gameObject;   //このゲームオブジェクトを格納する
+				break;
+			}
+		}
+	}
+
+	//プレイヤー削除関数
+	private void RemovePlayer()
+    {
+        if (isTrigger)
+        {
+			RemoveCharacterNum();
+			Destroy(this.gameObject);
+			InputSystem.FlushDisconnectedDevices();
+		}
+    }
+
+	//キャラクター（表示/非表示）関数
+	private void CharacterVisibility()
+    {
+		switch (characterNum)
+		{
+			//クマノミ（現在はベース）
+			case 0:
+				characters[characterNum].SetActive(true);   //クマノミを表示
+
+				//キャラクターの総数分ループし、現在選択されているキャラクター番号以外のキャラクターを非表示にする
+				for (int i = 0; i < maxCharacter; i++)
+				{
+					if (i != characterNum)
+					{
+						characters[i].SetActive(false);
+					}
+				}
+				break;
+			//サメ
+			case 1:
+				characters[characterNum].SetActive(true);   //サメを表示
+				for (int i = 0; i < maxCharacter; i++)
+				{
+					if (i != characterNum)
+					{
+						characters[i].SetActive(false);
+					}
+				}
+				break;
+				//カメ
+				//case 2:
+				//	characters[characterNum].SetActive(true);   //カメを表示
+				//	for (int i = 0; i < maxCharacter; i++)
+				//	{
+				//		if (i != characterNum)
+				//		{
+				//			characters[i].SetActive(false);
+				//		}
+				//	}
+				//	break;
+				//マンタ
+				//case 3:
+				//	characters[characterNum].SetActive(true);   //マンタを表示
+				//	for (int i = 0; i < maxCharacter; i++)
+				//	{
+				//		if (i != characterNum)
+				//		{
+				//			characters[i].SetActive(false);
+				//		}
+				//	}
+				//	break;
+		}
+	}
+
+	//キャラクター番号更新保持関数
+	private void AddCharacterNum()
+    {
+        for (int i = 0; i < dataRetation.characterNum.Length; i++)
+        {
+			//まだ値が格納されていないかつ、プレイヤーオブジェクト配列内に格納されているオブジェクトと同じものなら
+            if (dataRetation.characterNum[i] == -1 && dataRetation.playerList[i] == this.gameObject)
+            {
+				//その配列の値の場所に、キャラクター番号を格納する
+                dataRetation.characterNum[i] = characterNum;
+				break;
+            }
+			//現在のcharacterNumと配列内の値が一緒でなく、配列内に入っているオブジェクトがこのオブジェクト同じなら
+			else if (dataRetation.characterNum[i] != characterNum && dataRetation.playerList[i] == this.gameObject)
+			{
+				//キャラクタ番号を更新する
+				dataRetation.characterNum[i] = characterNum;
+				break;
+			}
+			//配列内の値が-1(既に値が格納されている)でないならば
+			else if (dataRetation.characterNum[i] != -1)
+            {
+				//既に値が格納されているのでループを継続する
+                continue;
+            }
+        }
+    }
+
+    //キャラクター番号削除関数
+    private void RemoveCharacterNum()
+    {
+        for (int i = 0; i < dataRetation.characterNum.Length; i++)
+        {
+            if (dataRetation.characterNum[i] != -1 && dataRetation.playerList[i] == this.gameObject)
+            {
+				dataRetation.controllerID[i] = -1;
+				dataRetation.characterNum[i] = -1;
+				break;
+            }
+        }
+    }
+
+	//--------------------------------------------------
+
 	//プレイヤーカーソル移動処理（ゲームパッド：左スティック or 十字キー）
 	public void OnMove(InputValue value)
 	{
@@ -156,7 +278,7 @@ public class CharSelectManager : MonoBehaviour
 			//左入力時
 			if (value.Get<float>() > 0)
 			{
-				if (push == false)	// 押された時の処理
+				if (push == false)  // 押された時の処理
 				{
 					push = true;
 					//キャラクター番号が0より小さい値になったら、一番最後のキャラクター番号に変更する（クマノミ->マンタ）
@@ -231,131 +353,12 @@ public class CharSelectManager : MonoBehaviour
 		}
 	}
 
-	//プレイヤー削除関数
-	private void PlayerDestroy()
-    {
-        if (isTrigger)
-        {
-			RemoveCharacterNum();
-			Destroy(this.gameObject);
-			InputSystem.FlushDisconnectedDevices();
-		}
-    }
-
 	//デバイス切断確認
 	public void OnDeviceLost(PlayerInput pi)
-    {
+	{
 		//Debug.Log("ゲームパッドが切断されました。");
 		isTrigger = true;
-    }
-
-	//プレイヤーオブジェクト（添字）保持関数
-	private void AddPlayer()
-    {
-		for(int i = 0; i < dataRetation.playerList.Length; i++)
-        {
-			if(dataRetation.playerList[i] == null)
-            {
-				dataRetation.playerID[i] = input.playerIndex + 1;
-				dataRetation.playerList[i] = this.gameObject;
-				break;
-            }
-        }
-    }
-
-	//キャラクター（表示/非表示）関数
-	private void CharacterVisibility()
-    {
-		switch (characterNum)
-		{
-			//クマノミ（現在はベース）
-			case 0:
-				characters[characterNum].SetActive(true);   //クマノミを表示
-
-				//キャラクターの総数分ループし、現在選択されているキャラクター番号以外のキャラクターを非表示にする
-				for (int i = 0; i < maxCharacter; i++)
-				{
-					if (i != characterNum)
-					{
-						characters[i].SetActive(false);
-					}
-				}
-				break;
-			//サメ
-			case 1:
-				characters[characterNum].SetActive(true);   //サメを表示
-				for (int i = 0; i < maxCharacter; i++)
-				{
-					if (i != characterNum)
-					{
-						characters[i].SetActive(false);
-					}
-				}
-				break;
-				//カメ
-				//case 2:
-				//	characters[characterNum].SetActive(true);   //カメを表示
-				//	for (int i = 0; i < maxCharacter; i++)
-				//	{
-				//		if (i != characterNum)
-				//		{
-				//			characters[i].SetActive(false);
-				//		}
-				//	}
-				//	break;
-				//マンタ
-				//case 3:
-				//	characters[characterNum].SetActive(true);   //マンタを表示
-				//	for (int i = 0; i < maxCharacter; i++)
-				//	{
-				//		if (i != characterNum)
-				//		{
-				//			characters[i].SetActive(false);
-				//		}
-				//	}
-				//	break;
-		}
 	}
 
-	//キャラクター番号保持関数
-	private void AddCharacterNum()
-    {
-        for (int i = 0; i < dataRetation.characterNum.Length; i++)
-        {
-			//まだ値が格納されていないかつ、プレイヤーオブジェクト配列内に格納されているオブジェクトと同じものなら
-            if (dataRetation.characterNum[i] == -1 && dataRetation.playerList[i] == this.gameObject)
-            {
-				//その配列の値の場所に、キャラクター番号を格納する
-                dataRetation.characterNum[i] = characterNum;
-				break;
-            }
-			//現在のcharacterNumと配列内の値が一緒でなく、配列内に入っているオブジェクトがこのオブジェクト同じなら
-			else if (dataRetation.characterNum[i] != characterNum && dataRetation.playerList[i] == this.gameObject)
-			{
-				//新しいキャラクタ番号を格納する
-				dataRetation.characterNum[i] = characterNum;
-				break;
-			}
-			//配列内の値が-1(既に値が格納されている)でないならば
-			else if (dataRetation.characterNum[i] != -1)
-            {
-				//既に値が格納されているのでループを継続する
-                continue;
-            }
-        }
-    }
-
-    //キャラクター番号削除関数
-    private void RemoveCharacterNum()
-    {
-        for (int i = 0; i < dataRetation.characterNum.Length; i++)
-        {
-            if (dataRetation.characterNum[i] != -1 && dataRetation.playerList[i] == this.gameObject)
-            {
-				dataRetation.playerID[i] = -1;
-				dataRetation.characterNum[i] = -1;
-				break;
-            }
-        }
-    }
+	//--------------------------------------------------
 }

@@ -9,7 +9,7 @@ public class DataRetation : MonoBehaviour
     public static DataRetation instance;
 
     public GameObject[] playerList; //プレイヤー番号順に格納するための配列
-    public int[] playerID;          //プレイヤー番号を格納するための配列
+    public int[] controllerID;          //プレイヤー番号を格納するための配列
     public int[] characterNum;      //各プレイヤーが選択したキャラクター番号を格納するための配列
 
     private void Awake()
@@ -29,16 +29,16 @@ public class DataRetation : MonoBehaviour
     {
         Array.Resize(ref playerList, 4);    //最大プレイ人数分の大きさに変更
         Array.Resize(ref characterNum, 4);  //最大プレイ人数分の大きさに変更
-        Array.Resize(ref playerID, 4);
+        Array.Resize(ref controllerID, 4);  //最大プレイ人数分の大きさに変更
 
         for (int i = 0; i < characterNum.Length; i++)
         {
             characterNum[i] = -1;
         }
 
-        for (int i = 0; i < playerID.Length; i++)
+        for (int i = 0; i < controllerID.Length; i++)
         {
-            playerID[i] = -1;
+            controllerID[i] = -1;
         }
     }
 }
