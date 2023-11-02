@@ -926,6 +926,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: baseModle
       objectReference: {fileID: 0}
+    - target: {fileID: 4431040761349162511, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -7654330463114948059, guid: 248cda43fb253904ba14a715502f5894, type: 3}
+    - target: {fileID: 4431040761349162511, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: -115882625693759487, guid: 248cda43fb253904ba14a715502f5894, type: 3}
     - target: {fileID: 5375637982755570912, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
       propertyPath: speed
       value: 0.1
