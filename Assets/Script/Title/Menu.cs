@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
+
 // ↓コピー用
 #region (←の+で閉じる/開く)タイトル
 /*ただのregionの説明用*/
@@ -522,7 +523,7 @@ public class Menu : MonoBehaviour
     float easing(float duration,float time,float length)
     {
         float frame = 60.0f;                      // fps
-        float t = ((easTime / frame) / duration); // easingの進行状況を示す値を算出
+        float t = ((time / frame) / duration); // easingの進行状況を示す値を算出
         TPRate = t * length;
         //Debug.Log($"easingの進捗{t * length}");
         //Debug.Log($"Sinの値{ (float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) }");
@@ -542,6 +543,37 @@ public class Menu : MonoBehaviour
         float result = min + (max - min) * easedValue;
 
         return Mathf.Round(result * 10000.0f) / 10000.0f;
+    }
+
+    /// <summary>
+    /// Sin波を使ったEasing関数 引数(所要時間,現在時間,Sinカーブの長さ,返り値の符号 true:+ false:-,始まりの値,最終的に欲しい値)
+    /// </summary>
+    /// <param name="duration">所要時間</param>
+    /// <param name="time">現在時間</param>
+    /// <param name="length">サインカーブの長さ</param>
+    /// <param name="symbol">サインカーブの始まりの符号 true:+ false:-</param>
+    /// <param name="source">始まりの値</param>
+    /// <param name="max">最終的に欲しい値</param>
+    /// <returns></returns>
+    float easing3(float duration, float time, float length, bool symbol, float source, float max)
+    {
+        float frame = 60.0f;                        // fps
+        float t = ((time / frame) / duration);      // easingの進行状況を示す値を算出
+        //TPRate = t;                               // 進行率(%)
+        //present_length = t * length;              // 現在地点(Sinカーブから見た)
+
+        // 返り値の符号の設定
+        float symbol_num = symbol ? 1.0f : -1.0f;
+        //Debug.Log($"symbol_num{symbol_num}");
+
+        if ((time / frame) > duration)
+        {
+            t = 1;
+            Debug.Log("time is over");
+            return source * ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * symbol_num) * (max / source);
+        }
+
+        return source * ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * symbol_num) * (max / source);
     }
 
     // duration:max値にするまでにかかる時間 max:最終的な値 delay:遅らせたい時間 time:特定条件下でカウントアップしている変数
@@ -592,6 +624,20 @@ public class Menu : MonoBehaviour
         cam_scaleZ = cSPos.z + cam_posZ[0] * easing(duration, time, (length)) -  Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posZ[1] * Convert.ToInt32(TPRate >= 0.5f);
         
         ui_scale = 1.0f - easing(duration, time, (length)) * ui_zoom_scale[0] + Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * ui_zoom_scale[1] * Convert.ToInt32(TPRate >= 0.5f);
+        
+        /*【UIスケールのイージング】*/
+        if(time < TurningTime(duration,length,0.5f))
+        {
+            ui_scale = easing3(duration, time, length, false, 1.0f, 0.7f);
+        }
+        else
+        {
+            float old_pos = easing3(duration, TurningTime(duration, length, 0.5f), length, false, 1.0f, 0.7f);
+
+            ui_scale = old_pos + easing3(duration, time, length, false, 1.0f, 40.0f);
+
+        }
+        /*--------------------------*/
 
         //Debug.Log($"cam_scaleY{cam_scaleY},cam_scaleZ{cam_scaleZ},ui_scale{ui_scale}");
 
@@ -696,5 +742,22 @@ public class Menu : MonoBehaviour
         //    //Debug.Log($"{cam.transform.position}");
         //}
         ///*-----------------------------------------*/
+    }
+
+
+    /// <summary>
+    /// Sin波のEasing関数の特定のタイミングの時間を取得する関数 引数(所要時間,Sinカーブの長さ,取得したい所(Sinカーブ上の地点))
+    /// </summary>
+    /// <param name="duration">所要時間</param>
+    /// <param name="length">サインカーブの長さ</param>
+    /// <param name="turning_point">取得したい所(Sinカーブ上の地点)</param>
+    /// <returns></returns>
+    float TurningTime(float duration,float length,float turning_point)
+    {
+        float fps = 60.0f;
+        float t = duration * fps;
+        float divisor = length / turning_point;
+
+        return t / divisor;
     }
 }
