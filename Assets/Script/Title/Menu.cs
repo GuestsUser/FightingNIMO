@@ -278,18 +278,22 @@ public class Menu : MonoBehaviour
                 easTime = 0.8f * 60.0f;
                 cam.transform.position = TPos;
             }
-            
+
             //Debug.Log($"easTime{easTime}");
 
-            Zoom(0.8f, easTime);
+            
+           
 
-            if(backUI == false)
+            if (backUI == false)
             {
+                Zoom(0.8f, easTime);
+
                 if (Gamepad.current.bButton.wasReleasedThisFrame)
                 {
                     for (int i = 0; i < characterUI.Length; i++)
                     {
                         characterUI[i].SetActive(false);
+                        Debug.Log("キャラクターUIが非表示になりました");
                     }
 
                     gameStart.isCharSelect = false;
@@ -305,6 +309,9 @@ public class Menu : MonoBehaviour
                 Debug.Log("メニューに戻る");
                 ZoomOut(0.8f, easTime);
             }
+
+
+           
         }
         /*------------------------*/
 
@@ -465,7 +472,8 @@ public class Menu : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
         
         game = true;
-        
+
+        moveUI = true;
 
         //yield return new WaitForSecondsRealtime(duration[1] - 0.25f);
 
@@ -525,24 +533,8 @@ public class Menu : MonoBehaviour
         float frame = 60.0f;                      // fps
         float t = ((time / frame) / duration); // easingの進行状況を示す値を算出
         TPRate = t * length;
-        //Debug.Log($"easingの進捗{t * length}");
-        //Debug.Log($"Sinの値{ (float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) }");
 
         return (float)Math.Round(Mathf.Sin(t * Mathf.PI * length),4, MidpointRounding.AwayFromZero);
-    }
-
-    float easing2(float duration, float time, float min, float max,float length)
-    {
-        float frame = 60.0f;                    // fps
-        float t = ((easTime / frame) / duration); // easingの進行状況を示す値を算出
-
-        float easedValue = Mathf.Sin(t * Mathf.PI * length) - 1;
-
-        // スケーリングとオフセット適用
-    
-        float result = min + (max - min) * easedValue;
-
-        return Mathf.Round(result * 10000.0f) / 10000.0f;
     }
 
     /// <summary>
@@ -555,86 +547,75 @@ public class Menu : MonoBehaviour
     /// <param name="source">始まりの値</param>
     /// <param name="max">最終的に欲しい値</param>
     /// <returns></returns>
-    float easing3(float duration, float time, float length, bool symbol, float source, float max)
+    float easing3(float duration, float time, float length, bool symbol, float source, float max, bool turn)
     {
-        float frame = 60.0f;                        // fps
-        float t = ((time / frame) / duration);      // easingの進行状況を示す値を算出
-        //TPRate = t;                               // 進行率(%)
+        float frame = 60.0f;                      // fps
+        float t = ((time / frame) / duration);    // easingの進行状況を示す値を算出
+        TPRate = t;                               // 進行率(%)
         //present_length = t * length;              // 現在地点(Sinカーブから見た)
 
-        // 返り値の符号の設定
+        // Sinカーブの進む方向を指定 true:+ false:- (最初に元の値から値を 増やしたい : +,減らしたい : -)
         float symbol_num = symbol ? 1.0f : -1.0f;
-        //Debug.Log($"symbol_num{symbol_num}");
 
-        if ((time / frame) > duration)
+        // ターン時かどうかで変わる　ターン時はSinカーブ上で言うと　-1 から 1 までつまり距離は 2 
+        if (turn)
         {
-            t = 1;
-            Debug.Log("time is over");
-            return source * ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * symbol_num) * (max / source);
+            // (time / frame) が duration を過ぎているなら
+            if ((time / frame) >= duration)
+            {
+                t = 1; // tは進行率なので 1=100%で100%に固定し、関数の返り値がmaxで指定した値から変わらないようにしている
+                       //Debug.Log("time is over");
+                return source + (((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) - 1.0f) * (symbol_num * -1)) * Mathf.Abs(max - source);
+            }
+            //Debug.Log("ターン");
+            return source + (((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) - 1.0f) / 2.0f * (symbol_num * -1)) * Mathf.Abs(max - source);
         }
-
-        return source * ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * symbol_num) * (max / source);
+        // それ以外は 0 から 1 で距離は 1
+        else
+        {
+            // (time / frame) が duration を過ぎているなら
+            if ((time / frame) >= duration)
+            {
+                t = 1; // tは進行率なので 1=100%で100%に固定し、関数の返り値がmaxで指定した値から変わらないようにしている
+                       //Debug.Log("time is over");
+                return source - ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * (symbol_num * -1)) * Mathf.Abs(max - source);
+            }
+            //Debug.Log("通常");
+            return source - ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * (symbol_num * -1)) * Mathf.Abs(max - source);
+        }
     }
 
-    // duration:max値にするまでにかかる時間 max:最終的な値 delay:遅らせたい時間 time:特定条件下でカウントアップしている変数
-    float Lerp(float duration,float min,float max,float length, float time)
-    {
-        float delay = (TPRate / length) * duration; // 経過時間
-        float Remain_time = duration - delay;　　　 // 最終地点までの残り時間を計算
-
-        float velocity = (max - min) / duration;    // 最終地点にたどり着くために必要な速度の計算
-        float acceleration = velocity / duration;　 // 最終地点にたどり着くために
-
-        add_value = velocity + acceleration;　　　　// 
-
-        if(TPRate <= length)
-        {
-            velocity = 0;
-            add_value = velocity;
-
-            return min;
-        }
-        //min += add_value;
-        //min = max;
-        return min;
-    }
-
+    
     void Zoom(float duration,float time)
     {
-        Debug.Log("ZoomIn中");
+        /*【カメラとUIの引きと寄りの時に欲しい値】*/
+        cam_posY = new float[2] { 65.0f, 5.0f};
+        cam_posZ = new float[2] { -260.0f, -20.0f};
 
-        /*【カメラとUIのminとmaxのポジション、スケールの設定】*/
-        //float[] cam_posX = { (125.0f / 6.0f) * 0.3f, cSPos.x - 0 };  // { min, max }
-        //cam_posY = new float[2] { (50.0f / 6.0f) * 0.3f, cSPos.y - 5.0f - 2.5f };
-        //cam_posZ = new float[2] { (-200.0f / 6.0f) * 0.3f, cSPos.z + 20.0f + 10.0f };
-
-        // 0,5,-20
-        cam_posY = new float[2] { (50.0f * 0.7f), cSPos.y - 5.0f - (50.0f * 0.3f) };
-        cam_posZ = new float[2] { (-200.0f * 0.7f), cSPos.z - 20.0f - (-200.0f * 0.3f) };
-
-        ui_zoom_scale = new float[2] { 1.0f - 0.7f, 40.0f - (1.0f - 0.7f) }; // { min, max }
-        //float ui_out_scale = 1 - 0.7f;              // UIのmin
-        //float ui_in_scale = 40.0f - zoom_out_scale; // UIのmax
-
+        ui_zoom_scale = new float[2] { 0.7f, 40.0f};
+        /*----------------------------------------*/
 
         float length = 1.5f; // 扱うSin(波の長さ)
 
-        //float cam_scaleX = cSPos.x + easing(duration, easTime, (length)) * cam_posX[0] - Mathf.Abs((easing(duration, easTime, (length)) - 1.0f) / 2.0f) * cam_posX[1] * Convert.ToInt32(TPRate >= 0.5);
-        cam_scaleY = cSPos.y + cam_posY[0] * easing(duration, time, (length)) -  Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posY[1] * Convert.ToInt32(TPRate >= 0.5f);
-        cam_scaleZ = cSPos.z + cam_posZ[0] * easing(duration, time, (length)) -  Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posZ[1] * Convert.ToInt32(TPRate >= 0.5f);
-        
-        ui_scale = 1.0f - easing(duration, time, (length)) * ui_zoom_scale[0] + Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * ui_zoom_scale[1] * Convert.ToInt32(TPRate >= 0.5f);
-        
-        /*【UIスケールのイージング】*/
-        if(time < TurningTime(duration,length,0.5f))
+        /*【UIとカメラのイージング】*/
+        if (time < TurningTime(duration,length,0.5f))
         {
-            ui_scale = easing3(duration, time, length, false, 1.0f, 0.7f);
+            ui_scale = easing3(duration, time, length, false, 1.0f, ui_zoom_scale[0], false);
+
+            cam_scaleY = easing3(duration, time, length, false, 50.0f, cam_posY[0], false);
+            cam_scaleZ = easing3(duration, time, length, false, -200.0f, cam_posZ[0], false);
         }
         else
         {
-            float old_pos = easing3(duration, TurningTime(duration, length, 0.5f), length, false, 1.0f, 0.7f);
+            float ui_old_pos = easing3(duration, TurningTime(duration, length, 0.5f), length, false, 1.0f, ui_zoom_scale[0], false);
 
-            ui_scale = old_pos + easing3(duration, time, length, false, 1.0f, 40.0f);
+            float old_cam_scaleY = easing3(duration, TurningTime(duration, length, 0.5f), length, false, 50.0f, cam_posY[0], false);
+            float old_cam_scaleZ = easing3(duration, TurningTime(duration, length, 0.5f), length, true, -200.0f, cam_posZ[0], false);
+
+            ui_scale = easing3(duration, time, length, true, ui_old_pos, ui_zoom_scale[1], true);
+
+            cam_scaleY = easing3(duration, time, length, false, old_cam_scaleY, cam_posY[1], true);
+            cam_scaleZ = easing3(duration, time, length, true, old_cam_scaleZ, cam_posZ[1], true);
 
         }
         /*--------------------------*/
@@ -650,23 +631,25 @@ public class Menu : MonoBehaviour
         /*【UIが通り過ぎる演出】*/
         if (ui.transform.localScale.x > 26.0f)  //10
         {
-            //logo.SetActive(false);
-            //menu.SetActive(false);
             for (int i = 0; i < menuObj.Length; i++)
             {
                 menuObj[i].GetComponent<Text>().CrossFadeAlpha(0, 0f, true);
             }
-
+            Debug.Log("メニューUIが非表示になりました");
         }
         /*----------------------*/
+
+        TPos = new Vector3(0, cam_posY[1], cam_posZ[1]);
 
         /*【キャラクターセレクト画面のUIの有効化】*/
         if (cam.transform.position == TPos)
         {
+            moveUI = false;
             //Debug.Log("キャラクターセレクトオン");
             for (int i = 0; i < characterUI.Length; i++)
             {
                 characterUI[i].SetActive(true);
+                Debug.Log("キャラクターUIを表示しました");
             }
 
             gameStart.isCharSelect = true;
@@ -682,27 +665,43 @@ public class Menu : MonoBehaviour
     }
     void ZoomOut(float duration, float time)
     {
-        Debug.Log("ZoomIn中");
+        /*【カメラとUIの引きと寄りの時に欲しい値】*/
+        ui_zoom_scale = new float[2] { 68.0f, 1.0f };
 
-        /*【カメラとUIのminとmaxのポジション、スケールの設定】*/
-        //float[] cam_posX = { (125.0f / 6.0f) * 0.3f, cSPos.x - 0 };  // { min, max }
-        cam_posY = new float[2] { (50.0f / 6.0f) * 0.3f, cSPos.y - 5.0f - 2.5f };
-        cam_posZ = new float[2] { (-200.0f / 6.0f) * 0.3f, cSPos.z + 20.0f + 10.0f };
+        cam_posY = new float[2] { -15.0f, 50.0f };
+        cam_posZ = new float[2] { 40.0f, -200.0f };
+        /*----------------------------------------*/
 
-        ui_zoom_scale = new float[2] { 1.0f - 0.7f, 40.0f - (1.0f - 0.7f) }; // { min, max }
-        //float ui_out_scale = 1 - 0.7f;              // UIのmin
-        //float ui_in_scale = 40.0f - zoom_out_scale; // UIのmax
+        float length = 0.5f; // 扱うSin(波の長さ)
 
+        ui_scale = easing3(duration, time, length, false, 40.0f, ui_zoom_scale[1], false);
 
-        float length = 1.5f; // 扱うSin(波の長さ)
+        cam_scaleY = easing3(duration, time, length, true, 5.0f, cam_posY[1], false);
+        cam_scaleZ = easing3(duration, time, length, false, -20.0f, cam_posZ[1], false);
 
-        //float cam_scaleX = cSPos.x + easing(duration, easTime, (length)) * cam_posX[0] - Mathf.Abs((easing(duration, easTime, (length)) - 1.0f) / 2.0f) * cam_posX[1] * Convert.ToInt32(TPRate >= 0.5);
-        cam_scaleY = cSPos.y - easing(duration, time, (length)) * cam_posY[0] + Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posY[1] * Convert.ToInt32(TPRate >= 0.5f);
-        cam_scaleZ = cSPos.z - easing(duration, time, (length)) * cam_posZ[0] + Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * cam_posZ[1] * Convert.ToInt32(TPRate >= 0.5f);
+        /*【UIとカメラのイージング】*/
+        //if (time < TurningTime(duration, length, 0.5f))
+        //{
+        //    ui_scale = easing3(duration, time, length, true, 40.0f, ui_zoom_scale[0], false);
 
-        ui_scale = ui.transform.localScale.x - easing(duration, time, (length)) * ui_zoom_scale[0] + Mathf.Abs((easing(duration, time, (length)) - 1.0f) / 2.0f) * ui_zoom_scale[1] * Convert.ToInt32(TPRate >= 0.5f);
+        //    cam_scaleY = easing3(duration, time, length, false, 5.0f, cam_posY[0], false);
+        //    cam_scaleZ = easing3(duration, time, length, true, -20.0f, cam_posZ[0], false);
+        //}
+        //else
+        //{
+        //    float ui_old_pos = easing3(duration, TurningTime(duration, length, 0.5f), length, true, 40.0f, ui_zoom_scale[0], false);
 
-        //Debug.Log($"cam_scaleY{cam_scaleY},cam_scaleZ{cam_scaleZ},ui_scale{ui_scale}");
+        //    float old_cam_scaleY = easing3(duration, TurningTime(duration, length, 0.5f), length, false, 5.0f, cam_posY[0], false);
+        //    float old_cam_scaleZ = easing3(duration, TurningTime(duration, length, 0.5f), length, true, -20.0f, cam_posZ[0], false);
+        //    // Debug.Log($"old_cam_scaleZ{-old_cam_scaleZ}");
+
+        //    ui_scale = easing3(duration, time, length, false, ui_old_pos, ui_zoom_scale[1], true);
+
+        //    cam_scaleY = easing3(duration, time, length, true, old_cam_scaleY, cam_posY[1], true);
+        //    cam_scaleZ = easing3(duration, time, length, false, old_cam_scaleZ, cam_posZ[1], true);
+
+        //}
+        /*--------------------------*/
 
 
         cam.transform.position = new Vector3(0, cam_scaleY, cam_scaleZ);
@@ -711,7 +710,7 @@ public class Menu : MonoBehaviour
 
 
         /*【UIが通り過ぎる演出】*/
-        if (ui.transform.localScale.x > 26.0f)  //10
+        if (ui.transform.localScale.x < 26.0f)  //10
         {
             //logo.SetActive(false);
             //menu.SetActive(false);
@@ -719,29 +718,24 @@ public class Menu : MonoBehaviour
             {
                 menuObj[i].GetComponent<Text>().CrossFadeAlpha(1.0f, 0f, true);
             }
-
+            Debug.Log("メニューUIが表示されています");
         }
         /*----------------------*/
 
-        ///*【キャラクターセレクト画面のUIの有効化】*/
-        //if (cam.transform.position == TPos)
-        //{
-        //    //Debug.Log("キャラクターセレクトオン");
-        //    for (int i = 0; i < characterUI.Length; i++)
-        //    {
-        //        characterUI[i].SetActive(true);
-        //    }
+        TPos = new Vector3(0, cam_posY[1], cam_posZ[1]);
 
-        //    gameStart.onCharaSelect = true;
-
-        //    logo.SetActive(false);
-        //    menu.SetActive(false);
-        //}
-        //else
-        //{
-        //    //Debug.Log($"{cam.transform.position}");
-        //}
-        ///*-----------------------------------------*/
+        /*【キャラクターセレクト画面のUIの有効化】*/
+        if (cam.transform.position == TPos)
+        {
+            game = false;
+            backUI = false;
+            StartCoroutine("BackMenu");
+        }
+        else
+        {
+            //Debug.Log($"{cam.transform.position}");
+        }
+        /*-----------------------------------------*/
     }
 
 

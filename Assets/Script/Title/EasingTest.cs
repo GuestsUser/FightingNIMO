@@ -54,6 +54,8 @@ public class EasingTest : MonoBehaviour
         }
 
         Turn();
+
+
         
         //value = easing(duration, time, length, symbol, source, max[0]);
 
@@ -65,11 +67,11 @@ public class EasingTest : MonoBehaviour
 
     void Turn()
     {
-        // 切り替え前までのポジションを保管
-        float old_pos = easing(duration, TurningTime(duration, length, 0.5f), length, !symbol, source, max[0], false);
-        Debug.Log($"old_pos{old_pos}");
+        // 切り替え地点の値を取得
+        float old_pos = easing(duration, TurningTime(duration, length, 0.5f), length, symbol, source, max[0], false);
+        //Debug.Log($"old_pos{old_pos}");
 
-        // timeがターンする地点への到着時間よりも小さい時(まだターンする地点に到着していない間)
+        // timeがターンする地点への到着時間以下の時時(まだターンする地点に到着していない間)
         if (time <= TurningTime(duration, length, turning_point))
         {
             // 最初の地点から次の地点までを補完
@@ -77,15 +79,11 @@ public class EasingTest : MonoBehaviour
         }
         else
         {
-
-            float d = (duration  - (TurningTime(duration, length, 0.5f)/60.0f)); // durationからターンする地点での時間を引いて残り時間を取得
-            float t = (time - TurningTime(duration, length, 0.5f));              // timeからターンする地点での時間を引いてeasingを0からスタート
-
             // ターン地点から次の地点までを補完
-            value = easing(d, t,length - turning_point, true, old_pos, max[1], false);
+            value = easing(duration, time, length, !symbol, old_pos, max[1], true);
         }
 
-        ui.transform.localScale = new Vector3(value, value, value);
+        //ui.transform.localScale = new Vector3(value, value, value);
     }
 
     /// <summary>
@@ -108,24 +106,28 @@ public class EasingTest : MonoBehaviour
         // Sinカーブの進む方向を指定 true:+ false:- (最初に元の値から値を 増やしたい : +,減らしたい : -)
         float symbol_num = symbol ? 1.0f : -1.0f;
 
-        // (time / frame)が duration を過ぎているなら
-        if ((time / frame) >= duration)
-        {
-            t = 1; // tは進行率なので 1=100%で100%に固定し、関数の返り値がmaxで指定した値から変わらないようにしている
-            //Debug.Log("time is over");
-            return source - ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * (symbol_num * -1)) * Mathf.Abs(max - source);
-        }
-
-        // ターン時かどうかで変わる　ターン時はSinカーブ上で言うと　-1 から 1 までつまり距離は 2 
+        // ターン時かどうかで変わる　ターン時はSinカーブ上で言うと　1 なので -1 して 0 から 1のカーブになるようにする 
         if (turn)
         {
-            Debug.Log("ターン");
-            return source - (((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) - 1.0f) * (symbol_num * -1)) * Mathf.Abs(max - source);
+            // (time / frame) が duration を過ぎているなら
+            if ((time / frame) >= duration)
+            {
+                t = 1; // tは進行率なので 1=100%で100%に固定し、関数の返り値がmaxで指定した値から変わらないようにしている
+                return source + (((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) - 1.0f) / 2.0f * (symbol_num * -1)) * Mathf.Abs(max - source);
+            }
+            return source + (((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) - 1.0f) / 2.0f * (symbol_num * -1)) * Mathf.Abs(max - source);
         }
         // それ以外は 0 から 1 で距離は 1
         else
         {
-            Debug.Log("通常");
+            // (time / frame) が duration を過ぎているなら
+            if ((time / frame) >= duration)
+            {
+                t = 1; // tは進行率なので 1=100%で100%に固定し、関数の返り値がmaxで指定した値から変わらないようにしている
+                return source - ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * (symbol_num * -1)) * Mathf.Abs(max - source);
+            }
+
+            //Debug.Log("通常");
             return source - ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * (symbol_num * -1)) * Mathf.Abs(max - source);
         }
     }
@@ -143,7 +145,7 @@ public class EasingTest : MonoBehaviour
         float t = duration * fps;
         float divisor = length / turning_point;
 
-        return t / divisor;
+        return (t / divisor);
     }
 
     private void Reset()
