@@ -288,21 +288,25 @@ public class Menu : MonoBehaviour
             {
                 Zoom(0.8f, easTime);
 
-                if (Gamepad.current.bButton.wasReleasedThisFrame)
+                if(moveUI == false)
                 {
-                    for (int i = 0; i < characterUI.Length; i++)
+                    if (Gamepad.current.bButton.wasReleasedThisFrame)
                     {
-                        characterUI[i].SetActive(false);
-                        Debug.Log("キャラクターUIが非表示になりました");
+                        for (int i = 0; i < characterUI.Length; i++)
+                        {
+                            characterUI[i].SetActive(false);
+                            Debug.Log("キャラクターUIが非表示になりました");
+                        }
+
+                        gameStart.isCharSelect = false;
+
+                        logo.SetActive(true);
+                        menu.SetActive(true);
+                        backUI = true;
+                        easTime = 0;
                     }
-
-                    gameStart.isCharSelect = false;
-
-                    logo.SetActive(true);
-                    menu.SetActive(true);
-                    backUI = true;
-                    easTime = 0;
                 }
+                
             }
             else
             {
@@ -475,12 +479,7 @@ public class Menu : MonoBehaviour
 
         moveUI = true;
 
-        //yield return new WaitForSecondsRealtime(duration[1] - 0.25f);
-
-        //gameStart.onCharaSelect = true;
-
-        //logo.SetActive(false);
-        //menu.SetActive(false);
+       
     }
     private IEnumerator PushCredit()
     {
@@ -521,7 +520,6 @@ public class Menu : MonoBehaviour
     }
     private IEnumerator BackMenu()
     {
-
         yield return new WaitForSecondsRealtime(duration[0]);
         cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.1f, true);                           // カーソルを徐々に戻す
         decision = false;
