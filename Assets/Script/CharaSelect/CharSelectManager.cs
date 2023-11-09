@@ -122,6 +122,7 @@ public class CharSelectManager : MonoBehaviour
 		//現在がキャラクターセレクトできる状態なら
 		if (gameStartSys.isCharSelect == true)
 		{
+			playerNumText.GetComponent<Text>().CrossFadeAlpha(1, 0f, true);
 			if (getCharacter == false)
 			{
 				//characterUIの取得とカーソルの表示
@@ -142,6 +143,10 @@ public class CharSelectManager : MonoBehaviour
 					cursorRT.position = characterUI[i].GetComponent<RectTransform>().position;
 				}
 			}
+		}
+        else
+		{
+			playerNumText.GetComponent<Text>().CrossFadeAlpha(0, 0f, true);
 		}
 	}
 
