@@ -96,8 +96,9 @@ public class MenuTest : MonoBehaviour
         if (Gamepad.all.Count != 0)
         {
             CursorMove();   //メニューカーソル移動処理
+            Decision();     //各メニューボタンが押されたときの処理
         }
-        Decision();     //各メニューボタンが押されたときの処理
+        
     }
 
     //カーソルの移動関連処理
