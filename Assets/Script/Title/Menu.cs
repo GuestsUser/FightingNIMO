@@ -20,85 +20,83 @@ public class Menu : MonoBehaviour
     [Header("【事前に入れるもの】")]
         /*【事前の代入が必須】*/
         [Tooltip("UIという名前のオブジェクトをアタッチしてください")]
-        [SerializeField] private RectTransform ui;
+        [SerializeField] private RectTransform ui; // 
         [Tooltip("GameStartスクリプトをアタッチしてください")]
-        [SerializeField] private GameStartSystem gameStart;
+        [SerializeField] private GameStartSystem gameStart;//
         [Tooltip("メニューグループ(空の親オブジェクト)の子要素のカーソルを入れてください")]
-        [SerializeField] private GameObject cursor;
+        [SerializeField] private GameObject cursor;//
         [Tooltip("メニューの項目の数を指定し、UIオブジェクトを入れてください")]
-        [SerializeField] private GameObject[] menuObj;
+        [SerializeField] private GameObject[] menuObj;//
         [Tooltip("ロゴを入れてください")]
-        [SerializeField] private GameObject logo;
-        [Tooltip("選べるキャラクター")]
-        [SerializeField] private GameObject[] characterUI;
+        [SerializeField] private GameObject logo;//
+   　    [Tooltip("選べるキャラクター")]
+        [SerializeField] private GameObject[] characterUI;//
         [Tooltip("CreditのUIを入れてください")]
-        [SerializeField] private GameObject creditUI;
+        [SerializeField] private GameObject creditUI;//
         [Tooltip("ControlsのUIを入れてください")]
-        [SerializeField] private GameObject controlsUI;
-        [Tooltip("プレイヤーインプットマネージャーを入れてください")]
-        [SerializeField] private PlayerInputManager PIManeger;
+        [SerializeField] private GameObject controlsUI;//
         [Tooltip("カメラオブジェクトを入れてください")]
-        [SerializeField] private Camera cam;
+        [SerializeField] private Camera cam;//
+
         // 音
-        private AudioSource audioSouce;
-        [SerializeField] private AudioClip desisionSE;
-        [SerializeField] private AudioClip cancelSE;
-        [SerializeField] private AudioClip moveSE;
-        [SerializeField] private AudioClip openMenuSE;
-        [SerializeField] private AudioClip closeMenuSE;
+        private AudioSource audioSouce; //
+        [SerializeField] private AudioClip desisionSE;//
+        [SerializeField] private AudioClip cancelSE;//
+        [SerializeField] private AudioClip moveSE;//
+        [SerializeField] private AudioClip openMenuSE;//
+        [SerializeField] private AudioClip closeMenuSE;//
 
         /*--------------------*/
         /*【調整するところ】*/
         [Tooltip("項目同士の縦の間隔(正の値を入力してください)")]
-        [SerializeField] private float itemSpace;
+        [SerializeField] private float itemSpace;//
         [Tooltip("カーソル移動時の時間間隔")]
-        [SerializeField] private float interval;
+        [SerializeField] private float interval;//
         [Tooltip("選択項目のカラー")]
-        [SerializeField] private Color selectionItemColor;
+        [SerializeField] private Color selectionItemColor;//
         [Tooltip("非選択項目のカラー")]
-        [SerializeField] private Color notSelectionItemColor;
+        [SerializeField] private Color notSelectionItemColor;//
         [Tooltip("『GAME』を押した時のカメラのターゲットポジションを入れてください")]
-        [SerializeField] private Vector3 TPos;
+        [SerializeField] private Vector3 TPos;//
         /*------------------*/
     #endregion
 
     #region 動作確認用に表示するもの
     [Header("【動作確認用】")]
         [Tooltip("このスクリプトがアタッチされているオブジェクトが入る")]
-        [SerializeField] private GameObject menu;
+        [SerializeField] private GameObject menu;//
         [Tooltip("カーソルのレンダートランスフォーム情報が入る")]
-        [SerializeField] private RectTransform cursorRT;
+        [SerializeField] private RectTransform cursorRT;//
         [Tooltip("現在選択されているメニュー番号")]
-        [SerializeField] private int menuNum;
+        [SerializeField] private int menuNum;//
         [Tooltip("現在選択されているメニュー名")]
-        [SerializeField] private string menuName;
+        [SerializeField] private string menuName;//
         [Tooltip("上下どちらかの入力がされているか")]
-        [SerializeField] private bool push;
+        [SerializeField] private bool push;//
         [Tooltip("入力継続時間")]
-        [SerializeField] private float count;
+        [SerializeField] private float count;//
+        [Tooltip("menu項目を選択したかどうか")]
+        [SerializeField] private bool decision;//
         [Tooltip("CreditかControlsを押したときの緩急の進み具合(0~1の点P)")]
-        [SerializeField] private bool decision;
-        [Tooltip("CreditかControlsを押したときの緩急の進み具合(0~1の点P)")]
-        [SerializeField] private float easTime;
+        [SerializeField] private float easTime;//
         [Tooltip("GameとGame以外を押したときの切り替わり時間(秒)")]
-        [SerializeField] private float[] duration;
+        [SerializeField] private float[] duration;//
         [Tooltip("UIを戻すかどうか")]
-        [SerializeField] private bool backUI;
+        [SerializeField] private bool backUI;//
         [Tooltip("UIを動かすかどうか")]
-        [SerializeField] private bool moveUI;
+        [SerializeField] private bool moveUI;//
         [Tooltip("『GAMEが押されたかどうか』")]
-        [SerializeField] private bool game;
+        [SerializeField] private bool game;//
     #endregion
 
     private string[] item; // 使用されているメニュー項目名を保存するstring型配列
-    //private Gamepad[] gamePad; // 接続されているゲームパッドを保存するstring型配列
-    private Vector3 cSPos;
     private float TPRate; //進捗率
-    private float add_value;
 
     private float cam_scaleY;
     private float cam_scaleZ;
     private float ui_scale;
+
+    /*目標地点(引き時と寄り時[関数内宣言でもいいかも])*/
     float[] cam_posY = new float[2] {0f, 0f};
     float[] cam_posZ = new float[2] {0f, 0f};
 
@@ -161,13 +159,12 @@ public class Menu : MonoBehaviour
         menuNum = 0;
         push = false;
         count = 0;
+
         decision = false;
         backUI = true;
         moveUI = false;
-        cSPos = cam.transform.position;
         game = false;
         TPRate = 0;
-        add_value = 0;
         easTime = 0f;
 
         cam_scaleY = 0.0f;
@@ -231,8 +228,6 @@ public class Menu : MonoBehaviour
                 {
                     case 1:
                         ui.anchoredPosition = new Vector2(easing(duration[0], easTime, (1.0f / 2.0f)) * 1920.0f, 0);
-                        //Debug.Log($"duration[0]{duration[0]},easTime{easTime}");
-                        //Debug.Log($"easing(duration[0], easTime, (1.0f / 2.0f)){easing(duration[0], easTime, (1.0f / 2.0f))} * 1920 = {easing(duration[0], easTime, (1 / 2)) * 1920}");
                         cam.transform.localRotation = Quaternion.Euler(0.0f, easing(duration[0], easTime, (1.0f / 2.0f)) * -90.0f, 0.0f);
                         break;
                     case 2:
@@ -478,8 +473,6 @@ public class Menu : MonoBehaviour
         game = true;
 
         moveUI = true;
-
-       
     }
     private IEnumerator PushCredit()
     {
@@ -488,16 +481,6 @@ public class Menu : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
 
         moveUI = true;
-
-        //yield return new WaitForSecondsRealtime(duration[0] - 0.25f);                                                     // 処理を待機 UIが移動する演出のため
-
-        /*【CREDITを実装したときの処理】*/
-
-        //ui.anchoredPosition = new Vector2(easing(duration,easTime) * 1920, 0);
-        /*--------------------------*/
-
-        //logo.SetActive(false);
-        //menu.SetActive(false);
     }
 
     private IEnumerator PushControls()
@@ -507,16 +490,6 @@ public class Menu : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
 
         moveUI = true;
-
-        //yield return new WaitForSecondsRealtime(duration[0] - 0.25f);                                                     // 処理を待機 UIが移動する演出のため
-
-        /*【CONTROLSを選択したときの処理】*/
-
-        //ui.anchoredPosition = new Vector2(-1920, 0);
-        /*--------------------------*/
-
-        //logo.SetActive(false);
-        //menu.SetActive(false);
     }
     private IEnumerator BackMenu()
     {

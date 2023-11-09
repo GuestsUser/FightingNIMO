@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerList: []
+  controllerID: 
   characterNum: 
 --- !u!4 &53020831
 Transform:
@@ -920,6 +921,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameStartSys: {fileID: 1703595130}
+  ui: {fileID: 732366458}
+  menu: {fileID: 1641679168}
   cursor: {fileID: 2028621830}
   cursorRT: {fileID: 2028621831}
   menuItems:
@@ -931,6 +934,10 @@ MonoBehaviour:
   characterUI:
   - {fileID: 1689377646}
   - {fileID: 1676138171}
+  creditUI: {fileID: 1696162623}
+  controlsUI: {fileID: 1377510505}
+  cam: {fileID: 2039909886}
+  tPos: {x: 0, y: 0, z: 0}
   audioSource: {fileID: 0}
   desisionSE: {fileID: 0}
   cancelSE: {fileID: 0}
@@ -941,10 +948,18 @@ MonoBehaviour:
   interval: 12
   selectionItemColor: {r: 0, g: 0, b: 0, a: 0}
   notSelectionItemColor: {r: 0, g: 0, b: 0, a: 0}
+  easTime: 0
+  duration:
+  - 0.8
+  - 0.5
   currentMenuNum: 0
   currentMenuName: 
   isPush: 0
   inputCount: 0
+  decision: 0
+  backUI: 0
+  moveUI: 0
+  game: 0
 --- !u!1 &735884861
 GameObject:
   m_ObjectHideFlags: 0
@@ -2041,7 +2056,6 @@ MonoBehaviour:
   - {fileID: 1676138171}
   creditUI: {fileID: 1696162623}
   controlsUI: {fileID: 1377510505}
-  PIManeger: {fileID: 759492722}
   cam: {fileID: 2039909886}
   desisionSE: {fileID: 0}
   cancelSE: {fileID: 0}
