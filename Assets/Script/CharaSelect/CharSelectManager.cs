@@ -50,6 +50,9 @@ public class CharSelectManager : MonoBehaviour
 	[Tooltip("左スティックのX軸を入力しているか")]
 	[SerializeField] private bool push;
 
+	//追加
+	[SerializeField] private SkinnedMeshRenderer[] Smr;	//表示の際に、キャラクターが倒れる現象を直すためにSkinnedMeshRendererのアクティブで調整
+
 	private bool getCharacter;  //1度だけ反応させるためのもの
 
 
@@ -183,25 +186,30 @@ public class CharSelectManager : MonoBehaviour
 		{
 			//クマノミ（現在はベース）
 			case 0:
-				characters[characterNum].SetActive(true);   //クマノミを表示
+				//characters[characterNum].SetActive(true);   //クマノミを表示
+				Smr[characterNum].enabled = true;
 
 				//キャラクターの総数分ループし、現在選択されているキャラクター番号以外のキャラクターを非表示にする
 				for (int i = 0; i < maxCharacter; i++)
 				{
 					if (i != characterNum)
 					{
-						characters[i].SetActive(false);
+						//characters[i].SetActive(false);
+						Smr[i].enabled = false;
 					}
 				}
 				break;
 			//サメ
 			case 1:
-				characters[characterNum].SetActive(true);   //サメを表示
+				//characters[characterNum].SetActive(true);   //サメを表示
+				Smr[characterNum].enabled = true;
 				for (int i = 0; i < maxCharacter; i++)
 				{
 					if (i != characterNum)
 					{
-						characters[i].SetActive(false);
+						//characters[i].SetActive(false);
+						Smr[i].enabled = false;
+
 					}
 				}
 				break;
