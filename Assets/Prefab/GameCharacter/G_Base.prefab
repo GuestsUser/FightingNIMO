@@ -370,7 +370,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2267458194201689204}
   - component: {fileID: 7073170482349213418}
-  - component: {fileID: 7667928165255599855}
   - component: {fileID: 3256175969077874914}
   m_Layer: 7
   m_Name: G_Base
@@ -386,7 +385,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 421828136598702146}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0.22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -396,7 +395,7 @@ Transform:
   - {fileID: 3450857337349162454}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &7073170482349213418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,18 +466,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &7667928165255599855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 421828136598702146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5157fb000e288b4f920d5a2be6e0d96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3256175969077874914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,17 +479,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.5
-  animatorObj: {fileID: 8791980554639194731, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
-  stickJoint: {fileID: 2177274487205925756, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
+  animatorObj: {fileID: 7263956451958978769}
+  stickJoint: {fileID: 1201771021240791118}
   anotherPlayer: 0
   pInput: {fileID: 2804993809482437147, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
-  hipJoint: {fileID: 1913799955612954535, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
+  hipJoint: {fileID: 7885067622764716025}
   downJoint:
-  - {fileID: 3981713834861955845, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
-  - {fileID: 7832396651444823267, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
-  - {fileID: 216878330211960670, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
-  - {fileID: 7952389689874896127, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
-  - {fileID: 4718357582332973102, guid: 89119e48e11799d49898e1994b4aaa51, type: 3}
+  - {fileID: 6980236715093712176}
+  - {fileID: 8671044319435080168}
+  - {fileID: 2446855636846462981}
+  - {fileID: 2209169103387906415}
+  - {fileID: 923145411811790670}
   downPower: 20
   turnTime: 0
 --- !u!1 &804571046691423538

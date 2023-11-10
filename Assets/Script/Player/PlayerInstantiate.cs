@@ -47,12 +47,14 @@ public class PlayerInstantiate : MonoBehaviour
                     //player[i] = Instantiate(characterPrefab[0], playerSpawnPos[i].position, Quaternion.identity);
                     PlayerInput input1 = PlayerInput.Instantiate(characterPrefab[0], -1, null, -1, current);
                     input1.gameObject.transform.position = playerSpawnPos[i].position;
+                    input1.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
                     break;
                 //ÉTÉÅ
                 case 1:
                     //player[i] = Instantiate(characterPrefab[1], playerSpawnPos[i].position, Quaternion.identity);
                     PlayerInput input2 = PlayerInput.Instantiate(characterPrefab[1], -1, null, -1, current);
                     input2.gameObject.transform.position = playerSpawnPos[i].position;
+                    input2.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
                     break;
                 //ÉJÉÅ
                 case 2:
