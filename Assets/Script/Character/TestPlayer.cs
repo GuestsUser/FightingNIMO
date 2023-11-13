@@ -9,6 +9,7 @@ using System;
 [RequireComponent(typeof(PlayerRotation))]
 [RequireComponent(typeof(PlayerMoving))]
 [RequireComponent(typeof(PlayerPunch))]
+[RequireComponent(typeof(PlayerLift))]
 
 public class TestPlayer : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class TestPlayer : MonoBehaviour
     PlayerRotation rotation;
     PlayerMoving moving;
     PlayerPunch rPunch;
+    PlayerLift lift;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +34,7 @@ public class TestPlayer : MonoBehaviour
         rotation = GetComponent<PlayerRotation>();
         moving = GetComponent<PlayerMoving>();
         rPunch = GetComponent<PlayerPunch>();
+        lift = GetComponent<PlayerLift>();
     }
 
     // Update is called once per frame
@@ -43,5 +46,6 @@ public class TestPlayer : MonoBehaviour
         rotation.RunFunction();
         moving.RunFunction();
         rPunch.RunFunction();
+        lift.RunFunction();
     }
 }
