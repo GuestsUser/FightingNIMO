@@ -86,7 +86,7 @@ public class MenuTest : MonoBehaviour
     [Tooltip("『GAMEが押されたかどうか』")]
     [SerializeField] private bool game;
 
-    private void Awake()
+    private void Start()
     {
         //事前の調整が必要な値が未調整だった場合
         if (interval == 0) { interval = 12; }                                                                                           // 長押しでの選択項目を移動する時間間隔の設定
@@ -95,10 +95,7 @@ public class MenuTest : MonoBehaviour
         if (notSelectionItemColor.a == 0) { notSelectionItemColor.a = 1; }                                                              // 透明度をマックスに設定
         if (selectionItemColor == new Color(0, 0, 0, 1)) { ColorUtility.TryParseHtmlString("#008fd9", out selectionItemColor); }        // 水色に設定
         if (notSelectionItemColor == new Color(0, 0, 0, 1)) { ColorUtility.TryParseHtmlString("#ffffff", out notSelectionItemColor); }  // 白色に設定
-    }
 
-    private void Start()
-    {
         this.gameObject.SetActive(true);    //タイトルメニュー一覧を表示する
         logo.SetActive(true);               //ロゴを表示する
 
@@ -218,7 +215,7 @@ public class MenuTest : MonoBehaviour
                 if (moveUI == false)
                 {
                     // Bボタンを押したら
-                    if (Gamepad.current.bButton.wasReleasedThisFrame)
+                    if (Gamepad.current.bButton.wasPressedThisFrame)
                     {
                         // キャラクターUIを非表示にする
                         for (int i = 0; i < characterUI.Length; i++)
@@ -426,6 +423,8 @@ public class MenuTest : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(duration[0]);
         cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.1f, true);                           // カーソルを徐々に戻す
+        creditUI.GetComponentInChildren<Text>().CrossFadeAlpha(1.0f, 0.0f, true);
+        controlsUI.GetComponentInChildren<RawImage>().CrossFadeAlpha(1.0f, 0.0f, true);
         decision = false;
         backUI = false;
         moveUI = false;

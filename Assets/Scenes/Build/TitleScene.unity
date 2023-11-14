@@ -1996,7 +1996,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1641679169}
-  - component: {fileID: 1641679170}
   - component: {fileID: 1641679171}
   m_Layer: 5
   m_Name: Menu
@@ -2030,57 +2029,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -150}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1641679170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1641679168}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec4289ab72580924cbfaadd8bf3b77b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ui: {fileID: 732366458}
-  gameStart: {fileID: 0}
-  cursor: {fileID: 2028621830}
-  menuObj:
-  - {fileID: 262113052}
-  - {fileID: 1119548308}
-  - {fileID: 525389620}
-  - {fileID: 1784917037}
-  logo: {fileID: 121486938}
-  characterUI:
-  - {fileID: 1689377646}
-  - {fileID: 1676138171}
-  creditUI: {fileID: 1696162623}
-  controlsUI: {fileID: 1377510505}
-  cam: {fileID: 2039909886}
-  desisionSE: {fileID: 0}
-  cancelSE: {fileID: 0}
-  moveSE: {fileID: 0}
-  openMenuSE: {fileID: 0}
-  closeMenuSE: {fileID: 0}
-  itemSpace: 120
-  interval: 0
-  selectionItemColor: {r: 0, g: 0.56078434, b: 0.8509804, a: 1}
-  notSelectionItemColor: {r: 1, g: 1, b: 1, a: 1}
-  TPos: {x: 0, y: 0, z: 0}
-  menu: {fileID: 0}
-  cursorRT: {fileID: 0}
-  menuNum: 0
-  menuName: 
-  push: 0
-  count: 0
-  decision: 0
-  easTime: 0
-  duration:
-  - 0.5
-  - 0.8
-  backUI: 0
-  moveUI: 0
-  game: 0
 --- !u!82 &1641679171
 AudioSource:
   m_ObjectHideFlags: 0
