@@ -158,7 +158,7 @@ public class GameStartSystem : MonoBehaviour
     [Tooltip("ゲームシーン移動フラグ")]
     [SerializeField] private bool isNextScene;
     [Tooltip("準備OKかどうか")]
-    [SerializeField] private bool isReady;
+    [SerializeField] public bool isReady;
     [Tooltip("キャラクターが選択されているかどうか")]
     [SerializeField] private bool[] isSelected;
 

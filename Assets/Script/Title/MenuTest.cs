@@ -24,6 +24,8 @@ public class MenuTest : MonoBehaviour
     [SerializeField] private GameObject menu;
     [Tooltip("メニュー専用のカーソルを入れてください")]
     [SerializeField] private GameObject cursor;
+    [Tooltip("カーソルの子要素を入れてください")]
+    [SerializeField] private GameObject inner; //カーソルの内側の色
     [Tooltip("メニューカーソルのRectTransform取得用")]
     [SerializeField] private RectTransform cursorRT;
     [Tooltip("タイトルで表示する項目UI(4つ)を入れてください")]
@@ -65,14 +67,19 @@ public class MenuTest : MonoBehaviour
     // Easing系
     [Tooltip("CreditかControlsを押したときの緩急の進み具合(0~1の点P)")]
     [SerializeField] private float easTime;
+    [SerializeField] private float[] itemTime;
     [Tooltip("GameとGame以外を押したときの切り替わり時間(秒)")]
     [SerializeField] private float[] duration;
 
     [Header("動作確認用")]
     [Tooltip("現在選択されているメニュー番号")]
     [SerializeField] private int currentMenuNum;
+    [Tooltip("ひとつ前に選択されていたメニュー番号")]
+    [SerializeField] private int oldMenuNum;
     [Tooltip("現在選択されているメニュー名")]
     [SerializeField] private string currentMenuName;
+    [Tooltip("ひとつ前に選択されていたメニュー名")]
+    [SerializeField] private string oldMenuName;
     [Tooltip("上下どちらかの入力がされているか")]
     [SerializeField] private bool isPush;
     [Tooltip("入力継続時間")]
@@ -99,12 +106,14 @@ public class MenuTest : MonoBehaviour
         this.gameObject.SetActive(true);    //タイトルメニュー一覧を表示する
         logo.SetActive(true);               //ロゴを表示する
 
-        Array.Resize(ref items, menuItems.Length);  //menuItemsの数によってitemsの大きさを変更する
+        Array.Resize(ref items, menuItems.Length);     //menuItemsの数によってitemsの大きさを変更する
+        Array.Resize(ref itemTime, menuItems.Length);  //menuItemsの数によってitemTimeの大きさを変更する
 
-        for(int i = 0; i < menuItems.Length; i++)
+        for (int i = 0; i < menuItems.Length; i++)
         {
             menuItems[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, i * -itemSpace);    //メニュー項目同士のY座標間隔を指定した間隔に設定
             items[i] = menuItems[i].name;   //配列の中にメニュー項目の名前を代入する
+            itemTime[i] = 0;
         }
 
         for(int i = 0; i < characterUI.Length; i++)
@@ -113,6 +122,7 @@ public class MenuTest : MonoBehaviour
         }
 
         currentMenuName = items[0];  //選択されているメニュ名を1番上に初期化
+        oldMenuName = currentMenuName;
         currentMenuNum = 0;          //選択されているメニュー番号を1番上に初期化
         isPush = false;              //上下どちらか押されているかの確認用フラグの初期化
         inputCount = 0;              //ボタン入力継続時間の初期化
@@ -212,7 +222,7 @@ public class MenuTest : MonoBehaviour
                 Zoom(duration[0], easTime);
 
                 // UIが動いてはいけないフラグが立っている時
-                if (moveUI == false)
+                if (moveUI == false && !gameStartSys.isReady)
                 {
                     // Bボタンを押したら
                     if (Gamepad.current.bButton.wasPressedThisFrame)
@@ -238,11 +248,20 @@ public class MenuTest : MonoBehaviour
                 ZoomOut(duration[0], easTime); // メニューの状態に戻る
             }
         }
+
+        //if (backUI == true && ui.anchoredPosition.x == 0.0f)
+        //{
+        //    decision = false;
+        //    backUI = false;
+        //    Debug.Log("a");
+        //}
+
     }
 
     //カーソルの移動関連処理
     private void CursorMove()
     {
+        
         //GamePad（左スティック上入力時 or 十字キー上入力時）
         if (Gamepad.current.leftStick.y.ReadValue() > 0 || Gamepad.current.dpad.up.isPressed)
         {
@@ -251,8 +270,9 @@ public class MenuTest : MonoBehaviour
                 isPush = true;
                 //currentMenuNumが上を押されることで減らされ、0より小さい値になったら
                 if (--currentMenuNum < 0) currentMenuNum = menuItems.Length - 1;   //カーソルを一番下に移動させる
-                //audioSource.clip = moveSE;
-                //audioSource.PlayOneShot(moveSE);
+                audioSource.clip = moveSE;
+                audioSource.PlayOneShot(moveSE);
+                if (itemTime[currentMenuNum] > 0.05f * 60.0f) itemTime[currentMenuNum] = 0;
             }
             else    //長押し時の処理
             {
@@ -261,10 +281,25 @@ public class MenuTest : MonoBehaviour
                 if (inputCount % interval == 0)
                 {
                     if (--currentMenuNum < 0) currentMenuNum = menuItems.Length - 1;   //カーソルを一番下に移動させる
-                    //audioSource.clip = moveSE;
-                    //audioSource.PlayOneShot(moveSE);
+                    audioSource.clip = moveSE;
+                    audioSource.PlayOneShot(moveSE);
+                    if (itemTime[currentMenuNum] > 0.05f * 60.0f) itemTime[currentMenuNum] = 0;
                 }
             }
+
+            if(currentMenuNum + 1 > 3)
+            {
+                oldMenuNum = 0;
+            }
+            else
+            {
+                oldMenuNum = currentMenuNum + 1;
+            }
+
+            if (itemTime[oldMenuNum] > 0.05f * 60.0f) itemTime[oldMenuNum] = 0;
+            oldMenuName = items[oldMenuNum];
+            currentMenuName = items[currentMenuNum];  //選択されているメニュー名をmenuNameに代入する（随時更新）
+            
         }
         //GamePad（左スティック下入力時 or 十字キー下入力時）
         else if (Gamepad.current.leftStick.y.ReadValue() < 0 || Gamepad.current.dpad.down.isPressed)
@@ -274,8 +309,9 @@ public class MenuTest : MonoBehaviour
                 isPush = true;
                 //currentMenuNumが下を押されることで増え、項目数より大きい値になったら
                 if (++currentMenuNum > menuItems.Length - 1) currentMenuNum = 0;    //カーソルを一番上に移動させる
-                //audioSource.clip = moveSE;
-                //audioSource.PlayOneShot(moveSE);
+                audioSource.clip = moveSE;
+                audioSource.PlayOneShot(moveSE);
+                if (itemTime[currentMenuNum] > 0.05f * 60.0f) itemTime[currentMenuNum] = 0;
             }
             else    //長押し時の処理
             {
@@ -284,10 +320,26 @@ public class MenuTest : MonoBehaviour
                 if (inputCount % interval == 0)
                 {
                     if (++currentMenuNum > menuItems.Length - 1) currentMenuNum = 0;    //カーソルを一番上に移動させる
-                    //audioSource.clip = moveSE;
-                    //audioSource.PlayOneShot(moveSE);
+                    audioSource.clip = moveSE;
+                    audioSource.PlayOneShot(moveSE);
+                    //if (itemTime[oldMenuNum] > 0.05f * 60.0f) itemTime[oldMenuNum] = 0;
+                    if (itemTime[currentMenuNum] > 0.05f * 60.0f) itemTime[currentMenuNum] = 0;
                 }
             }
+            if (currentMenuNum - 1 < 0)
+            {
+                oldMenuNum = 3;
+            }
+            else
+            {
+                oldMenuNum = currentMenuNum - 1;
+            }
+            //if (itemTime[oldMenuNum] > 0.05f * 60.0f) itemTime[oldMenuNum] = 0;
+            //if (itemTime[currentMenuNum] > 0.05f * 60.0f) itemTime[currentMenuNum] = 0;
+
+            if (itemTime[oldMenuNum] > 0.05f * 60.0f) itemTime[oldMenuNum] = 0;
+            oldMenuName = items[oldMenuNum];
+            currentMenuName = items[currentMenuNum];  //選択されているメニュー名をmenuNameに代入する（随時更新）
         }
         else      //何もしてない時
         {
@@ -295,7 +347,8 @@ public class MenuTest : MonoBehaviour
             inputCount = 0;
         }
 
-        currentMenuName = items[currentMenuNum];  //選択されているメニュー名をmenuNameに代入する（随時更新）
+
+        float scale = 0;
 
         //色変更
         for (int i = 0; i < menuItems.Length; i++)
@@ -304,12 +357,19 @@ public class MenuTest : MonoBehaviour
             if (currentMenuName == items[i])
             {
                 cursorRT.position = menuItems[i].GetComponent<RectTransform>().position;    //メニューカーソルの位置を選択されているメニューの位置に変更する
-                menuItems[i].GetComponent<Text>().color = selectionItemColor;               //メニュー名の色を選択されているときの色に変更する
+                menuItems[i].GetComponent<Text>().CrossFadeColor(selectionItemColor, 0.05f, true, true); // 文字を徐々に白色に戻す
+
+                // 文字をだんだん大きくする
+                scale = easing3(0.05f, itemTime[i], 0.5f, true, 1.0f, 1.25f, false);
+                menuItems[i].GetComponent<RectTransform>().localScale = new Vector3(scale, scale, scale);
+                itemTime[i]++;
             }
-            //現在選択されているメニュー名とメニュー項目内にある名前が一致しなかった場合
-            else if (currentMenuName != items[i])
+            else
             {
-                menuItems[i].GetComponent<Text>().color = notSelectionItemColor;    //メニュー名の色を選択されていない時の色に変更する
+                menuItems[i].GetComponent<Text>().CrossFadeColor(notSelectionItemColor, 0.05f, true, true); // 文字を徐々に白色に戻す
+                scale = easing3(0.05f, itemTime[i], 0.5f, false, menuItems[i].GetComponent<RectTransform>().localScale.x, 1.0f, false);
+                menuItems[i].GetComponent<RectTransform>().localScale = new Vector3(scale, scale, scale);
+                itemTime[i]++;
             }
         }
     }
@@ -323,6 +383,10 @@ public class MenuTest : MonoBehaviour
             easTime = 0;
             decision = true; // 決定フラグON
             backUI = false;
+
+            audioSource.clip = desisionSE;
+            audioSource.PlayOneShot(desisionSE);
+
             switch (currentMenuNum)
             {
                 case 0:
@@ -349,46 +413,12 @@ public class MenuTest : MonoBehaviour
                     break;
             }
         }
-        //[GAME]項目が選択されている状態かつプレイヤーが決定を押した時
-        //if (currentMenuName == items[0] && Gamepad.current.buttonSouth.wasPressedThisFrame)
-        //{
-        //    gameStartSys.isCharSelect = true; //trueにすることでキャラクターセレクトになる
-        //    for (int i = 0; i < characterUI.Length; i++)
-        //    {
-        //        gameStartSys.isCharSelect = true;   //現在がキャラクターセレクト画面であることを示す
-        //        characterUI[i].SetActive(true);     //各キャラクターUI(ボタン)を表示する
-        //        logo.SetActive(false);              //タイトルロゴを非表示にする
-        //        this.gameObject.SetActive(false);   //タイトルメニューを非表示にする
-        //    }
-        //}
-
-        ////[CREDIT]項目が選択されている状態かつプレイヤーが決定を押した時
-        //if (menuName == items[1] && gamePad.buttonSouth.wasPressedThisFrame)
-        //{
-
-        //}
-
-        ////[CONTROLS]項目が選択されている状態かつプレイヤーが決定を押した時
-        //if (menuName == items[2] && gamePad.buttonSouth.wasPressedThisFrame)
-        //{
-
-        //}
-
-        //[EXIT]が選択されている状態かつプレイヤーが決定を押した時
-        //if (currentMenuName == items[3] && Gamepad.current.buttonSouth.wasPressedThisFrame)
-        //{
-        //    //ゲームを終了させる
-        //    #if UNITY_EDITOR
-        //        UnityEditor.EditorApplication.isPlaying = false;
-        //    #else
-        //        Application.Quit();
-        //    #endif
-        //}
     }
 
     void CursorFade()
     {
         cursor.GetComponent<RawImage>().CrossFadeAlpha(0, 0.25f, true);                           // カーソルを徐々に消す
+        inner.GetComponent<RawImage>().CrossFadeAlpha(0, 0.25f, true);                           // カーソルを徐々に消す
         menuItems[currentMenuNum].GetComponent<Text>().CrossFadeColor(notSelectionItemColor, 0.25f, true, true); // 文字を徐々に白色に戻す
     }
 
@@ -421,13 +451,19 @@ public class MenuTest : MonoBehaviour
     }
     private IEnumerator BackMenu()
     {
-        yield return new WaitForSecondsRealtime(duration[0]);
+        yield return new WaitForSecondsRealtime(duration[1]);
         cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.1f, true);                           // カーソルを徐々に戻す
+        inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.1f, true);                           // カーソルを徐々に消す
         creditUI.GetComponentInChildren<Text>().CrossFadeAlpha(1.0f, 0.0f, true);
         controlsUI.GetComponentInChildren<RawImage>().CrossFadeAlpha(1.0f, 0.0f, true);
-        decision = false;
-        backUI = false;
-        moveUI = false;
+        //decision = false;
+        if(ui.anchoredPosition.x == 0.0f)
+        {
+            moveUI = false;
+            decision = false;
+            backUI = false;
+        }
+        
     }
 
     /// <summary>
