@@ -48,7 +48,7 @@ public class MenuTest : MonoBehaviour
 
     // 音系
     [SerializeField] private AudioSource audioSource;   //自身のAudioSourceを入れる
-    [SerializeField] private AudioClip desisionSE;      //決定音
+    [SerializeField] private AudioClip decisionSE;      //決定音 decision
     [SerializeField] private AudioClip cancelSE;        //キャンセル音
     [SerializeField] private AudioClip moveSE;          //移動音
     [SerializeField] private AudioClip openMenuSE;      //
@@ -142,16 +142,22 @@ public class MenuTest : MonoBehaviour
     private void Update()
     {
         // まだ項目選択中の時
-        if (decision == false)
+        if (decision == false && ui.anchoredPosition.x == 0.0f)
         {
             CursorMove();   //メニューカーソル移動処理
+
             Decision();     //各メニューボタンが押されたときの処理
+
+            
 
             moveUI = false;
         }
         // 『CREDIT』と『CONTROLS』を選択した時
         else if (decision == true && (currentMenuNum > 0 && currentMenuNum < menuItems.Length - 1) && moveUI)
         {
+
+            Debug.Log(" 決定された ");
+
             easTime++;
 
             // (easTime / 60.0f)が指定した演出にかかる所要時間を超えた時
@@ -199,7 +205,19 @@ public class MenuTest : MonoBehaviour
                         break;
                 }
 
+                if (Mathf.Abs(ui.anchoredPosition.x) < 1.0f)
+                {
+                    moveUI = false;
+                    decision = false;
+                    backUI = false;
+
+                    cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
+                    inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
+                }
+
                 StartCoroutine("BackMenu");
+
+                
             }
         }
 
@@ -377,15 +395,17 @@ public class MenuTest : MonoBehaviour
     //各メニューボタンが押されたときの処理
     private void Decision()
     {
+        
         // 決定ボタン(aボタン)を押したとき
-        if (Gamepad.current.aButton.wasPressedThisFrame)
+        if (Gamepad.current.aButton.wasPressedThisFrame/* && inner.GetComponent<RawImage>().canvasRenderer.GetAlpha() == 1*/)
         {
+            CursorFade();
             easTime = 0;
             decision = true; // 決定フラグON
             backUI = false;
 
-            audioSource.clip = desisionSE;
-            audioSource.PlayOneShot(desisionSE);
+            audioSource.clip = decisionSE;
+            audioSource.PlayOneShot(decisionSE);
 
             switch (currentMenuNum)
             {
@@ -403,9 +423,13 @@ public class MenuTest : MonoBehaviour
 
                 case 3:
                     #if UNITY_EDITOR
+
                         UnityEditor.EditorApplication.isPlaying = false;
+
                     #else
+
                         Application.Quit();
+
                     #endif
                     break;
 
@@ -417,14 +441,14 @@ public class MenuTest : MonoBehaviour
 
     void CursorFade()
     {
-        cursor.GetComponent<RawImage>().CrossFadeAlpha(0, 0.25f, true);                           // カーソルを徐々に消す
-        inner.GetComponent<RawImage>().CrossFadeAlpha(0, 0.25f, true);                           // カーソルを徐々に消す
-        menuItems[currentMenuNum].GetComponent<Text>().CrossFadeColor(notSelectionItemColor, 0.25f, true, true); // 文字を徐々に白色に戻す
+        inner.GetComponent<RawImage>().CrossFadeAlpha(0, 0.2f, true);                                           // カーソルを徐々に消す
+        cursor.GetComponent<RawImage>().CrossFadeAlpha(0, 0.2f, true);                                          // カーソルを徐々に消す
+        menuItems[currentMenuNum].GetComponent<Text>().CrossFadeColor(notSelectionItemColor, 0.2f, true, true); // 文字を徐々に白色に戻す
     }
 
     private IEnumerator PushGame()
     {
-        CursorFade();
+        //CursorFade();
 
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
 
@@ -434,16 +458,15 @@ public class MenuTest : MonoBehaviour
     }
     private IEnumerator PushCredit()
     {
-        CursorFade();
+        //CursorFade();
 
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
 
         moveUI = true;
     }
-
     private IEnumerator PushControls()
     {
-        CursorFade();
+        //CursorFade();
 
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
 
@@ -452,18 +475,9 @@ public class MenuTest : MonoBehaviour
     private IEnumerator BackMenu()
     {
         yield return new WaitForSecondsRealtime(duration[1]);
-        cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.1f, true);                           // カーソルを徐々に戻す
-        inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.1f, true);                           // カーソルを徐々に消す
         creditUI.GetComponentInChildren<Text>().CrossFadeAlpha(1.0f, 0.0f, true);
         controlsUI.GetComponentInChildren<RawImage>().CrossFadeAlpha(1.0f, 0.0f, true);
         //decision = false;
-        if(ui.anchoredPosition.x == 0.0f)
-        {
-            moveUI = false;
-            decision = false;
-            backUI = false;
-        }
-        
     }
 
     /// <summary>
@@ -513,7 +527,6 @@ public class MenuTest : MonoBehaviour
             return source - ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * (symbol_num * -1)) * Mathf.Abs(max - source);
         }
     }
-
 
     void Zoom(float duration, float time)
     {
@@ -621,11 +634,13 @@ public class MenuTest : MonoBehaviour
         {
             game = false;
             backUI = false;
+            decision = false;
+            cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
+            inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
             StartCoroutine("BackMenu");
         }
         /*-----------------------------------------*/
     }
-
 
     /// <summary>
     /// Sin波のEasing関数の特定のタイミングの時間を取得する関数 引数(所要時間,Sinカーブの長さ,取得したい所(Sinカーブ上の地点))

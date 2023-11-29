@@ -940,7 +940,7 @@ MonoBehaviour:
   cam: {fileID: 2039909886}
   tPos: {x: 0, y: 0, z: 0}
   audioSource: {fileID: 732366460}
-  desisionSE: {fileID: 8300000, guid: 6de3007a375b80a498571ddcdfd8c866, type: 3}
+  decisionSE: {fileID: 8300000, guid: 6de3007a375b80a498571ddcdfd8c866, type: 3}
   cancelSE: {fileID: 0}
   moveSE: {fileID: 8300000, guid: b7605feb036e76f4db71c89fd48a271c, type: 3}
   openMenuSE: {fileID: 0}
