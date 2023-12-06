@@ -187,7 +187,7 @@ public class CharSelectManager : MonoBehaviour
 			//クマノミ（現在はベース）
 			case 0:
 				//characters[characterNum].SetActive(true);   //クマノミを表示
-				Smr[characterNum].enabled = true;
+				Smr[characterNum].enabled = true;	//クマノミを表示
 
 				//キャラクターの総数分ループし、現在選択されているキャラクター番号以外のキャラクターを非表示にする
 				for (int i = 0; i < maxCharacter; i++)
@@ -273,8 +273,9 @@ public class CharSelectManager : MonoBehaviour
         {
             if (dataRetation.characterNum[i] != -1 && dataRetation.playerList[i] == this.gameObject)
             {
-				dataRetation.controllerID[i] = -1;
-				dataRetation.characterNum[i] = -1;
+				dataRetation.controllerID[i] = -1;			//コントローラーIDをを削除する
+				dataRetation.characterNum[i] = -1;			//選択されていたキャラクター番号を削除する
+				gameStartSys.selectCharacterNumber[i] = -1;	//決定されていたキャラクター番号を削除する
 				break;
             }
         }
@@ -295,7 +296,31 @@ public class CharSelectManager : MonoBehaviour
 				{
 					push = true;
 					//キャラクター番号が0より小さい値になったら、一番最後のキャラクター番号に変更する（クマノミ->マンタ）
-					if (--characterNum < 0) characterNum = maxCharacter - 1;
+					//if (--characterNum < 0) characterNum = maxCharacter - 1;
+
+					//0の時または、下回った時
+					if (characterNum <= 0)
+					{
+						//一番右にする
+						characterNum = maxCharacter - 1;
+					}
+                    //現在選択しているキャラクター番号配列添え字とキャラクター番号がおなじなら
+                    else if (gameStartSys.selectCharacterNumber[characterNum] == characterNum)
+                    {
+                        for (int i = 0; i < gameStartSys.selectCharacterNumber.Length; i++)
+                        {
+                            if (gameStartSys.selectCharacterNumber[i] == -1)
+                            {
+                                characterNum = gameStartSys.selectCharacterNumber[i];
+                            }
+                        }
+                    }
+                    else
+					{
+						//1回ずつ減らす
+						characterNum = characterNum - 1;
+					}
+
 					//audioSouce.clip = moveSE;
 					//audioSouce.PlayOneShot(moveSE);
 				}
@@ -347,22 +372,40 @@ public class CharSelectManager : MonoBehaviour
 	//UI用の決定処理（ゲームパッド：Bボタン）
 	public void OnSubmit(InputValue value)
 	{
-		//キャラクターが選択されていない場合
+		//キャラクターが選択されていないかつ、現在がキャラクターセレクトである
 		if (!isCharSelected && gameStartSys.isCharSelect)
 		{
 			//キャラクターを選択（決定）する
 			isCharSelected = true;
+			for (int i = 0; i < gameStartSys.selectCharacterNumber.Length; i++)
+			{
+				//キャラクターを決定していないかつ、格納する場所がキャラクター番号と同じ場所なら
+				if (gameStartSys.selectCharacterNumber[i] == -1 && characterNum == i)
+				{
+					gameStartSys.selectCharacterNumber[i] = characterNum;   //選択されたキャラクター番号を格納する（同じキャラクター番号のものを選択できないようにするため）
+					break;
+				}
+			}
 		}
 	}
 
 	//UI用のキャンセル処理（ゲームパッド：Aボタン）
 	public void OnCancel(InputValue value)
 	{
-		//キャラクターが選択されている場合
+		//現在がキャラクターセレクト画面かつ、キャラクターが選択されている場合
 		if (isCharSelected && gameStartSys.isCharSelect)
 		{
 			//キャラクター選択を解除する
 			isCharSelected = false;
+			for (int i = 0; i < gameStartSys.selectCharacterNumber.Length; i++)
+			{
+				//キャラクターが決定されているかつ、同じ添え字の場所に入っているのがこのオブジェクトなら
+				if (gameStartSys.selectCharacterNumber[i] != -1 && dataRetation.playerList[i] == this.gameObject)
+				{
+					gameStartSys.selectCharacterNumber[i] = -1;   //決定されたキャラクター番号を削除する（-1を入れる）
+					break;
+				}
+			}
 		}
 	}
 
