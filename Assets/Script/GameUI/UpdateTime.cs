@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class UpdateTime : MonoBehaviour
 {
-    
-
     [Tooltip("分のテキスト")]
     [SerializeField] private Text[] minutesText;
     [Tooltip("秒のテキスト")]
