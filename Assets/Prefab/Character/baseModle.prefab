@@ -274,13 +274,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 700
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 700
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -352,6 +352,7 @@ GameObject:
   - component: {fileID: 5856354260276287969}
   - component: {fileID: 8801452034421193611}
   - component: {fileID: 5196838087559461891}
+  - component: {fileID: 7377406551062526637}
   m_Layer: 7
   m_Name: baseModle
   m_TagString: Untagged
@@ -451,6 +452,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 30dd9f4c-4275-43f2-90e2-3798f799c197
     m_ActionName: Player/DebugDown[/XInputControllerWindows/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 311d3635-2870-4f3c-b42a-cb00d98aad75
+    m_ActionName: Player/Lift[/XInputControllerWindows/buttonWest]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
@@ -510,6 +515,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stickJoint: {fileID: 0}
+--- !u!114 &7377406551062526637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830106439567414674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfe6e40fac554ca45879f1abe58b07f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1301552326341642963
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,13 +665,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -879,13 +896,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 1800
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 1800
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -1078,13 +1095,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -1376,13 +1393,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -2268,13 +2285,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 1800
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 1800
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -2467,13 +2484,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 50
+    positionSpring: 300
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 50
+    positionSpring: 700
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -2897,13 +2914,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 1600
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 1600
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -3164,13 +3181,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -3721,13 +3738,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -4441,13 +4458,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 1800
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 1800
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -4640,13 +4657,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 1600
+    positionSpring: 160
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
@@ -5157,13 +5174,13 @@ ConfigurableJoint:
   m_RotationDriveMode: 0
   m_AngularXDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 700
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
   m_AngularYZDrive:
     serializedVersion: 4
-    positionSpring: 3600
+    positionSpring: 700
     positionDamper: 0
     maximumForce: 3.4028233e+38
     useAcceleration: 0
