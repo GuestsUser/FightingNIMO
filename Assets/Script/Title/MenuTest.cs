@@ -8,7 +8,7 @@ using System;
 
 public class MenuTest : MonoBehaviour
 {
-    private string[] items; //タイトル画面をメニュー項目名を保持する配列
+    private string[] items; //タイトル画面のメニュー項目名を保持する配列
 
     // CS系
     [Tooltip("GameStartSystem.csを持っているオブジェクトを入れてください")]
