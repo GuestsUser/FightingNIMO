@@ -21,8 +21,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject[] menuItems;
 
     // 音
-    private AudioSource audioSouce;
-    [SerializeField] private AudioClip desisionSE;      // 決定音
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip decisionSE;      // 決定音
     [SerializeField] private AudioClip cancelSE;        // キャンセル音
     [SerializeField] private AudioClip moveSE;          // カーソル移動音
     [SerializeField] private AudioClip openMenuSE;      // メニュー表示オン
@@ -54,8 +54,10 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private RectTransform cursorRT;
     [Tooltip("現在選択されているメニュー番号")]
     [SerializeField] private int currentMenuNum;
+    [SerializeField] private int oldMenuNum;
     [Tooltip("現在選択されているメニュー名")]
-    [SerializeField] private string menuName;
+    [SerializeField] private string currentMenuName;
+    [SerializeField] private string oldMenuName;
     [Tooltip("上下どちらかの入力がされているか")]
     [SerializeField] private bool ispush;
     [Tooltip("QUITボタンが押されたか")]
@@ -66,7 +68,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private int controlNum;    // 操作番号
     #endregion
 
-    private string[] item;     // 使用されているメニュー項目名を保存するstring型配列
+    private string[] items;     // 使用されているメニュー項目名を保存するstring型配列
     private Gamepad[] gamePad; // 接続されているゲームパッドを保存するstring型配列
 
     [SerializeField] private bool show;      // true:表示 false:非表示
@@ -82,7 +84,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(false); // 最初は非表示に
         if (cursor == null) { Debug.LogError("カーソルオブジェクトがアタッチされていません"); }
         cursorRT = cursor.GetComponent<RectTransform>();
-        audioSouce = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
         /*-------------------*/
 
 
@@ -101,7 +103,7 @@ public class PauseMenu : MonoBehaviour
         /*------------------------------------------*/
 
         /*【自動調節系】*/
-        Array.Resize(ref item, menuItems.Length);                                                          // 配列のサイズをメニュー項目と同じ数に設定
+        Array.Resize(ref items, menuItems.Length);                                                          // 配列のサイズをメニュー項目と同じ数に設定
         Array.Resize(ref gamePad, Gamepad.all.Count);                                                    // 配列のサイズをゲームパッドの接続数と同じ数に設定
         Array.Resize(ref itemTime, menuItems.Length);  //menuItemsの数によってitemTimeの大きさを変更する
 
@@ -109,7 +111,7 @@ public class PauseMenu : MonoBehaviour
         for (int i = 0; i < menuItems.Length; i++)
         {
             menuItems[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, i * -itemSpace);  // メニュー項目同士のY座標間隔を指定した間隔に設定
-            item[i] = menuItems[i].name;                                                             // 配列の中にメニュー項目の名前を代入
+            items[i] = menuItems[i].name;                                                             // 配列の中にメニュー項目の名前を代入
             itemTime[i] = 0;
         }
         for (int i = 0; i < Gamepad.all.Count; i++)
@@ -119,8 +121,9 @@ public class PauseMenu : MonoBehaviour
         /*--------------*/
 
         /*【その他変数の初期化】*/
-        menuName = item[0];
+        currentMenuName = items[0];
         currentMenuNum = 0;
+        oldMenuNum = 0;
         ispush = false;
         pushQuit = false; // Quitとボタンが押されたか
         count = 0;
@@ -192,8 +195,9 @@ public class PauseMenu : MonoBehaviour
             {
                 ispush = true;
                 if (--currentMenuNum < 0) currentMenuNum = menuItems.Length - 1;
-                audioSouce.clip = moveSE;
-                audioSouce.PlayOneShot(moveSE);
+                audioSource.clip = moveSE;
+                audioSource.PlayOneShot(moveSE);
+                if (itemTime[currentMenuNum] > 0.05f * 60.0f) itemTime[currentMenuNum] = 0;
             }
             else               // 長押し時の処理
             {
@@ -201,10 +205,24 @@ public class PauseMenu : MonoBehaviour
                 if (count % interval == 0)
                 {
                     if (--currentMenuNum < 0) currentMenuNum = menuItems.Length - 1;
-                    audioSouce.clip = moveSE;
-                    audioSouce.PlayOneShot(moveSE);
+                    audioSource.clip = moveSE;
+                    audioSource.PlayOneShot(moveSE);
+                    if (itemTime[currentMenuNum] > 0.05f * 60.0f) itemTime[currentMenuNum] = 0;
                 }
             }
+
+            if (currentMenuNum + 1 > (menuItems.Length - 1))
+            {
+                oldMenuNum = 0;
+            }
+            else
+            {
+                oldMenuNum = currentMenuNum + 1;
+            }
+
+            if (itemTime[oldMenuNum] > 0.05f * 60.0f) itemTime[oldMenuNum] = 0;
+            oldMenuName = items[oldMenuNum];
+            currentMenuName = items[currentMenuNum];  //選択されているメニュー名をmenuNameに代入する（随時更新）
 
         }
         // 左スティック下入力時 or 十字キー下入力時
@@ -214,8 +232,9 @@ public class PauseMenu : MonoBehaviour
             {
                 ispush = true;
                 if (++currentMenuNum > menuItems.Length - 1) currentMenuNum = 0;
-                audioSouce.clip = moveSE;
-                audioSouce.PlayOneShot(moveSE);
+                audioSource.clip = moveSE;
+                audioSource.PlayOneShot(moveSE);
+                if (itemTime[currentMenuNum] > 0.05f * 60.0f) itemTime[currentMenuNum] = 0;
             }
             else               // 長押し時の処理
             {
@@ -223,17 +242,32 @@ public class PauseMenu : MonoBehaviour
                 if (count % interval == 0)
                 {
                     if (++currentMenuNum > menuItems.Length - 1) currentMenuNum = 0;
-                    audioSouce.clip = moveSE;
-                    audioSouce.PlayOneShot(moveSE);
+                    audioSource.clip = moveSE;
+                    audioSource.PlayOneShot(moveSE);
+                    if (itemTime[currentMenuNum] > 0.05f * 60.0f) itemTime[currentMenuNum] = 0;
                 }
             }
+
+            if (currentMenuNum - 1 < 0)
+            {
+                oldMenuNum = menuItems.Length - 1;
+            }
+            else
+            {
+                oldMenuNum = currentMenuNum - 1;
+            }
+
+            if (itemTime[oldMenuNum] > 0.05f * 60.0f) itemTime[oldMenuNum] = 0;
+            oldMenuName = items[oldMenuNum];
+            currentMenuName = items[currentMenuNum];  //選択されているメニュー名をmenuNameに代入する（随時更新）
+
         }
         else
         {
             ispush = false;
             count = 0;
         }
-        menuName = item[currentMenuNum]; // 現在選択しているメニュー名を代入
+        currentMenuName = items[currentMenuNum]; // 現在選択しているメニュー名を代入
         #endregion
 
         float scale = 0;
@@ -241,10 +275,10 @@ public class PauseMenu : MonoBehaviour
         #region カーソルの移動処理(項目の数によって自動でループ数が変更され、移動できるポジションも増減する)
         for (int i = 0; i < menuItems.Length; i++)
         {
-            if (menuName == item[i])
+            if (currentMenuName == items[i])
             {
                 cursorRT.position = menuItems[i].GetComponent<RectTransform>().position;
-                menuItems[i].GetComponent<Text>().CrossFadeColor(selectionItemColor, 0.05f, true, true); // 文字を徐々に白色に戻す
+                menuItems[i].GetComponent<Text>().CrossFadeColor(selectionItemColor, 0.05f, true, true); // 文字を徐々に水色に変更
 
                 scale = easing3(0.05f, itemTime[i], 0.5f, true, 1.0f, 1.25f, false);
                 menuItems[i].GetComponent<RectTransform>().localScale = new Vector3(scale, scale, scale);
@@ -266,6 +300,10 @@ public class PauseMenu : MonoBehaviour
         // 決定ボタン(aボタン)を押したとき
         if (gamePad[controlNum].aButton.wasPressedThisFrame)
         {
+
+            audioSource.clip = decisionSE;
+            audioSource.PlayOneShot(decisionSE);
+
             switch (currentMenuNum)
             {
                 /*【ゲームに戻る】*/
