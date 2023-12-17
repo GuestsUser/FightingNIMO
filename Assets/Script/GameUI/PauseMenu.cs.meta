@@ -3,7 +3,16 @@ guid: 732824575e4fe004fb7069fa3778056a
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - pauseMenu: {instanceID: 0}
+  - cursor: {instanceID: 0}
+  - inner: {instanceID: 0}
+  - decisionSE: {fileID: 8300000, guid: 6de3007a375b80a498571ddcdfd8c866, type: 3}
+  - cancelSE: {instanceID: 0}
+  - moveSE: {fileID: 8300000, guid: b7605feb036e76f4db71c89fd48a271c, type: 3}
+  - openMenuSE: {instanceID: 0}
+  - closeMenuSE: {instanceID: 0}
+  - cursorRT: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

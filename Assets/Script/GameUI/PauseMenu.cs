@@ -11,14 +11,20 @@ public class PauseMenu : MonoBehaviour
     #region インスペクターからの代入が必要or調整をするもの
     [Header("【事前に入れるもの】")]
     /*【事前の代入が必須】*/
-    [Tooltip("PauseMenuを構成している親要素を入れてください")]
-    [SerializeField] private GameObject pauseMenu;
+    
+    [Tooltip("UIという名前のオブジェクトをアタッチしてください")]
+    [SerializeField] private GameObject ui;
+    [Tooltip("PauseMenuという名前のオブジェクトをアタッチしてください")]
+    [SerializeField] private RectTransform pauseMenu;
     [Tooltip("カーソルを入れてください")]
     [SerializeField] private GameObject cursor;
     [Tooltip("カーソルの子要素を入れてください")]
     [SerializeField] private GameObject inner; //カーソルの内側の色
     [Tooltip("メニューの項目の数を指定し、UIオブジェクトを入れてください")]
     [SerializeField] private GameObject[] menuItems;
+    
+    [Tooltip("ControlsのUIを入れてください")]
+    [SerializeField] private GameObject controlsUI;
 
     // 音
     private AudioSource audioSource;
@@ -60,6 +66,12 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private string oldMenuName;
     [Tooltip("上下どちらかの入力がされているか")]
     [SerializeField] private bool ispush;
+    [Tooltip("menu項目を選択したかどうか")]
+    [SerializeField] private bool decision; // 決定フラグON
+    [Tooltip("UIを戻すかどうか")]
+    [SerializeField] private bool backUI;
+    [Tooltip("UIを動かすかどうか")]
+    [SerializeField] private bool moveUI;
     [Tooltip("QUITボタンが押されたか")]
     [SerializeField] private bool pushQuit;
     [Tooltip("入力継続時間")]
@@ -81,7 +93,7 @@ public class PauseMenu : MonoBehaviour
     {
         /*Titleと共通*/
         /*【オブジェクト情報の取得】*/
-        pauseMenu.SetActive(false); // 最初は非表示に
+        ui.SetActive(false); // 最初は非表示に
         if (cursor == null) { Debug.LogError("カーソルオブジェクトがアタッチされていません"); }
         cursorRT = cursor.GetComponent<RectTransform>();
         audioSource = GetComponent<AudioSource>();
@@ -125,6 +137,9 @@ public class PauseMenu : MonoBehaviour
         currentMenuNum = 0;
         oldMenuNum = 0;
         ispush = false;
+        decision = false;
+        backUI = true;
+        moveUI = false;
         pushQuit = false; // Quitとボタンが押されたか
         count = 0;
         controlNum = 0;
@@ -147,13 +162,86 @@ public class PauseMenu : MonoBehaviour
         /* 【表示状態】 */
         if (show)
         {
-            if(pushQuit == false)
+            if (pushQuit == false && decision == false)
             {
                 // カーソル移動関数
                 CursorMove();
 
                 // 決定関数
                 Decision();
+            } 
+            else if (decision == true && currentMenuNum == 1)
+            {
+                easTime++;
+
+                // (easTime / 60.0f)が指定した演出にかかる所要時間を超えた時
+                if (easTime / 60.0f > duration[1])
+                {
+                    easTime = duration[1] * 60.0f; // easTimeを(duration * 60.0f)に固定
+
+                    // Bボタンを押したとき
+                    if (Gamepad.current.bButton.wasPressedThisFrame)
+                    {
+                        backUI = true; // UIが戻る演出ON
+                        easTime = 0;   // easTime初期化
+                    }
+                }
+
+                // 戻る演出フラグが立っていない時
+                if (backUI == false)
+                {
+                    if(currentMenuNum == 1)
+                    {
+                        pauseMenu.anchoredPosition = new Vector2(easing(duration[1], easTime, (1.0f / 2.0f)) * -1920.0f, 0);
+                    }
+                    //switch (currentMenuNum)
+                    //{
+                    //    case 1: // 『CREDIT』への画面に移動する演出
+                    //        ui.anchoredPosition = new Vector2(easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f, 0);
+                    //        //cam.transform.localRotation = Quaternion.Euler(0.0f, easing(duration[1], easTime, (1.0f / 2.0f)) * -90.0f, 0.0f);
+                    //        break;
+
+                    //    case 2: // 『CONTROLS』への画面に移動する演出
+                    //        ui.anchoredPosition = new Vector2(easing(duration[1], easTime, (1.0f / 2.0f)) * -1920.0f, 0);
+                    //        //cam.transform.localRotation = Quaternion.Euler(0.0f, easing(duration[1], easTime, (1.0f / 2.0f)) * 90.0f, 0.0f);
+                    //        break;
+                    //}
+                }
+
+                // 戻る演出フラグが立っている時
+                else
+                {
+                    if (currentMenuNum == 1)
+                    {
+                        pauseMenu.anchoredPosition = new Vector2(-1920.0f + (easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f), 0.0f);
+
+                    }
+                    //switch (currentMenuNum)
+                    //{
+                    //    case 1:
+                    //        ui.anchoredPosition = new Vector2(1920.0f - (easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f), 0.0f);
+                    //        //cam.transform.localRotation = Quaternion.Euler(0.0f, -90.0f + easing(duration[1], easTime, (1.0f / 2.0f)) * 90.0f, 0.0f);
+                    //        break;
+                    //    case 2:
+                    //        ui.anchoredPosition = new Vector2(-1920.0f + (easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f), 0.0f);
+                    //        //cam.transform.localRotation = Quaternion.Euler(0.0f, 90.0f - easing(duration[1], easTime, (1.0f / 2.0f)) * 90, 0.0f);
+                    //        break;
+                    //}
+
+                    if (Mathf.Abs(pauseMenu.anchoredPosition.x) < 1.0f)
+                    {
+                        moveUI = false;
+                        decision = false;
+                        backUI = false;
+
+                        cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
+                        inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
+                    }
+
+                    StartCoroutine("BackMenu");
+
+
+                }
             }
         }
 
@@ -174,7 +262,9 @@ public class PauseMenu : MonoBehaviour
                 }
                 show = true;                                   // ポーズメニューを表示状態のフラグにする
                 Time.timeScale = 0;                            // ポーズ(時間を止める)
-                pauseMenu.SetActive(true);                     // UIオブジェクトを有効化する
+                ui.SetActive(true);                     // UIオブジェクトを有効化する
+                inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                                           // カーソルを徐々に消す
+                cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);
             }
         }
     }
@@ -183,7 +273,7 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1;             // ポーズ解除(時間を動かす)
         show = false;                   // メニューを 非表示状態 にする
-        pauseMenu.SetActive(false);     // UIオブジェクトを無効化する
+        ui.SetActive(false);     // UIオブジェクトを無効化する
     }
     void CursorMove()
     {
@@ -301,6 +391,11 @@ public class PauseMenu : MonoBehaviour
         if (gamePad[controlNum].aButton.wasPressedThisFrame)
         {
 
+            CursorFade();
+            easTime = 0;
+            decision = true; // 決定フラグON
+            backUI = false;
+
             audioSource.clip = decisionSE;
             audioSource.PlayOneShot(decisionSE);
 
@@ -308,15 +403,13 @@ public class PauseMenu : MonoBehaviour
             {
                 /*【ゲームに戻る】*/
                 case 0:
-                    Time.timeScale = 1;         // ポーズ解除(時間を動かす)
-                    show = false;               // メニューを 非表示状態 にする
-                    pauseMenu.SetActive(false); // UIオブジェクトを有効化
+                    StartCoroutine("PushContinue"); 
                     break;
                 /*------------*/
 
                 /*【操作説明を開く】*/
                 case 1:
-                    
+                    StartCoroutine("PushControls");
                     break;
                 /*-------------*/
 
@@ -365,11 +458,45 @@ public class PauseMenu : MonoBehaviour
         menuItems[currentMenuNum].GetComponent<Text>().CrossFadeColor(notSelectionItemColor, 0.2f, true, true); // 文字を徐々に白色に戻す
     }
 
+    private IEnumerator PushContinue()
+    {
+        yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
+
+        Time.timeScale = 1;         // ポーズ解除(時間を動かす)
+        show = false;               // メニューを 非表示状態 にする
+        decision = false; // 決定フラグON
+        ui.SetActive(false); // UIオブジェクトを有効化
+    }
+
+    private IEnumerator PushControls()
+    {
+        yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
+
+        moveUI = true;
+    }
+
+    private IEnumerator BackMenu()
+    {
+        yield return new WaitForSecondsRealtime(duration[1]);
+        controlsUI.GetComponentInChildren<RawImage>().CrossFadeAlpha(1.0f, 0.0f, true);
+        //decision = false;
+    }
+
     private IEnumerator BacktoTitleScene()
     {
         yield return new WaitForSecondsRealtime(waitTime); // 処理を待機 シーン時の音を鳴らすため
         SceneManager.LoadScene("TitleScene");
         Initialize();
+    }
+
+
+    float easing(float duration, float time, float length)
+    {
+        float frame = 60.0f;                      // fps
+        float t = ((time / frame) / duration);    // easingの進行状況を示す値を算出
+        //TPRate = t * length;
+
+        return (float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero);
     }
 
     /// <summary>
@@ -419,4 +546,5 @@ public class PauseMenu : MonoBehaviour
             return source - ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * (symbol_num * -1)) * Mathf.Abs(max - source);
         }
     }
+    
 }
