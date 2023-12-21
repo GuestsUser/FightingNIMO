@@ -780,8 +780,8 @@ RectTransform:
   m_Children:
   - {fileID: 810808416}
   - {fileID: 612098484}
-  - {fileID: 2080844677}
   - {fileID: 1589289231}
+  - {fileID: 2080844677}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1128,8 +1128,9 @@ MonoBehaviour:
   easTime: 0
   itemTime: []
   duration:
-  - 0
+  - 0.25
   - 0.5
+  uiGroup: {fileID: 0}
   cursorRT: {fileID: 31719299}
   currentMenuNum: 0
   oldMenuNum: 0
@@ -3095,6 +3096,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2080844677}
+  - component: {fileID: 2080844678}
   m_Layer: 5
   m_Name: UI(Pause)
   m_TagString: Untagged
@@ -3124,6 +3126,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &2080844678
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080844676}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2134396340
 GameObject:
   m_ObjectHideFlags: 0

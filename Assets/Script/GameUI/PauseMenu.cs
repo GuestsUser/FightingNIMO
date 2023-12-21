@@ -56,6 +56,8 @@ public class PauseMenu : MonoBehaviour
 
     #region 動作確認用に表示するもの
     [Header("【動作確認用】")]
+    [Tooltip("UIのcanvas group Component")]
+    [SerializeField] private CanvasGroup uiGroup;
     [Tooltip("カーソルのレンダートランスフォーム情報が入る")]
     [SerializeField] private RectTransform cursorRT;
     [Tooltip("現在選択されているメニュー番号")]
@@ -93,6 +95,7 @@ public class PauseMenu : MonoBehaviour
     {
         /*Titleと共通*/
         /*【オブジェクト情報の取得】*/
+        uiGroup = ui.GetComponent<CanvasGroup>();
         ui.SetActive(false); // 最初は非表示に
         if (cursor == null) { Debug.LogError("カーソルオブジェクトがアタッチされていません"); }
         cursorRT = cursor.GetComponent<RectTransform>();
@@ -143,6 +146,8 @@ public class PauseMenu : MonoBehaviour
         pushQuit = false; // Quitとボタンが押されたか
         count = 0;
         controlNum = 0;
+
+        uiGroup.alpha = 0.0f;
         /*----------------------*/
 
         /*Pause専用*/
@@ -162,6 +167,18 @@ public class PauseMenu : MonoBehaviour
         /* 【表示状態】 */
         if (show)
         {
+            easTime++;
+            // (easTime / 60.0f)が指定した演出にかかる所要時間を超えた時
+            if (easTime / 60.0f > duration[1])
+            {
+                easTime = duration[1] * 60.0f; // easTimeを(duration * 60.0f)に固定
+            }
+
+            if(uiGroup.alpha < 1.0f)
+            {
+                uiGroup.alpha = easing(duration[0], easTime, 0.5f);
+            }
+
             if (pushQuit == false && decision == false)
             {
                 // カーソル移動関数
@@ -170,77 +187,67 @@ public class PauseMenu : MonoBehaviour
                 // 決定関数
                 Decision();
             } 
-            else if (decision == true && currentMenuNum == 1)
+            else if (decision)
             {
-                easTime++;
+                //easTime++;
 
-                // (easTime / 60.0f)が指定した演出にかかる所要時間を超えた時
-                if (easTime / 60.0f > duration[1])
+                //// (easTime / 60.0f)が指定した演出にかかる所要時間を超えた時
+                //if (easTime / 60.0f > duration[1])
+                //{
+                //    easTime = duration[1] * 60.0f; // easTimeを(duration * 60.0f)に固定
+                //}
+
+                switch (currentMenuNum)
                 {
-                    easTime = duration[1] * 60.0f; // easTimeを(duration * 60.0f)に固定
+                    case 0:
+                        uiGroup.alpha = 1.0f - easing(duration[0],easTime,0.5f);
+                        break;
+                    case 1:
+                        
+                        // 戻る演出フラグが立っていない時
+                        if (backUI == false)
+                        {
+                            if (moveUI)
+                            {
+                                if(Mathf.Abs(pauseMenu.anchoredPosition.x) < 1920.0f)
+                                {
+                                    pauseMenu.anchoredPosition = new Vector2(easing(duration[1], easTime, (1.0f / 2.0f)) * -1920.0f, 0);
+                                }
+                                if (easTime / 60.0f == duration[1]) {
+                                    // Bボタンを押したとき
+                                    if (Gamepad.current.bButton.wasPressedThisFrame)
+                                    {
+                                        backUI = true; // UIが戻る演出ON
+                                        easTime = 0;   // easTime初期化
+                                        Debug.Log("通りました");
+                                    }
+                                }
+                            }
+                            
+                        }
 
-                    // Bボタンを押したとき
-                    if (Gamepad.current.bButton.wasPressedThisFrame)
-                    {
-                        backUI = true; // UIが戻る演出ON
-                        easTime = 0;   // easTime初期化
-                    }
-                }
+                        // 戻る演出フラグが立っている時
+                        else
+                        {
+                            if (currentMenuNum == 1)
+                            {
+                                pauseMenu.anchoredPosition = new Vector2(-1920.0f + (easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f), 0.0f);
+                            }
 
-                // 戻る演出フラグが立っていない時
-                if (backUI == false)
-                {
-                    if(currentMenuNum == 1)
-                    {
-                        pauseMenu.anchoredPosition = new Vector2(easing(duration[1], easTime, (1.0f / 2.0f)) * -1920.0f, 0);
-                    }
-                    //switch (currentMenuNum)
-                    //{
-                    //    case 1: // 『CREDIT』への画面に移動する演出
-                    //        ui.anchoredPosition = new Vector2(easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f, 0);
-                    //        //cam.transform.localRotation = Quaternion.Euler(0.0f, easing(duration[1], easTime, (1.0f / 2.0f)) * -90.0f, 0.0f);
-                    //        break;
+                            if (Mathf.Abs(pauseMenu.anchoredPosition.x) < 1.0f)
+                            {
+                                moveUI = false;
+                                decision = false;
+                                backUI = false;
 
-                    //    case 2: // 『CONTROLS』への画面に移動する演出
-                    //        ui.anchoredPosition = new Vector2(easing(duration[1], easTime, (1.0f / 2.0f)) * -1920.0f, 0);
-                    //        //cam.transform.localRotation = Quaternion.Euler(0.0f, easing(duration[1], easTime, (1.0f / 2.0f)) * 90.0f, 0.0f);
-                    //        break;
-                    //}
-                }
+                                cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
+                                inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
+                            }
 
-                // 戻る演出フラグが立っている時
-                else
-                {
-                    if (currentMenuNum == 1)
-                    {
-                        pauseMenu.anchoredPosition = new Vector2(-1920.0f + (easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f), 0.0f);
+                            StartCoroutine("BackMenu");
 
-                    }
-                    //switch (currentMenuNum)
-                    //{
-                    //    case 1:
-                    //        ui.anchoredPosition = new Vector2(1920.0f - (easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f), 0.0f);
-                    //        //cam.transform.localRotation = Quaternion.Euler(0.0f, -90.0f + easing(duration[1], easTime, (1.0f / 2.0f)) * 90.0f, 0.0f);
-                    //        break;
-                    //    case 2:
-                    //        ui.anchoredPosition = new Vector2(-1920.0f + (easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f), 0.0f);
-                    //        //cam.transform.localRotation = Quaternion.Euler(0.0f, 90.0f - easing(duration[1], easTime, (1.0f / 2.0f)) * 90, 0.0f);
-                    //        break;
-                    //}
-
-                    if (Mathf.Abs(pauseMenu.anchoredPosition.x) < 1.0f)
-                    {
-                        moveUI = false;
-                        decision = false;
-                        backUI = false;
-
-                        cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
-                        inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
-                    }
-
-                    StartCoroutine("BackMenu");
-
-
+                        }
+                        break;
                 }
             }
         }
@@ -251,8 +258,9 @@ public class PauseMenu : MonoBehaviour
             // 誰かしらがStartボタンを押した時
             if (Gamepad.current.startButton.wasPressedThisFrame)
             {
+                easTime = 0;
                 /*【何PがStatボタンを押したのかを取得する】*/
-                for(int i = 0; i< gamePad.Length; i++)
+                for (int i = 0; i< gamePad.Length; i++)
                 {
                     if (gamePad[i].startButton.wasPressedThisFrame)
                     {
@@ -473,6 +481,7 @@ public class PauseMenu : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
 
         moveUI = true;
+        easTime = 0;
     }
 
     private IEnumerator BackMenu()
