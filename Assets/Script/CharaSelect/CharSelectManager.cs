@@ -16,7 +16,7 @@ public class CharSelectManager : MonoBehaviour
 	[Tooltip("このプレイヤーのカーソルテキストを入れてください")]
 	[SerializeField] private GameObject cursor;
 	[Tooltip("このプレイヤーのカーソルテキストを入れてください（RT取得用）")]
-	[SerializeField] private RectTransform cursorText;
+	[SerializeField] private RectTransform cursorImage; // 変更箇所 cursorText → cursorImage
 	[Tooltip("プレイヤー番号UI用のテキストを入れてください")]
 	[SerializeField] private Text playerNumText;
 	[Tooltip("自身のPlayerInputを取得(自動)")]
@@ -58,6 +58,11 @@ public class CharSelectManager : MonoBehaviour
 
 	private bool isTrigger;
 
+	/* 追加箇所 */
+	[Tooltip("UIのアイコンとの距離 0がx、1がy")]
+	[SerializeField] private float[] offset = {60,40};
+	/* 追加箇所 */
+
 	private void Awake()
 	{
 		//------[自動取得][変更][初期化]------
@@ -88,28 +93,40 @@ public class CharSelectManager : MonoBehaviour
 		{
 			//1P
 			case 0:
-				characterNum = 0;	//プレイヤーの最初の初期キャラクター設定
-				cursorText.anchoredPosition = new Vector2(-160, 100);
+				characterNum = 0;   //プレイヤーの最初の初期キャラクター設定
+				/* 追加・変更箇所 */
+				cursorImage.anchoredPosition = new Vector2(-(offset[0]), (offset[1]));
+				playerNumText.text = "<color=#ff6363>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
+				/* ---------- */
 				break;
 			//2P
 			case 1:
 				characterNum = 1;
-				cursorText.anchoredPosition = new Vector2(160, 100);
+				/* 追加・変更箇所 */
+				cursorImage.anchoredPosition = new Vector2((offset[0]), (offset[1]));
+				playerNumText.text = "<color=#33b0ff>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
+				/* ---------- */
 				break;
 			//3P
 			case 2:
 				characterNum = 2;
-				cursorText.anchoredPosition = new Vector2(-160, -100);
+				/* 追加・変更箇所 */
+				cursorImage.anchoredPosition = new Vector2(-(offset[0]), -(offset[1]));
+				playerNumText.text = "<color=#f4f54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
+				/* ---------- */
 				break;
 			//4P
 			case 3:
 				characterNum = 3;
-				cursorText.anchoredPosition = new Vector2(160, -100);
+				/* 追加・変更箇所 */
+				cursorImage.anchoredPosition = new Vector2((offset[0]), -(offset[1]));
+				playerNumText.text = "<color=#4cf54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
+				/* ---------- */
 				break;
 		}
 
 		this.gameObject.name = "Player" + (receiveNotificationExample.playerNum - 1);   //このオブジェクトの名前をPlayer1～4に変更する
-		playerNumText.text = "P" + (input.playerIndex + 1); //PlayerCursorTextをP1/P2/P3/P4に設定
+		
 		cursor.SetActive(false);	//プレイヤーカーソルの非表示
 		getCharacter = false;		//初期化
 		isCharSelected = false;     //初期化
@@ -118,6 +135,26 @@ public class CharSelectManager : MonoBehaviour
 
 	private void Update()
 	{
+		//1P～4Pカーソルの位置デバッグ用
+		//switch (input.playerIndex)
+		//{
+		//	//1P
+		//	case 0:
+		//		cursorImage.anchoredPosition = new Vector2(-(offset[0]), (offset[1]));
+		//		break;
+		//	//2P
+		//	case 1:
+		//		cursorImage.anchoredPosition = new Vector2((offset[0]), (offset[1]));
+		//		break;
+		//	//3P
+		//	case 2:
+		//		cursorImage.anchoredPosition = new Vector2(-(offset[0]), -(offset[1]));
+		//		break;
+		//	//4P
+		//	case 3:
+		//		cursorImage.anchoredPosition = new Vector2((offset[0]), -(offset[1]));
+		//		break;
+		//}
 		AddCharacterNum();		//キャラクター番号保持関数
 		RemovePlayer();		//プレイヤー削除関数
 		CharacterVisibility();  ////キャラクター（表示/非表示）関数
@@ -125,14 +162,15 @@ public class CharSelectManager : MonoBehaviour
 		//現在がキャラクターセレクトできる状態なら
 		if (gameStartSys.isCharSelect == true)
 		{
-			playerNumText.GetComponent<Text>().CrossFadeAlpha(1, 0f, true);
+			//playerNumText.GetComponent<Text>().CrossFadeAlpha(1, 0f, true);
+			cursor.GetComponent<CanvasGroup>().alpha = 1;
 			if (getCharacter == false)
 			{
 				//characterUIの取得とカーソルの表示
 				getCharacter = true;
 				characterUI[0] = GameObject.Find("BaseButton");
 				characterUI[1] = GameObject.Find("SharkButton");
-				//characterUI[2] = GameObject.Find("TurtleButton");
+				characterUI[2] = GameObject.Find("TurtleButton");
 				//characterUI[3] = GameObject.Find("MantaButton");
 				cursor.SetActive(true);
 			}
@@ -149,7 +187,8 @@ public class CharSelectManager : MonoBehaviour
 		}
         else
 		{
-			playerNumText.GetComponent<Text>().CrossFadeAlpha(0, 0f, true);
+			//playerNumText.GetComponent<Text>().CrossFadeAlpha(0, 0f, true);
+			cursor.GetComponent<CanvasGroup>().alpha = 0;
 		}
 	}
 
@@ -213,29 +252,32 @@ public class CharSelectManager : MonoBehaviour
 					}
 				}
 				break;
-				//カメ
-				//case 2:
-				//	characters[characterNum].SetActive(true);   //カメを表示
-				//	for (int i = 0; i < maxCharacter; i++)
-				//	{
-				//		if (i != characterNum)
-				//		{
-				//			characters[i].SetActive(false);
-				//		}
-				//	}
-				//	break;
-				//マンタ
-				//case 3:
-				//	characters[characterNum].SetActive(true);   //マンタを表示
-				//	for (int i = 0; i < maxCharacter; i++)
-				//	{
-				//		if (i != characterNum)
-				//		{
-				//			characters[i].SetActive(false);
-				//		}
-				//	}
-				//	break;
-		}
+                //カメ
+
+            case 2:
+				//characters[characterNum].SetActive(true);   //カメを表示
+				Smr[characterNum].enabled = true;
+				for (int i = 0; i < maxCharacter; i++)
+                {
+                    if (i != characterNum)
+                    {
+                        //characters[i].SetActive(false);
+						Smr[i].enabled = false;
+					}
+                }
+                break;
+                //マンタ
+                //case 3:
+                //	characters[characterNum].SetActive(true);   //マンタを表示
+                //	for (int i = 0; i < maxCharacter; i++)
+                //	{
+                //		if (i != characterNum)
+                //		{
+                //			characters[i].SetActive(false);
+                //		}
+                //	}
+                //	break;
+        }
 	}
 
 	//キャラクター番号更新保持関数
