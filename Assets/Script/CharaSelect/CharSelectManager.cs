@@ -23,13 +23,14 @@ public class CharSelectManager : MonoBehaviour
 	[SerializeField] private PlayerInput input;
 	[Tooltip("選べるキャラクターUIを入れてください")]
 	[SerializeField] private GameObject[] characterUI;
-	
+	[SerializeField] private SkinnedMeshRenderer[] Smr; //表示の際に、キャラクターが倒れる現象を直すためにSkinnedMeshRendererのアクティブで調整
+
+
 	[Tooltip("GameStartSystem.csを持っているオブジェクトを入れてください")]
 	[SerializeField] private GameStartSystem gameStartSys;
 	[Tooltip("ReceiveNotificationExample.csを持ったオブジェクトを入れる")]
 	[SerializeField] private ReceiveNotificationExample receiveNotificationExample;
 
-	//追加
 	[Tooltip("DataRetation.csを持ったオブジェクトを入れる")]
 	[SerializeField] private DataRetation dataRetation;
 
@@ -50,13 +51,12 @@ public class CharSelectManager : MonoBehaviour
 	[Tooltip("左スティックのX軸を入力しているか")]
 	[SerializeField] private bool push;
 
-	//追加
-	[SerializeField] private SkinnedMeshRenderer[] Smr;	//表示の際に、キャラクターが倒れる現象を直すためにSkinnedMeshRendererのアクティブで調整
-
 	private bool getCharacter;  //1度だけ反応させるためのもの
 
 
-	private bool isTrigger;
+	private bool isTrigger;		//ゲームパッドが切断されたかどうか
+	private bool isLeftPush;    //左十字キーが押されているかどうか
+	private bool isRightPush;   //右十字キーが押されているかどうか
 
 	/* 追加箇所 */
 	[Tooltip("UIのアイコンとの距離 0がx、1がy")]
@@ -131,6 +131,8 @@ public class CharSelectManager : MonoBehaviour
 		getCharacter = false;		//初期化
 		isCharSelected = false;     //初期化
 		isTrigger = false;          //初期化
+		isLeftPush = false;         //初期化
+		isRightPush = false;        //初期化
 	}
 
 	private void Update()
@@ -332,15 +334,14 @@ public class CharSelectManager : MonoBehaviour
 		if (gameStartSys.isCharSelect == true && isCharSelected == false)
 		{
 			//左入力時
-			if (value.Get<float>() > 0)
+			if (value.Get<float>() < 0)
 			{
 				if (push == false)  // 押された時の処理
 				{
 					push = true;
-					//キャラクター番号が0より小さい値になったら、一番最後のキャラクター番号に変更する（クマノミ->マンタ）
-					//if (--characterNum < 0) characterNum = maxCharacter - 1;
+					isLeftPush = true;
 
-					//0の時または、下回った時
+					//0の時または下回った時、一番最後のキャラクター番号に変更する（クマノミ->マンタ）
 					if (characterNum <= 0)
 					{
 						//一番右にする
@@ -379,11 +380,12 @@ public class CharSelectManager : MonoBehaviour
 				}
 			}
 			//右入力時
-			else if (value.Get<float>() < 0)
+			else if (value.Get<float>() > 0)
 			{
 				if (push == false)
 				{
 					push = true;
+					isRightPush = true;
 					//キャラクター番号がキャラ総数より大きい値になったら、一番最後のキャラクター番号に変更する（マンタ->クマノミ）
 					if (++characterNum > maxCharacter - 1) characterNum = 0;
 					//audioSouce.clip = moveSE;
@@ -406,6 +408,8 @@ public class CharSelectManager : MonoBehaviour
 			{
 				//リセット
 				push = false;
+				isLeftPush = false;
+				isRightPush = false;
 				count = 0;
 			}
 		}
