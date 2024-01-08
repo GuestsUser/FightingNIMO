@@ -32,7 +32,7 @@ public class MenuTest : MonoBehaviour
     [SerializeField] private GameObject[] menuItems;
     [SerializeField] private GameObject logo;
     [Tooltip("各キャラクターUIを入れてください")]
-    [SerializeField] private GameObject[] characterUI;
+    [SerializeField] private GameObject characterUI;
     [Tooltip("CreditのUIを入れてください")]
     [SerializeField] private GameObject creditUI;
     [Tooltip("ControlsのUIを入れてください")]
@@ -116,10 +116,11 @@ public class MenuTest : MonoBehaviour
             itemTime[i] = 0;
         }
 
-        for(int i = 0; i < characterUI.Length; i++)
-        {
-            characterUI[i].SetActive(false);    //各キャラクターUIを非表示にする
-        }
+        //for(int i = 0; i < characterUI.Length; i++)
+        //{
+        //    characterUI[i].SetActive(false);    //各キャラクターUIを非表示にする
+        //}
+        characterUI.SetActive(false);    //各キャラクターUIを非表示にする
 
         currentMenuName = items[0];  //選択されているメニュ名を1番上に初期化
         oldMenuName = currentMenuName;
@@ -246,10 +247,11 @@ public class MenuTest : MonoBehaviour
                     if (Gamepad.current.bButton.wasPressedThisFrame)
                     {
                         // キャラクターUIを非表示にする
-                        for (int i = 0; i < characterUI.Length; i++)
-                        {
-                            characterUI[i].SetActive(false); 
-                        }
+                        //for (int i = 0; i < characterUI.Length; i++)
+                        //{
+                        //    characterUI[i].SetActive(false); 
+                        //}
+                        characterUI.SetActive(false);
 
                         gameStartSys.isCharSelect = false; // キャラクターセレクトを無効化
 
@@ -584,10 +586,11 @@ public class MenuTest : MonoBehaviour
         if (cam.transform.position == tPos)
         {
             moveUI = false;
-            for (int i = 0; i < characterUI.Length; i++)
-            {
-                characterUI[i].SetActive(true); // キャラクターセレクトを表示する
-            }
+            //for (int i = 0; i < characterUI.Length; i++)
+            //{
+            //    characterUI[i].SetActive(true); // キャラクターセレクトを表示する
+            //}
+            characterUI.SetActive(true); // キャラクターセレクトを表示する
 
             gameStartSys.isCharSelect = true;
 
