@@ -689,9 +689,7 @@ MonoBehaviour:
   cursorRT: {fileID: 857541488998929162}
   cursor: {fileID: 6686119981669036820}
   cursorImage: {fileID: 7508584338788567369}
-  playerNumText:
-  - {fileID: 7226619387004901021}
-  - {fileID: 7846040043033089997}
+  playerNumText: {fileID: 7846040043033089997}
   input: {fileID: 4776843875413288474}
   characterUI: []
   Smr:
@@ -710,8 +708,6 @@ MonoBehaviour:
   offset:
   - 80
   - 50
-  circle: {fileID: 3867967999308981992}
-  circles: []
 --- !u!1001 &4032014248811238586
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1082,17 +1078,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &7226619387004901021 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2833086374810205197, guid: 731cd65840633974c936d4abdb0a31db, type: 3}
-  m_PrefabInstance: {fileID: 4835521329252756112}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &7508584338788567369 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3109982571944125401, guid: 731cd65840633974c936d4abdb0a31db, type: 3}
