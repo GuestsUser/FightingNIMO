@@ -8,6 +8,7 @@ using System;
 [RequireComponent(typeof(PlayerDown))]
 [RequireComponent(typeof(PlayerRotation))]
 [RequireComponent(typeof(PlayerMoving))]
+[RequireComponent(typeof(PlayerJump))]
 [RequireComponent(typeof(PlayerPunch))]
 [RequireComponent(typeof(PlayerLift))]
 
@@ -22,6 +23,7 @@ public class TestPlayer : MonoBehaviour
     PlayerDown down;
     PlayerRotation rotation;
     PlayerMoving moving;
+    PlayerJump jump;
     PlayerPunch rPunch;
     PlayerLift lift;
 
@@ -33,6 +35,7 @@ public class TestPlayer : MonoBehaviour
         down = GetComponent<PlayerDown>();
         rotation = GetComponent<PlayerRotation>();
         moving = GetComponent<PlayerMoving>();
+        jump = GetComponent<PlayerJump>();
         rPunch = GetComponent<PlayerPunch>();
         lift = GetComponent<PlayerLift>();
     }
@@ -42,10 +45,17 @@ public class TestPlayer : MonoBehaviour
     {
         down.RunFunction();
         if (down.isDown) { return; } //ダウンしていれば他処理は実行しない
+        //jump.RunFunction();
 
         rotation.RunFunction();
         moving.RunFunction();
+        
         rPunch.RunFunction();
         lift.RunFunction();
+    }
+    void FixedUpdate()
+    {
+        if (down.isDown) { return; } //ダウンしていれば他処理は実行しない
+        jump.RunFunction();
     }
 }
