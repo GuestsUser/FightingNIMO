@@ -345,6 +345,8 @@ GameObject:
   - component: {fileID: 4345121369237589757}
   - component: {fileID: 2689490871544092170}
   - component: {fileID: 5038569598716950744}
+  - component: {fileID: 2830417506645783009}
+  - component: {fileID: 1126416565011404631}
   m_Layer: 7
   m_Name: G_Base
   m_TagString: Untagged
@@ -442,6 +444,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 30dd9f4c-4275-43f2-90e2-3798f799c197
     m_ActionName: Player/DebugDown[/XInputControllerWindows/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 311d3635-2870-4f3c-b42a-cb00d98aad75
+    m_ActionName: Player/Lift[/XInputControllerWindows/buttonWest,/XInputControllerWindows1/buttonWest]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c6770082-05f9-448a-aff0-ad8bc8c762f1
+    m_ActionName: Player/Jump[/XInputControllerWindows/buttonEast,/XInputControllerWindows1/buttonEast]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
@@ -461,6 +471,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 404880200334393082}
   _pInput: {fileID: 7073170482349213418}
+  hitLayer:
+  - Anemone
+  - Shark
+  - Turtle
+  - Stingray
+  - Wepon
+  floorLayer:
+  - Default
 --- !u!114 &4730511598523669091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,6 +566,35 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &2830417506645783009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421828136598702146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2cc0b5b3cb746c4c9e25fe114c02643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foot:
+  - {fileID: 2783345903350091038}
+  - {fileID: 4511896563268904726}
+  jumpPower: 15
+  forceStamina: 0.2
+--- !u!114 &1126416565011404631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421828136598702146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfe6e40fac554ca45879f1abe58b07f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &804571046691423538
 GameObject:
   m_ObjectHideFlags: 0
@@ -3427,7 +3474,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -2.5623384e-13, y: -1.9631194, z: 0.0000014253496}
+  m_ConnectedAnchor: {x: 0.000000036076496, y: 1.0446208, z: 0.030110922}
   serializedVersion: 3
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
