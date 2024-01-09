@@ -1322,8 +1322,8 @@
     "m_Color": {
         "color": {
             "r": 0.0,
-            "g": 1.0,
-            "b": 0.9424278736114502,
+            "g": 0.9150943160057068,
+            "b": 0.8642557263374329,
             "a": 0.0
         },
         "mode": 0
@@ -2961,7 +2961,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "Alpha",
     "m_StageCapability": 2,
-    "m_Value": 1.0,
+    "m_Value": 0.6000000238418579,
     "m_DefaultValue": 1.0,
     "m_Labels": []
 }
