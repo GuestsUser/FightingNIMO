@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
-    [SerializeField] [Tooltip("くっつきに使うジョイント")] ConfigurableJoint stickJoint;
-
     [SerializeField] [Tooltip("接地判定に利用するコライダー")] BoxCollider[] foot;
     [SerializeField] [Tooltip("ジャンプの際の上昇パワー最高値")] float jumpPower = 132.0f;
     [SerializeField] [Tooltip("ジャンプの上昇力がなくなる時間")] float forceStamina = 1.0f;
@@ -38,7 +36,7 @@ public class PlayerJump : MonoBehaviour
         foreach (var itr in foot)
         {
             RaycastHit hit;
-            if (Physics.BoxCast(itr.transform.position, itr.size, Vector3.down, out hit, Quaternion.Euler(Vector3.zero), 1))
+            if (Physics.BoxCast(itr.transform.position, itr.size, Vector3.down, out hit, Quaternion.Euler(Vector3.zero), 1, parent.floorMask))
             {
                 isGround = true; //片足でもヒットがあれば接地とする
                 count = 0; //ジャンプを可能にする為カウントリセット

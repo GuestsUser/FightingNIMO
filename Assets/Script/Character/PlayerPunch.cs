@@ -41,9 +41,8 @@ public class PlayerPunch : MonoBehaviour
         if (parent.animator.GetFloat("punchHoldTime") < 2) { return; }
         if (stickTarget != null) { return; } //既に別オブジェクトを掴んでいれば終了
 
-        int mask = LayerMask.GetMask("Chara"); //仮動作
         RaycastHit hit;
-        if (!Physics.SphereCast(stickJoint.transform.position, 1.5f, stickJoint.transform.forward, out hit, 1.9f, mask)) { return; } //ヒットがなければここで終了
+        if (!Physics.SphereCast(stickJoint.transform.position, 1.5f, stickJoint.transform.forward, out hit, 1.9f, parent.hitMask)) { return; } //ヒットがなければここで終了
         if (hit.transform.GetComponent<Rigidbody>() == null) { return; } //rigidbodyが無ければくっつき処理終了
 
         stickTarget = hit.transform.gameObject; //掴み対象保存
