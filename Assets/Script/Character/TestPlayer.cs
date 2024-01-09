@@ -55,7 +55,7 @@ public class TestPlayer : MonoBehaviour
     {
         down.RunFunction();
         if (down.isDown) { return; } //ダウンしていれば他処理は実行しない
-        //jump.RunFunction();
+        jump.RunFunction();
 
         rotation.RunFunction();
         moving.RunFunction();
@@ -66,6 +66,6 @@ public class TestPlayer : MonoBehaviour
     void FixedUpdate()
     {
         if (down.isDown) { return; } //ダウンしていれば他処理は実行しない
-        jump.RunFunction();
+        //jump.RunFunction();
     }
 }
