@@ -347,6 +347,7 @@ GameObject:
   - component: {fileID: 5038569598716950744}
   - component: {fileID: 2830417506645783009}
   - component: {fileID: 1126416565011404631}
+  - component: {fileID: 4081971574880104302}
   m_Layer: 7
   m_Name: G_Base
   m_TagString: Untagged
@@ -452,6 +453,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: c6770082-05f9-448a-aff0-ad8bc8c762f1
     m_ActionName: Player/Jump[/XInputControllerWindows/buttonEast,/XInputControllerWindows1/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 371a17dd-ddfb-455e-bc29-678753c1ec61
+    m_ActionName: Player/Head[/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a211d783-7e91-4a84-8889-16d1dd97aeb0
+    m_ActionName: Player/LPunch[/XInputControllerWindows/leftShoulder]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
@@ -538,7 +547,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2fe20c6d6884824c8f1b64bf9bb7188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stickJoint: {fileID: 1201771021240791118}
+  stickJoint:
+  - {fileID: 1201771021240791118}
+  - {fileID: 4561943486221792258}
+  punchParaName:
+  - RPunch
+  - LPunch
+  animeParaName:
+  - isRPunch
+  - isLPunch
 --- !u!54 &5038569598716950744
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -595,6 +612,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfe6e40fac554ca45879f1abe58b07f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4081971574880104302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421828136598702146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b65935794cd6df44ea9a1c03e4a41c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wait: 1.5
 --- !u!1 &804571046691423538
 GameObject:
   m_ObjectHideFlags: 0

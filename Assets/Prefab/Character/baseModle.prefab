@@ -354,6 +354,7 @@ GameObject:
   - component: {fileID: 5196838087559461891}
   - component: {fileID: 7377406551062526637}
   - component: {fileID: 3554879383620854221}
+  - component: {fileID: 5980471855888988782}
   m_Layer: 7
   m_Name: baseModle
   m_TagString: Untagged
@@ -392,6 +393,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
   _pInput: {fileID: 0}
+  hitLayer: []
+  floorLayer:
+  - Default
 --- !u!114 &2804993809482437147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,8 +463,12 @@ MonoBehaviour:
     m_ActionName: Player/Lift[/XInputControllerWindows/buttonWest]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 81e4e9c4-02ce-4e1a-9ab5-00175e02ccf9
-    m_ActionName: Player/Jump
+    m_ActionId: c6770082-05f9-448a-aff0-ad8bc8c762f1
+    m_ActionName: Player/Jump[/XInputControllerWindows/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 371a17dd-ddfb-455e-bc29-678753c1ec61
+    m_ActionName: Player/Head[/XInputControllerWindows/buttonEast]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
@@ -544,8 +552,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2cc0b5b3cb746c4c9e25fe114c02643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stickJoint: {fileID: 0}
   foot: []
+  jumpPower: 132
+  forceStamina: 1
+--- !u!114 &5980471855888988782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830106439567414674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b65935794cd6df44ea9a1c03e4a41c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wait: 1.5
 --- !u!1 &1301552326341642963
 GameObject:
   m_ObjectHideFlags: 0

@@ -42,6 +42,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "LPunch",
+                    "type": "Value",
+                    "id": "a211d783-7e91-4a84-8889-16d1dd97aeb0",
+                    "expectedControlType": "Integer",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "DebugDown",
                     "type": "Value",
                     "id": "30dd9f4c-4275-43f2-90e2-3798f799c197",
@@ -63,6 +72,15 @@
                     "name": "Jump",
                     "type": "Value",
                     "id": "c6770082-05f9-448a-aff0-ad8bc8c762f1",
+                    "expectedControlType": "Integer",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Head",
+                    "type": "Value",
+                    "id": "371a17dd-ddfb-455e-bc29-678753c1ec61",
                     "expectedControlType": "Integer",
                     "processors": "",
                     "interactions": "",
@@ -161,7 +179,7 @@
                 {
                     "name": "",
                     "id": "2aae2986-5167-4fbd-b405-b62bf1e26c87",
-                    "path": "<Gamepad>/buttonSouth",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -172,7 +190,7 @@
                 {
                     "name": "",
                     "id": "f3b4a9aa-39aa-4c70-9185-00cdf0e75308",
-                    "path": "<XInputController>/buttonSouth",
+                    "path": "<XInputController>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -183,7 +201,7 @@
                 {
                     "name": "",
                     "id": "0514f851-b19e-491a-8e99-97932855c259",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -194,7 +212,7 @@
                 {
                     "name": "",
                     "id": "a4695060-bec3-470c-a14a-a92e403fbe7c",
-                    "path": "<XInputController>/buttonWest",
+                    "path": "<XInputController>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -205,7 +223,7 @@
                 {
                     "name": "",
                     "id": "47b63431-ee4a-42ef-981a-2aaa44b99015",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -216,11 +234,55 @@
                 {
                     "name": "",
                     "id": "dc444ccf-7903-476f-876d-54bdd8f28223",
-                    "path": "<XInputController>/buttonEast",
+                    "path": "<XInputController>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e15929d-6501-4949-9035-15c800673f05",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Head",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c6f8f5c-ec43-4708-9e41-ea01ef7d0ece",
+                    "path": "<XInputController>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Head",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "99279cce-3de7-4fa5-9dd8-110a046a2a18",
+                    "path": "<XInputController>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "LPunch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "468d2003-ee7b-408f-96c2-709bc6dbe5db",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "LPunch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
