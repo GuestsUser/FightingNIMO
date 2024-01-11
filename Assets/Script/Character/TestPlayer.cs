@@ -56,7 +56,7 @@ public class TestPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Time.timeScale <= 0) { return; } //停止中は実行しない
+        if (Time.timeScale <= 0) { return; } //停止中は実行しない
 
         down.RunFunction();
         if (down.isDown) { return; } //ダウンしていれば他処理は実行しない
