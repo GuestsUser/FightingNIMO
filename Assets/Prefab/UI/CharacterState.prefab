@@ -218,7 +218,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 6b3f9dc6d91f9aa46a3bd229a7bf82e6, type: 3}
+  m_Texture: {fileID: 2800000, guid: 2b416833a3f26f54584d1102afe25e3c, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -519,6 +519,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2894958808021473219}
+  - component: {fileID: 4156150554712005505}
   m_Layer: 0
   m_Name: CharacterState
   m_TagString: Untagged
@@ -550,6 +551,18 @@ RectTransform:
   m_AnchoredPosition: {x: -580, y: 300}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &4156150554712005505
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4472092537902830463}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5811422031037290376
 GameObject:
   m_ObjectHideFlags: 0

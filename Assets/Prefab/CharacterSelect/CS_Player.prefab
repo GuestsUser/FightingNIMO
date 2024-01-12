@@ -223,6 +223,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CSM: {fileID: 1768038374339283132}
+  GSS: {fileID: 0}
+  playerNumText: {fileID: 7846040043033089997}
+  characterState: {fileID: 4329199262838734892}
   circle: {fileID: 4281976125156308683}
   circles:
   - {fileID: 2187816589312100733}
@@ -237,6 +240,8 @@ MonoBehaviour:
   maxY: 10
   delay: 50
   speed: 0.25
+  space: 410
+  input: {fileID: 0}
 --- !u!1001 &145372697780376403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -333,6 +338,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: CharacterState
       objectReference: {fileID: 0}
+    - target: {fileID: 7991299351186441374, guid: 9b62ed87a3084f24d8d0f14798ba8264, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7991299351186441374, guid: 9b62ed87a3084f24d8d0f14798ba8264, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7991299351186441374, guid: 9b62ed87a3084f24d8d0f14798ba8264, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863024128926706992, guid: 9b62ed87a3084f24d8d0f14798ba8264, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 270
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -363,6 +384,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4136790641077675416, guid: 9b62ed87a3084f24d8d0f14798ba8264, type: 3}
   m_PrefabInstance: {fileID: 145372697780376403}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4329199262838734892 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4472092537902830463, guid: 9b62ed87a3084f24d8d0f14798ba8264, type: 3}
+  m_PrefabInstance: {fileID: 145372697780376403}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5954363708504671451 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5811422031037290376, guid: 9b62ed87a3084f24d8d0f14798ba8264, type: 3}
@@ -377,6 +403,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7846040043033089997 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7991299351186441374, guid: 9b62ed87a3084f24d8d0f14798ba8264, type: 3}
+  m_PrefabInstance: {fileID: 145372697780376403}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &4032014248811238586
@@ -606,6 +643,18 @@ PrefabInstance:
     - target: {fileID: 2293149927492639108, guid: 731cd65840633974c936d4abdb0a31db, type: 3}
       propertyPath: m_Name
       value: Cursor
+      objectReference: {fileID: 0}
+    - target: {fileID: 2833086374810205197, guid: 731cd65840633974c936d4abdb0a31db, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2833086374810205197, guid: 731cd65840633974c936d4abdb0a31db, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2833086374810205197, guid: 731cd65840633974c936d4abdb0a31db, type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2833086374810205197, guid: 731cd65840633974c936d4abdb0a31db, type: 3}
       propertyPath: m_FontData.m_MinSize
