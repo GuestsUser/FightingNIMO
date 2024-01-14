@@ -235,12 +235,13 @@ MonoBehaviour:
   readyColor: {r: 0, g: 1, b: 0.40160227, a: 1}
   check: {fileID: 3600797110428319647}
   easTimes: []
-  stopTimes: []
-  stopTime: 20
-  maxY: 10
-  delay: 50
+  stopTime: 0
+  stopDuration: 40
+  maxY: 15
+  delay: 60
   speed: 0.25
   space: 410
+  complete: 0
   input: {fileID: 0}
 --- !u!1001 &145372697780376403
 PrefabInstance:

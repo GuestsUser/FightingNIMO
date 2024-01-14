@@ -17,8 +17,8 @@ public class SelectAnim : MonoBehaviour
     [SerializeField] private Color readyColor;
     [SerializeField] private GameObject check;
     [SerializeField] private float[] easTimes;
-    [SerializeField] private float[] stopTimes;
     [SerializeField] private float stopTime;
+    [SerializeField] private float stopDuration;
     [SerializeField] private float maxY;
     [SerializeField] private float delay;
     [SerializeField] private float speed;
@@ -37,7 +37,7 @@ public class SelectAnim : MonoBehaviour
         input = this.GetComponent<PlayerInput>();			//このスクリプトを持つオブジェクトのPlayerInputを取得
         characterState.GetComponent<CanvasGroup>().alpha = 0.0f;
         Array.Resize(ref easTimes, circles.Length);   //circlesの数によってeasTimesの大きさを変更する
-        Array.Resize(ref stopTimes, circles.Length);  //circlesの数によってstopTimesの大きさを変更する
+        //Array.Resize(ref stopTimes, circles.Length);  //circlesの数によってstopTimesの大きさを変更する
 
         for(int i = 0; i < circles.Length; i++)
         {
@@ -118,33 +118,42 @@ public class SelectAnim : MonoBehaviour
             circles[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(circles[i].GetComponent<RectTransform>().anchoredPosition.x, (maxY / 2.0f) * easing(speed, easTimes[i], 0.5f));
 
             // 点が初期位置に戻ってきたとき
-            if ((maxY / 2.0f) * easing(speed, easTimes[i], 0.5f) == 0)
+            if (/*(maxY / 2.0f) * easing(speed, easTimes[2], 0.5f) == 0 && */easTimes[2] == 100.0f)
             {
-                //if(i == 2 && complete == false)
-                //{
-                //    complete = true;
-                //}
-
-                stopTimes[i]++;
-                if (stopTimes[i] > stopTime)
+                if (i == 2)
                 {
-                    stopTimes[i] = 0;
-                    complete = false;
+                    //if(complete == false)
+                    //{
+                    //    complete = true;
+                    //}
+                    stopTime++;
+                }
+
+                
+                if (stopTime > stopDuration)
+                {
+                    stopTime = 0;
+                    //complete = false;
+
+                    for (int j = 0; j < circles.Length; j++)
+                    {
+                        easTimes[j] = 45.0f;
+                    }
                 }
             }
 
-            // stopTimesが0であれば
-            if (stopTimes[i] == 0/* && complete == false*/)
+            // stopTimeが0であれば
+            if (stopTime == 0/* && complete == false*/)
             {
                 if (i > 0)
                 {
-                    if (easTimes[i - 1] > delay)
+                    if (easTimes[i - 1] > delay && easTimes[i] < 100)
                     {
                         easTimes[i]++;
                     }
 
                 }
-                else
+                else if(easTimes[0] < 100)
                 {
                     easTimes[0]++;
                 }
