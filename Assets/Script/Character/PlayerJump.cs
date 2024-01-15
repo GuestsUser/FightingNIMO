@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerJump : MonoBehaviour
 {
@@ -45,6 +46,7 @@ public class PlayerJump : MonoBehaviour
             }
         }
         parent.animator.SetBool("triggerJump", false); //平常時は常にfalse
+        parent.animator.SetFloat("airTime", (parent.animator.GetFloat("airTime") + Time.deltaTime) * Convert.ToInt32(!isGround)); //落下していれば滞空時間を記録
 
         bool pushJump = parent.pInput.actions["Jump"].ReadValue<float>() > 0; //入力があった場合true
         if (parent.animator.GetCurrentAnimatorStateInfo(1).IsName("wait")) {
@@ -53,11 +55,9 @@ public class PlayerJump : MonoBehaviour
             parent.animator.SetBool("triggerJump", pushJump); //ボタン入力があった且つ接地していればtrue
         }
 
-        parent.animator.SetBool("isGround", isGround);
 
         if (run == Section.jumpUp) { JumpUp(pushJump, isGround); }
         if (run == Section.jumpDown) { JumpDown(pushJump, isGround); }
-
         //if (!isGround || pushJump)
         //{
         //    if (count == 0) { force = jumpPower; }

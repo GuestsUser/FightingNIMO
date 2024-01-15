@@ -82,9 +82,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: isGround
-    m_EventTreshold: 0
+  - m_ConditionMode: 4
+    m_ConditionEvent: airTime
+    m_EventTreshold: 0.1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1988178758924570079}
   m_Solo: 0
@@ -183,9 +183,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
-    m_ConditionEvent: isGround
-    m_EventTreshold: 0
+  - m_ConditionMode: 3
+    m_ConditionEvent: airTime
+    m_EventTreshold: 1.3
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8553552134620427901}
   m_Solo: 0
@@ -342,10 +342,10 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 4642757294138610381}
-    m_Position: {x: 380, y: 110, z: 0}
+    m_Position: {x: 220, y: 10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4460224408247425048}
-    m_Position: {x: 550, y: 190, z: 0}
+    m_Position: {x: 220, y: 100, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6514136674658704986}
     m_Position: {x: 585, y: 255, z: 0}
@@ -375,7 +375,7 @@ AnimatorStateMachine:
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 80, y: 10, z: 0}
+  m_AnyStatePosition: {x: -20, y: -30, z: 0}
   m_EntryPosition: {x: 240, y: -60, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
@@ -811,6 +811,12 @@ AnimatorController:
     m_Controller: {fileID: 0}
   - m_Name: triggerHead
     m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: airTime
+    m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0

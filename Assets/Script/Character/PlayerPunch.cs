@@ -8,8 +8,10 @@ public class PlayerPunch : MonoBehaviour
     [SerializeField] [Tooltip("くっつきに使うジョイント")] ConfigurableJoint[] stickJoint;
     [SerializeField] [Tooltip("パンチ入力を取得する為のinputSystem上の名前を入れる")] string[] punchParaName;
     [SerializeField] [Tooltip("アニメのbool値を切り替える為の名前を入れる")] string[] animeParaName;
+    [SerializeField] [Tooltip("ボタン長押しからこれだけの時間が経過したらくっつきを開始する")] float stickStartTime = 1;
 
     private Rigidbody[] stickRb; //stickjointのrigidbody
+    private Attacker[] handAttack; //くっつきオブジェクトの攻撃スクリプト
     private GameObject[] stickTarget; //掴む対象
     private float[] holdTime; //ボタン長押し時間記録
 
@@ -21,9 +23,15 @@ public class PlayerPunch : MonoBehaviour
         parent = GetComponent<TestPlayer>();
 
         stickRb = new Rigidbody[stickJoint.Length];
+        handAttack = new Attacker[stickJoint.Length];
+
         stickTarget = new GameObject[stickJoint.Length];
         holdTime = new float[stickJoint.Length];
-        for (int i = 0; i < stickJoint.Length; ++i) { stickRb[i] = stickJoint[i].GetComponent<Rigidbody>(); }
+        for (int i = 0; i < stickJoint.Length; ++i)
+        {
+            stickRb[i] = stickJoint[i].GetComponent<Rigidbody>();
+            handAttack[i] = stickJoint[i].gameObject.GetComponent<Attacker>();
+        }
     }
 
     // Update is called once per frame
@@ -52,7 +60,8 @@ public class PlayerPunch : MonoBehaviour
 
             parent.animator.SetBool(animeParaName[i], isPunch);
 
-            if (holdTime[i] < 2) { continue; }
+            handAttack[i].isAttack = isPunch && holdTime[i] < stickStartTime; //パンチを押している且つくっつきに移行しない段階ならダメージ発生
+            if (holdTime[i] < stickStartTime) { continue; }
             if (stickTarget[i] != null) { continue; } //既に別オブジェクトを掴んでいれば終了
 
             RaycastHit hit;

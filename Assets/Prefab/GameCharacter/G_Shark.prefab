@@ -176,6 +176,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 4730511598523669091, guid: 4e5dc903f8ad28c41a453d4d8064477c, type: 3}
+      propertyPath: ignoreLayer.Array.data[1]
+      value: Shark
+      objectReference: {fileID: 0}
     - target: {fileID: 4971735649072986109, guid: 4e5dc903f8ad28c41a453d4d8064477c, type: 3}
       propertyPath: m_Layer
       value: 8
