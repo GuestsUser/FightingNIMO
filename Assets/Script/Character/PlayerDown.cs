@@ -8,7 +8,10 @@ using System;
 public class PlayerDown : MonoBehaviour
 {
     [SerializeField] [Tooltip("体力、0になるとダウンする")] float hp = 150;
-    [SerializeField] [Tooltip("ダウンした時の時間")] float downTimeBase = 5f;
+    [SerializeField] [Tooltip("ダウンした時の時間")] float downTimeBase = 4f;
+    [SerializeField] [Tooltip("短い間隔でダウンする事によってダウン時間がこの倍率分増加していく")] float timeAugRate = 0.3f;
+    [SerializeField] [Tooltip("増加時間倍率の最大値")] float maxRate = 2f;
+    [SerializeField] [Tooltip("ダメージを受けずにcountがこの時間に達すると体力を回復しダウン回数を1減らす")] float healTime = -10f;
 
     [SerializeField] [Tooltip("無敵時間、ダメージを受けるとこの時間分はヒット判定を取らない")] float invincible = 0.2f;
     [SerializeField] [Tooltip("このレイヤー名gameObjectはヒットを無効化する")] string[] ignoreLayer = { "Default" };
@@ -46,17 +49,19 @@ public class PlayerDown : MonoBehaviour
         iniHp = hp;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     public void RunFunction() //このコンポーネントのメイン機能
     {
         if (count <= 0 && isDown) //ダウン中にカウントが切れた場合体力を戻してダウン解除
         {
             hp = iniHp;
             _isDown = false;
+        }
+
+        if (count <= healTime)
+        {
+            count = 0; //カウントリセット
+            hp = iniHp;
+            if (downCt > 0) { --downCt; } //1回以上ダウンした事がある場合ダウン回数を減らす
         }
 
         count -= Time.deltaTime;
@@ -99,12 +104,14 @@ public class PlayerDown : MonoBehaviour
     public void Damage(float dmg) //dmg分だけダメージを受ける
     {
         hp -= dmg;
-
         _isDown = hp <= 0;
         if (isDown)
         {
-            count = downTimeBase; //ダウン用の無敵時間を入れる
             downCt++; //ダウン回数カウントアップ
+
+            float rate = timeAugRate * downCt;
+            if (rate > maxRate) { rate = maxRate; } //倍率を最大値に丸める
+            count = downTimeBase * rate; //ダウン用の無敵時間を入れる
             return;
         }
 

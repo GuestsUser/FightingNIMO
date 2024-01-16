@@ -16,12 +16,6 @@ public class HitLimb : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (parent.IsInvincible() || parent.IsIgnoreLayer(collision.gameObject)) { return; } //親が無敵かヒットを取らないオブジェクトへのヒットだった場合終わり
