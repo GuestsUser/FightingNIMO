@@ -10,6 +10,10 @@ public class PlayerPunch : MonoBehaviour
     [SerializeField] [Tooltip("アニメのbool値を切り替える為の名前を入れる")] string[] animeParaName;
     [SerializeField] [Tooltip("ボタン長押しからこれだけの時間が経過したらくっつきを開始する")] float stickStartTime = 1;
 
+    [SerializeField] [Tooltip("拳をオブジェクトに引き寄せる為の検知半径")] float searchRad = 2.5f;
+    [SerializeField] [Tooltip("この半径に入ったオブジェクトを掴む")] float gripRad = 1.1f;
+    [SerializeField] [Tooltip("引き寄せ範囲に入ったオブジェクトへ向かう力")] float gatherPower = 15f;
+
     private Rigidbody[] stickRb; //stickjointのrigidbody
     private Attacker[] handAttack; //くっつきオブジェクトの攻撃スクリプト
     private GameObject[] stickTarget; //掴む対象
@@ -65,7 +69,16 @@ public class PlayerPunch : MonoBehaviour
             if (stickTarget[i] != null) { continue; } //既に別オブジェクトを掴んでいれば終了
 
             RaycastHit hit;
-            if (!Physics.SphereCast(stickJoint[i].transform.position, 1.5f, stickJoint[i].transform.forward, out hit, 1.9f, parent.hitMask)) { continue; } //ヒットがなければここで終了
+            while (true)
+            {
+                if (!Physics.SphereCast(stickJoint[i].transform.position, searchRad, stickJoint[i].transform.forward, out hit, 0.1f, parent.hitMask)) { break; } //サーチ範囲になければ終了
+                if (hit.transform.GetComponent<Rigidbody>() == null) { break; } //ヒットオブジェクトにrigidBodyが無ければ終了
+
+                stickRb[i].AddForce((hit.transform.position - transform.position).normalized * gatherPower, ForceMode.Impulse); //サーチオブジェクトへ手を動かす
+                break;
+            }
+
+            if (!Physics.SphereCast(stickJoint[i].transform.position, gripRad, stickJoint[i].transform.forward, out hit, 0.1f, parent.hitMask)) { continue; } //ヒットがなければここで終了
             if (hit.transform.GetComponent<Rigidbody>() == null) { continue; } //rigidbodyが無ければくっつき処理終了
 
             stickTarget[i] = hit.transform.gameObject; //掴み対象保存

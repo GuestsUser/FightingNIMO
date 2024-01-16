@@ -494,6 +494,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 150
   downTimeBase: 5
+  timeAugRate: 0.3
+  maxRate: 2
+  healTime: -10
   invincible: 0.2
   ignoreLayer:
   - Default
@@ -552,6 +555,9 @@ MonoBehaviour:
   - isRPunch
   - isLPunch
   stickStartTime: 1
+  searchRad: 1.7
+  gripRad: 1.1
+  gatherPower: 3
 --- !u!114 &7377406551062526637
 MonoBehaviour:
   m_ObjectHideFlags: 0
