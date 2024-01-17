@@ -74,7 +74,7 @@ public class PlayerPunch : MonoBehaviour
                 if (!Physics.SphereCast(stickJoint[i].transform.position, searchRad, stickJoint[i].transform.forward, out hit, 0.1f, parent.hitMask)) { break; } //サーチ範囲になければ終了
                 if (hit.transform.GetComponent<Rigidbody>() == null) { break; } //ヒットオブジェクトにrigidBodyが無ければ終了
 
-                stickRb[i].AddForce((hit.transform.position - transform.position).normalized * gatherPower, ForceMode.Impulse); //サーチオブジェクトへ手を動かす
+                stickRb[i].AddForce((hit.transform.position - stickJoint[i].transform.position).normalized * gatherPower, ForceMode.Impulse); //サーチオブジェクトへ手を動かす
                 break;
             }
 

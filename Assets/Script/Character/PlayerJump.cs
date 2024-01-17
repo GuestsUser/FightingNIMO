@@ -19,20 +19,21 @@ public class PlayerJump : MonoBehaviour
 
     float count = 0; //ジャンプを始めてからの時間経過記録
     float force = 0; //現在の上昇力
-    bool triggerJump = false; //地上でジャンプした場合trueにする
+    bool oldPushJump = false; //前フレームでジャンプボタンを押していた場合trueに
     Section run = Section.none; //上昇系処理の内どれを実行すべきか記録
 
     TestPlayer parent; //このスクリプトを制御する親スクリプトを保持
+    PlayerMoving moving; //移動用スクリプト取得
 
     // Start is called before the first frame update
     void Start()
     {
         parent = GetComponent<TestPlayer>();
+        moving = GetComponent<PlayerMoving>();
     }
 
     public void RunFunction() //このコンポーネントのメイン機能
     {
-        int mask = LayerMask.GetMask("Chara"); //仮動作
         bool isGround = false; //接地してるかどうか判定取り
         foreach (var itr in foot)
         {
@@ -49,12 +50,13 @@ public class PlayerJump : MonoBehaviour
         parent.animator.SetFloat("airTime", (parent.animator.GetFloat("airTime") + Time.deltaTime) * Convert.ToInt32(!isGround)); //落下していれば滞空時間を記録
 
         bool pushJump = parent.pInput.actions["Jump"].ReadValue<float>() > 0; //入力があった場合true
-        if (parent.animator.GetCurrentAnimatorStateInfo(1).IsName("wait")) {
-            triggerJump = pushJump;
-            if (triggerJump) { run = Section.jumpUp; }
-            parent.animator.SetBool("triggerJump", pushJump); //ボタン入力があった且つ接地していればtrue
+        if (parent.animator.GetCurrentAnimatorStateInfo(1).IsName("wait") && isGround) {
+            bool pullJump = pushJump == false && oldPushJump == true; //ジャンプボタンを離した瞬間ならtrue
+            bool noDash = moving.GetMoveMode() != PlayerMoving.MoveMode.dash; //ダッシュ状態ではない場合true
+            if (pullJump && noDash) { run = Section.jumpUp; }
+            parent.animator.SetBool("triggerJump", pullJump && noDash); //ボタン入力があった且つ接地していればtrue
         }
-
+        oldPushJump = pushJump;
 
         if (run == Section.jumpUp) { JumpUp(pushJump, isGround); }
         if (run == Section.jumpDown) { JumpDown(pushJump, isGround); }
@@ -76,7 +78,7 @@ public class PlayerJump : MonoBehaviour
 
     void JumpUp(bool pushJump, bool isGround)
     {
-        if (count > forceStamina || !pushJump)
+        if (count > forceStamina)
         {
             run = Section.jumpDown;
             return;
