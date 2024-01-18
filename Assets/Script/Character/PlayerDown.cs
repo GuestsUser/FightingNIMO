@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
 
+[RequireComponent(typeof(AudioSource))]
+
 public class PlayerDown : MonoBehaviour
 {
     [SerializeField] [Tooltip("体力、0になるとダウンする")] float hp = 150;
@@ -20,6 +22,10 @@ public class PlayerDown : MonoBehaviour
     [SerializeField] [Tooltip("ダウン時に戻る力を弱める対象とするジョイント")] ConfigurableJoint[] downJoint;
     [SerializeField] [Tooltip("ダウン時の戻る力")] float downPower = 5;
 
+    [SerializeField] [Tooltip("ダメージを受けた時流すサウンド")] AudioClip[] damageSound;
+    [SerializeField] [Tooltip("ダウンした時に流すサウンド")] AudioClip downSound;
+
+    AudioSource audioPlayer;
     float count = 0; //復帰までの時間や無敵時間の終了をカウントする変数、値が0以下の場合ダメージを受けられるカウントダウン形式
     float iniHp; //復帰時にhpを戻す為初期体力を記録する
     bool _isDown; //ダウンしているかを記録する変数
@@ -47,6 +53,7 @@ public class PlayerDown : MonoBehaviour
         }
 
         iniHp = hp;
+        audioPlayer = GetComponent<AudioSource>();
     }
 
     public void RunFunction() //このコンポーネントのメイン機能
@@ -103,6 +110,7 @@ public class PlayerDown : MonoBehaviour
 
     public void Damage(float dmg) //dmg分だけダメージを受ける
     {
+        audioPlayer.PlayOneShot(damageSound[UnityEngine.Random.Range(0, damageSound.Length)]);
         hp -= dmg;
         _isDown = hp <= 0;
         if (isDown)
@@ -112,6 +120,8 @@ public class PlayerDown : MonoBehaviour
             float rate = timeAugRate * downCt;
             if (rate > maxRate) { rate = maxRate; } //倍率を最大値に丸める
             count = downTimeBase * rate; //ダウン用の無敵時間を入れる
+
+            audioPlayer.PlayOneShot(downSound);
             return;
         }
 
