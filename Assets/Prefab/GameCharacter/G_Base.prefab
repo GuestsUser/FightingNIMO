@@ -631,7 +631,7 @@ MonoBehaviour:
   - {fileID: 2783345903350091038}
   - {fileID: 4511896563268904726}
   jumpPower: 18
-  forceStamina: 0.15
+  forceStamina: 0.25
 --- !u!114 &1126416565011404631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1856,8 +1856,8 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
+  m_MassScale: 2
+  m_ConnectedMassScale: 0.7
 --- !u!136 &2083260748838233428
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2505,8 +2505,8 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
+  m_MassScale: 2
+  m_ConnectedMassScale: 0.7
 --- !u!136 &1141022762720987623
 CapsuleCollider:
   m_ObjectHideFlags: 0
