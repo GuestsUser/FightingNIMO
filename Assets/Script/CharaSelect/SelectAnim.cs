@@ -82,30 +82,32 @@ public class SelectAnim : MonoBehaviour
         //space = (1920 - ((1920.0f / 2.0f) - initPos) * 2) / 4;
         //characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2(-initPos + (input.playerIndex * space), 300.0f);
 
+        float posY = characterState.GetComponent<RectTransform>().anchoredPosition.y;
+
         //1P～4Pカーソルの初期位置設定
         switch (input.playerIndex)
         {
             //1P
             case 0:
-                characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2(-((space / 2.0f) + space), 300.0f);
+                characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2(-((space / 2.0f) + space), posY);
                 playerNumText.text = "<color=#ff6363>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
                 /* ---------- */
                 break;
             //2P
             case 1:
-                characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2(-(space / 2.0f), 300.0f);
+                characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2(-(space / 2.0f), posY);
                 playerNumText.text = "<color=#33b0ff>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
                 /* ---------- */
                 break;
             //3P
             case 2:
-                characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2((space / 2.0f), 300.0f);
+                characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2((space / 2.0f), posY);
                 playerNumText.text = "<color=#f4f54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
                 /* ---------- */
                 break;
             //4P
             case 3:
-                characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2(((space / 2.0f) + space), 300.0f);
+                characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2(((space / 2.0f) + space), posY);
                 playerNumText.text = "<color=#4cf54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
                 /* ---------- */
                 break;
