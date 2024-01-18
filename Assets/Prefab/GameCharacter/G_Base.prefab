@@ -630,7 +630,7 @@ MonoBehaviour:
   foot:
   - {fileID: 2783345903350091038}
   - {fileID: 4511896563268904726}
-  jumpPower: 12
+  jumpPower: 18
   forceStamina: 0.15
 --- !u!114 &1126416565011404631
 MonoBehaviour:

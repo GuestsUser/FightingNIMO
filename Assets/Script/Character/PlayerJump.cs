@@ -24,12 +24,14 @@ public class PlayerJump : MonoBehaviour
 
     TestPlayer parent; //このスクリプトを制御する親スクリプトを保持
     PlayerMoving moving; //移動用スクリプト取得
+    PlayerDown down;
 
     // Start is called before the first frame update
     void Start()
     {
         parent = GetComponent<TestPlayer>();
         moving = GetComponent<PlayerMoving>();
+        down = GetComponent<PlayerDown>();
     }
 
     public void RunFunction() //このコンポーネントのメイン機能
@@ -40,57 +42,49 @@ public class PlayerJump : MonoBehaviour
             RaycastHit hit;
             if (Physics.BoxCast(itr.transform.position, itr.size, Vector3.down, out hit, Quaternion.Euler(Vector3.zero), 1, parent.floorMask))
             {
-                isGround = true; //片足でもヒットがあれば接地とする
                 count = 0; //ジャンプを可能にする為カウントリセット
                 nowPower = 0;
-                //Debug.Log(hit);
-                break;
+                isGround = true; //片足でもヒットがあれば接地とする
             }
         }
         parent.animator.SetBool("triggerJump", false); //平常時は常にfalse
         parent.animator.SetFloat("airTime", (parent.animator.GetFloat("airTime") + Time.deltaTime) * Convert.ToInt32(!isGround)); //落下していれば滞空時間を記録
 
-        bool pushJump = parent.pInput.actions["Jump"].ReadValue<float>() > 0; //入力があった場合true
-        if (parent.animator.GetCurrentAnimatorStateInfo(1).IsName("wait")) {
-            if (isGround)
+        bool pushJump = false; //ダウンしていれば入力に関わらずfalseとなる
+        if (!down.isDown) //ダウンしていれば入力系判定を取る
+        {
+            pushJump = parent.pInput.actions["Jump"].ReadValue<float>() > 0;
+            if (parent.animator.GetCurrentAnimatorStateInfo(1).IsName("wait"))
             {
-                bool pullJump = pushJump == false && oldPushJump == true; //ジャンプボタンを離した瞬間ならtrue
-                bool noDash = moving.GetMoveMode() != PlayerMoving.MoveMode.dash; //ダッシュ状態ではない場合true
-                if (pullJump && noDash) { run = Section.jumpUp; }
-                parent.animator.SetBool("triggerJump", pullJump && noDash); //ボタン入力があった且つ接地していればtrue
-
-            }else
-            {
-                run = Section.jumpDown;
+                if (isGround)
+                {
+                    bool pullJump = pushJump == false && oldPushJump == true; //ジャンプボタンを離した瞬間ならtrue
+                    bool noDash = moving.GetMoveMode() != PlayerMoving.MoveMode.dash; //ダッシュ状態ではない場合true
+                    if (pullJump && noDash)
+                    {
+                        run = Section.jumpUp;
+                        nowPower = jumpPower;
+                        parent.animator.SetBool("triggerJump", true); //ボタン入力があった且つ接地していればtrue
+                    }
+                }
+                else { run = Section.jumpDown; }
             }
         }
         oldPushJump = pushJump;
 
-        if (run == Section.jumpUp) { JumpUp(pushJump, isGround); }
-        if (run == Section.jumpDown) { JumpDown(pushJump, isGround); }
-        //if (!isGround || pushJump)
-        //{
-        //    if (count == 0) { force = jumpPower; }
-        //    force += Physics.gravity.y * Time.deltaTime;
-        //    Vector3 pos = gameObject.transform.position;
-        //    pos.y += force * Time.deltaTime;
-        //    gameObject.transform.position = pos;
-
-        //    count += Time.deltaTime;
-        //}
-
-
-
-
+        if (run == Section.jumpUp) { JumpUp(isGround); }
+        if (run == Section.jumpDown) { JumpDown(isGround); }
     }
 
-    void JumpUp(bool pushJump, bool isGround)
+    void JumpUp(bool isGround)
     {
         if (count > forceStamina)
         {
             run = Section.jumpDown;
+            count = 0;
             return;
         }
+
 
         nowPower = jumpPower - (jumpPower / forceStamina * count);
         Vector3 pos = gameObject.transform.position;
@@ -100,7 +94,7 @@ public class PlayerJump : MonoBehaviour
         count += Time.deltaTime;
     }
 
-    void JumpDown(bool pushJump, bool isGround)
+    void JumpDown(bool isGround)
     {
         if (isGround)
         {
@@ -108,9 +102,9 @@ public class PlayerJump : MonoBehaviour
             return;
         }
 
-        float usePower = nowPower - (jumpPower / forceStamina * count);
+        nowPower = -jumpPower / forceStamina * count;
         Vector3 pos = gameObject.transform.position;
-        pos.y += (Mathf.Abs(Physics.gravity.y) + usePower) * Time.deltaTime;
+        pos.y += (Mathf.Abs(Physics.gravity.y) + nowPower) * Time.deltaTime;
         gameObject.transform.position = pos;
 
         count += Time.deltaTime;

@@ -17,12 +17,6 @@ public class PlayerRotation : MonoBehaviour
         parent = GetComponent<TestPlayer>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void RunFunction() //このコンポーネントのメイン機能
     {
         Vector2 move = parent.pInput.actions["Move"].ReadValue<Vector2>();

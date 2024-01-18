@@ -18,10 +18,6 @@ public class PlayerHeadbutt : MonoBehaviour
         count = wait;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     public void RunFunction() //このコンポーネントのメイン機能
     {

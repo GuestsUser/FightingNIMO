@@ -20,11 +20,13 @@ public class PlayerPunch : MonoBehaviour
     private float[] holdTime; //ボタン長押し時間記録
 
     TestPlayer parent; //このスクリプトを制御する親スクリプトを保持
+    PlayerDown down;
 
     // Start is called before the first frame update
     void Start()
     {
         parent = GetComponent<TestPlayer>();
+        down = GetComponent<PlayerDown>();
 
         stickRb = new Rigidbody[stickJoint.Length];
         handAttack = new Attacker[stickJoint.Length];
@@ -38,16 +40,13 @@ public class PlayerPunch : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     public void RunFunction() //このコンポーネントのメイン機能
     {
         for (int i = 0; i < stickJoint.Length; ++i)
         {
-            bool isPunch = parent.pInput.actions[punchParaName[i]].ReadValue<float>() != 0; //パンチ入力があったか記録
+            bool isPunch = false; //ダウン状態なら強制false
+            if (!down.isDown) { isPunch = parent.pInput.actions[punchParaName[i]].ReadValue<float>() != 0; } //パンチ入力があったか記録
+
             if ((!isPunch) && stickTarget[i] != null)  //掴んでいた場合掴み用ジョイントを削除し掴み対象の情報もリセットする
             {
                 foreach (var itr in stickTarget[i].GetComponents<FixedJoint>())
@@ -63,6 +62,7 @@ public class PlayerPunch : MonoBehaviour
             holdTime[i] = (holdTime[i] + Time.deltaTime) * Convert.ToInt32(isPunch); //実行を行った場合0にし、しなければ経過時間の加算を行う
 
             parent.animator.SetBool(animeParaName[i], isPunch);
+            if (down.isDown) { continue; } //ダウン状態の場合実行はここまで
 
             handAttack[i].isAttack = isPunch && holdTime[i] < stickStartTime; //パンチを押している且つくっつきに移行しない段階ならダメージ発生
             if (holdTime[i] < stickStartTime) { continue; }

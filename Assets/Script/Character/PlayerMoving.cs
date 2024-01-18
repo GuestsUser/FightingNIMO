@@ -29,11 +29,6 @@ public class PlayerMoving : MonoBehaviour
         parent = GetComponent<TestPlayer>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     public void RunFunction() //このコンポーネントのメイン機能
     {
         count = (count + Time.deltaTime) * Convert.ToInt32(parent.pInput.actions["Jump"].ReadValue<float>() > 0); //入力があれば時間経過記録、そうでなければリセット
