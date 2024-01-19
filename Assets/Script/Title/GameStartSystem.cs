@@ -24,7 +24,8 @@ public class GameStartSystem : MonoBehaviour
     [Tooltip("選択されたキャラクター番号を格納する")]
     public int[] selectCharacterNumber;
 
-    private bool flgCheck;  //1人でもキャラクターを選択してない時のフラグ
+    public int conectCount;     //接続しているキャラ数
+    public int submitCharCount; //選択が確定されたキャラ数を記録
 
     void Start()
     {
@@ -40,7 +41,6 @@ public class GameStartSystem : MonoBehaviour
         isNextScene = false;
         isReady = false;
         isCharSelect = false;
-        flgCheck = false;
     }
 
     void Update()
@@ -59,68 +59,30 @@ public class GameStartSystem : MonoBehaviour
         }
     }
 
+    //Ready状態ONとOFFの条件関数
     private void CheckReady()
     {
-        //旧バージョン
-        //for (int i = 0; i < receiveNotificationExample.playerNum; i++)
-        //{
-        //    //
-        //    if (receiveNotificationExample.count == 0)
-        //    {
-        //        //各キャラクターごとにキャラクターを選択したかどうかの値を取得する
-        //        //isSelected[i] = GameObject.Find($"Player{i}").GetComponent<CharSelectManager>().isCharSelected;
-        //        isSelected[i] = GameObject.FindWithTag("SelectPlayer").GetComponent<CharSelectManager>().isCharSelected;
-        //    }
-
-        //}
-
-        //for (int i = 0; i < receiveNotificationExample.playerNum; i++)
-        //{
-        //    // もしひとつでもキャラクターが選択されていなかったらfor文を抜ける
-        //    if (isSelected[i] == false)
-        //    {
-
-        //        readyUI.SetActive(false);   //ReadyのUIを非表示にする
-        //        isReady = false;            //Ready状態を解除する
-        //        break;                      //for文を抜ける
-        //    }
-
-        //    //もし全てのプレイヤーがキャラクターを選択していたら
-        //    if (isSelected[receiveNotificationExample.playerNum - 1])
-        //    {
-        //        readyUI.SetActive(true);    //ReadyのUIを表示する
-        //        isReady = true;             //Ready状態にする
-        //    }
-        //}
-
         //新バージョン
         //hierarchyにあるCharSelectManagerを持つオブジェクトの配列を作成
         CharSelectManager[] objectsWithScripts = FindObjectsOfType<CharSelectManager>();
 
+        conectCount = objectsWithScripts.Length; //選択数初期化
+        submitCharCount = 0;
+
         foreach (CharSelectManager obj in objectsWithScripts)
         {
-            bool value = obj.isCharSelected;    //キャラクターが選択されているかどうかの値を代入
-
-            //1つでもfalseがあればフラグを立てる
-            if (!value)
-            {
-                flgCheck = true;
-                break;
-            }
-            else
-            {
-                flgCheck = false;
-            }
+            if (obj.isCharSelected) { submitCharCount++; } //確定されていればカウント加算
+            Debug.Log(submitCharCount);
         }
 
-        //キャラクターセレクト画面かつ1人でもキャラクターを選択していない場合
-        if (isCharSelect && flgCheck)
+        //キャラクターセレクト画面かつ1人でもキャラクターを選択していない,または接続数が1以下の場合
+        if (isCharSelect && submitCharCount < conectCount || conectCount <= 1)
         {
             readyUI.SetActive(false);   //ReadyのUIを非表示にする
             isReady = false;            //Ready状態を解除する
         }
-        //キャラクターセレクト画面かつ全員がキャラクターを選択している場合
-        else if (isCharSelect && !flgCheck)
+        //キャラクターセレクト画面かつ全員がキャラクターを選択している、接続数が1以上の場合
+        else if (isCharSelect && submitCharCount >= conectCount && conectCount > 1)
         {
             readyUI.SetActive(true);    //ReadyのUIを表示する
             isReady = true;             //Ready状態にする

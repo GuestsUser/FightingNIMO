@@ -244,7 +244,7 @@ public class MenuTest : MonoBehaviour
                 if (moveUI == false && !gameStartSys.isReady)
                 {
                     // Bボタンを押したら
-                    if (Gamepad.current.bButton.wasPressedThisFrame)
+                    if (Gamepad.current.bButton.wasPressedThisFrame && gameStartSys.submitCharCount <= 0)
                     {
                         // キャラクターUIを非表示にする
                         //for (int i = 0; i < characterUI.Length; i++)
