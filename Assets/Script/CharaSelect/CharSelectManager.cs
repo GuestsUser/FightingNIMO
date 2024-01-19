@@ -19,19 +19,19 @@ public class CharSelectManager : MonoBehaviour
 	[SerializeField] private RectTransform cursorImage; // 変更箇所 cursorText → cursorImage
 	[Tooltip("プレイヤー番号UI用のテキストを入れてください")]
 	[SerializeField] private Text playerNumText;
-	[Tooltip("自身のPlayerInputを取得(自動)")]
+	[Tooltip("自身のPlayerInputを取得(自動取得)")]
 	[SerializeField] private PlayerInput input;
-	[Tooltip("選べるキャラクターUIを入れてください")]
-	[SerializeField] private GameObject[] characterUI;
-	[SerializeField] private SkinnedMeshRenderer[] Smr; //表示の際に、キャラクターが倒れる現象を直すためにSkinnedMeshRendererのアクティブで調整
+	[Tooltip("選べるキャラクターUI(自動取得)")]
+	[SerializeField] private GameObject[] characterUI;  //自動的に入れられるようになっている
+	[Tooltip("各キャラクターのmoving内にあるTestCharacterを入れてください")]
+	[SerializeField] private SkinnedMeshRenderer[] Smr; //表示の際に、キャラクターが倒れる現象を直すためにSkinnedMeshRendererのアクティブで調整している
 
-
-	[Tooltip("GameStartSystem.csを持っているオブジェクトを入れてください")]
+	/*Script関連取得*/
+	[Tooltip("GameStartSystem.csを持っているオブジェクトの自動取得")]
 	[SerializeField] private GameStartSystem gameStartSys;
-	[Tooltip("ReceiveNotificationExample.csを持ったオブジェクトを入れる")]
+	[Tooltip("ReceiveNotificationExample.csを持ったオブジェクトの自動取得")]
 	[SerializeField] private ReceiveNotificationExample receiveNotificationExample;
-
-	[Tooltip("DataRetation.csを持ったオブジェクトを入れる")]
+	[Tooltip("DataRetation.csを持ったオブジェクトの自動取得")]
 	[SerializeField] private DataRetation dataRetation;
 
 	[Header("---------------------------------------------")]
@@ -43,25 +43,24 @@ public class CharSelectManager : MonoBehaviour
 	[SerializeField] private float interval;
 	[Tooltip("現在選択されているキャラクター番号")]
 	[SerializeField] private int characterNum;
-	[Tooltip("選択されているキャラクターを選んだかどうか")]
-	[SerializeField] public bool isCharSelected;
-
-	[Tooltip("入力継続時間")]
+	[Tooltip("UIのアイコンとの距離 0がx、1がy")]
+	[SerializeField] private float[] offset = { 60, 40 };
+	[Tooltip("ボタン入力継続時間")]
 	[SerializeField] private float count;
+
+
+	[Tooltip("選択されているキャラクターを選んだかどうか")]
+	[SerializeField] public bool isCharSelected;    //キャラクターを選択したらチェックが付く
 	[Tooltip("左スティックのX軸を入力しているか")]
 	[SerializeField] private bool push;
 
+	[SerializeField] private bool isLeftPush;    //左十字キーが押されているかどうか
+	[SerializeField] private bool isRightPush;   //右十字キーが押されているかどうか
+
 	private bool getCharacter;  //1度だけ反応させるためのもの
+	private bool isTrigger;     //ゲームパッドが切断されたかどうか
 
-
-	private bool isTrigger;		//ゲームパッドが切断されたかどうか
-	private bool isLeftPush;    //左十字キーが押されているかどうか
-	private bool isRightPush;   //右十字キーが押されているかどうか
-
-	/* 追加箇所 */
-	[Tooltip("UIのアイコンとの距離 0がx、1がy")]
-	[SerializeField] private float[] offset = {60,40};
-	/* 追加箇所 */
+	
 
 	private void Awake()
 	{
@@ -125,7 +124,8 @@ public class CharSelectManager : MonoBehaviour
 				break;
 		}
 
-		this.gameObject.name = "Player" + (receiveNotificationExample.playerNum - 1);   //このオブジェクトの名前をPlayer1～4に変更する
+		//このオブジェクトの名前をPlayer1～4に変更する
+		this.gameObject.name = "Player" + (receiveNotificationExample.playerNum - 1);
 		
 		cursor.SetActive(false);	//プレイヤーカーソルの非表示
 		getCharacter = false;		//初期化
@@ -157,9 +157,11 @@ public class CharSelectManager : MonoBehaviour
 		//		cursorImage.anchoredPosition = new Vector2((offset[0]), -(offset[1]));
 		//		break;
 		//}
-		AddCharacterNum();		//キャラクター番号保持関数
-		RemovePlayer();		//プレイヤー削除関数
-		CharacterVisibility();  ////キャラクター（表示/非表示）関数
+
+		//AddCharacterNum();      //キャラクター番号保持関数
+		RemovePlayer();         //プレイヤー削除関数
+		CharacterVisibility();  //キャラクター（表示/非表示）関数
+		LongPress();            //長押し入力関数
 
 		//現在がキャラクターセレクトできる状態なら
 		if (gameStartSys.isCharSelect == true)
@@ -177,6 +179,18 @@ public class CharSelectManager : MonoBehaviour
 				cursor.SetActive(true);
 			}
 
+			if (isCharSelected == false)
+			{
+				int currentCharNum = characterNum;
+
+				while (LoopArray((currentCharNum) % maxCharacter))
+				{
+					++currentCharNum;
+				}
+
+				characterNum = currentCharNum % maxCharacter;
+			}
+
 			//キャラクターの総数分ループ
 			for (int i = 0; i < maxCharacter; i++)
 			{
@@ -187,10 +201,15 @@ public class CharSelectManager : MonoBehaviour
 				}
 			}
 		}
-        else
+		else
 		{
 			//playerNumText.GetComponent<Text>().CrossFadeAlpha(0, 0f, true);
 			cursor.GetComponent<CanvasGroup>().alpha = 0;
+
+			//リセットすることで戻った時に移動するバグをさせない
+			isRightPush = false;
+			isLeftPush = false;
+			push = false;
 		}
 	}
 
@@ -201,7 +220,6 @@ public class CharSelectManager : MonoBehaviour
 		{
 			if (dataRetation.playerList[i] == null)
 			{
-				//dataRetation.controllerID[i] = input.playerIndex + 1;
 				dataRetation.controllerID[i] = input.devices[0].deviceId;   //デバイスIDを格納する
 				dataRetation.playerList[i] = this.gameObject;   //このゲームオブジェクトを格納する
 				break;
@@ -225,9 +243,8 @@ public class CharSelectManager : MonoBehaviour
     {
 		switch (characterNum)
 		{
-			//クマノミ（現在はベース）
+			//クマノミ
 			case 0:
-				//characters[characterNum].SetActive(true);   //クマノミを表示
 				Smr[characterNum].enabled = true;	//クマノミを表示
 
 				//キャラクターの総数分ループし、現在選択されているキャラクター番号以外のキャラクターを非表示にする
@@ -235,83 +252,78 @@ public class CharSelectManager : MonoBehaviour
 				{
 					if (i != characterNum)
 					{
-						//characters[i].SetActive(false);
 						Smr[i].enabled = false;
 					}
 				}
 				break;
 			//サメ
 			case 1:
-				//characters[characterNum].SetActive(true);   //サメを表示
-				Smr[characterNum].enabled = true;
+				Smr[characterNum].enabled = true;    //サメを表示
 				for (int i = 0; i < maxCharacter; i++)
 				{
 					if (i != characterNum)
 					{
-						//characters[i].SetActive(false);
-						Smr[i].enabled = false;
+						Smr[i].enabled = false;		//サメを非表示
 
 					}
 				}
 				break;
                 //カメ
 
-            case 2:
-				//characters[characterNum].SetActive(true);   //カメを表示
-				Smr[characterNum].enabled = true;
+            case 2:  
+				Smr[characterNum].enabled = true;   //カメを表示
 				for (int i = 0; i < maxCharacter; i++)
                 {
                     if (i != characterNum)
                     {
-                        //characters[i].SetActive(false);
-						Smr[i].enabled = false;
+						Smr[i].enabled = false;     //カメを非表示
 					}
                 }
                 break;
-                //マンタ
-                //case 3:
-                //	characters[characterNum].SetActive(true);   //マンタを表示
-                //	for (int i = 0; i < maxCharacter; i++)
-                //	{
-                //		if (i != characterNum)
-                //		{
-                //			characters[i].SetActive(false);
-                //		}
-                //	}
-                //	break;
-        }
+				//マンタ
+				//case 3:
+				//Smr[characterNum].enabled = true;	//マンタを表示
+				//for (int i = 0; i < maxCharacter; i++)
+				//{
+				//		if (i != characterNum)
+				//		{
+				//			Smr[i].enabled = false;	//マンタを非表示
+				//		}
+				//	}
+				//	break;
+		}
 	}
 
 	//キャラクター番号更新保持関数
-	private void AddCharacterNum()
-    {
-        for (int i = 0; i < dataRetation.characterNum.Length; i++)
-        {
-			//まだ値が格納されていないかつ、プレイヤーオブジェクト配列内に格納されているオブジェクトと同じものなら
-            if (dataRetation.characterNum[i] == -1 && dataRetation.playerList[i] == this.gameObject)
-            {
-				//その配列の値の場所に、キャラクター番号を格納する
-                dataRetation.characterNum[i] = characterNum;
-				break;
-            }
-			//現在のcharacterNumと配列内の値が一緒でなく、配列内に入っているオブジェクトがこのオブジェクト同じなら
-			else if (dataRetation.characterNum[i] != characterNum && dataRetation.playerList[i] == this.gameObject)
-			{
-				//キャラクタ番号を更新する
-				dataRetation.characterNum[i] = characterNum;
-				break;
-			}
-			//配列内の値が-1(既に値が格納されている)でないならば
-			else if (dataRetation.characterNum[i] != -1)
-            {
-				//既に値が格納されているのでループを継続する
-                continue;
-            }
-        }
-    }
+	//	//private void AddCharacterNum()
+	//   {
+	//       for (int i = 0; i < dataRetation.characterNum.Length; i++)
+	//       {
+	//		//まだ値が格納されていないかつ、プレイヤーオブジェクト配列内に格納されているオブジェクトと同じものなら
+	//           if (dataRetation.characterNum[i] == -1 && dataRetation.playerList[i] == this.gameObject)
+	//           {
+	//			//その配列の値の場所に、キャラクター番号を格納する
+	//               dataRetation.characterNum[i] = characterNum;
+	//			break;
+	//           }
+	//		//現在のcharacterNumと配列内の値が一緒でなく、配列内に入っているオブジェクトがこのオブジェクト同じなら
+	//		else if (dataRetation.characterNum[i] != characterNum && dataRetation.playerList[i] == this.gameObject)
+	//		{
+	//			//キャラクタ番号を更新する
+	//			dataRetation.characterNum[i] = characterNum;
+	//			break;
+	//		}
+	//		//配列内の値が-1(既に値が格納されている)でないならば
+	//		else if (dataRetation.characterNum[i] != -1)
+	//           {
+	//			//既に値が格納されているのでループを継続する
+	//               continue;
+	//           }
+	//       }
+	//   }
 
-    //キャラクター番号削除関数
-    private void RemoveCharacterNum()
+
+	private void RemoveCharacterNum()
     {
         for (int i = 0; i < dataRetation.characterNum.Length; i++)
         {
@@ -325,86 +337,125 @@ public class CharSelectManager : MonoBehaviour
         }
     }
 
-	//--------------------------------------------------
+	//既に選択されているキャラクターがいたら関数
+	private bool LoopArray(int testNum)
+	{
+		int array = dataRetation.characterNum.Length;   //要素数（4）取得
+
+		for (int i = 0; i < array; i++)
+		{
+			if (dataRetation.characterNum[i] == testNum)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//プレイヤーカーソル移動処理（長押し.ver）
+	private void LongPress()
+	{
+
+		int testNum2 = characterNum;
+		if (push == true)
+		{
+			count++;    //長押し間隔調整
+
+			//右長押し
+			if (isRightPush == true)
+			{
+				if (count % interval == 0)
+				{
+					while (LoopArray((++testNum2) % maxCharacter)) { }
+
+					characterNum = testNum2 % maxCharacter;
+					//SE（移動音）
+					//audioSouce.clip = moveSE;
+					//audioSouce.PlayShot(moveSE);
+				}
+			}
+			//左長押し
+			else if (isLeftPush == true)
+			{
+				if (count % interval == 0)
+				{
+					while (true)
+					{
+						--testNum2;
+
+						if (testNum2 < 0)
+						{
+							//一番最後のキャラクター番号に変更する（クマノミ->マンタ）
+							//マンタモデルができたら-1削除
+							testNum2 = maxCharacter - 1;
+						}
+						if (!LoopArray(testNum2)) { break; }
+					}
+
+					characterNum = testNum2 % maxCharacter;
+				}
+				//audioSouce.clip = moveSE;
+				//audioSouce.PlayOneShot(moveSE);
+			}
+		}
+	}
+
+	/*-----------ActionInput(Start)-----------*/
 
 	//プレイヤーカーソル移動処理（ゲームパッド：左スティック or 十字キー）
 	public void OnMove(InputValue value)
 	{
-		//現在がキャラクターセレクトできる状態かつまだキャラクターを選択していない場合
+		int currentCharNum = characterNum;
+
+		//現在がキャラクターセレクトできる状態かつまだキャラクターを選択していない場合（動かせる）
 		if (gameStartSys.isCharSelect == true && isCharSelected == false)
 		{
-			//左入力時
-			if (value.Get<float>() < 0)
+			//左入力処理
+			if (value.Get<float>() < 0.0f)
 			{
-				if (push == false)  // 押された時の処理
+				if (push == false && isLeftPush == false)  //押された時の処理（1度だけ反応させるため）
 				{
 					push = true;
 					isLeftPush = true;
 
-					//0の時または下回った時、一番最後のキャラクター番号に変更する（クマノミ->マンタ）
-					if (characterNum <= 0)
+					while (true)
 					{
-						//一番右にする
-						characterNum = maxCharacter - 1;
-					}
-                    //現在選択しているキャラクター番号配列添え字とキャラクター番号がおなじなら
-                    else if (gameStartSys.selectCharacterNumber[characterNum] == characterNum)
-                    {
-                        for (int i = 0; i < gameStartSys.selectCharacterNumber.Length; i++)
-                        {
-                            if (gameStartSys.selectCharacterNumber[i] == -1)
-                            {
-                                characterNum = gameStartSys.selectCharacterNumber[i];
-                            }
-                        }
-                    }
-                    else
-					{
-						//1回ずつ減らす
-						characterNum = characterNum - 1;
+						--currentCharNum;
+
+						if (currentCharNum < 0)
+						{
+							//一番最後のキャラクター番号に変更する（クマノミ->マンタ）
+							//マンタモデルができたら-1削除
+							currentCharNum = maxCharacter - 1;
+						}
+						if (!LoopArray(currentCharNum)) { break; }
 					}
 
+					characterNum = currentCharNum % maxCharacter;
+
+					//SE（移動音）
 					//audioSouce.clip = moveSE;
 					//audioSouce.PlayOneShot(moveSE);
 				}
-				else    // 長押し時の処理
-				{
-					count++;
-					if (count % interval == 0)
-					{
-						//キャラクター番号が0より小さい値になったら、一番最初のキャラクター番号に変更する（クマノミ->マンタ）
-						if (--characterNum < 0) characterNum = maxCharacter - 1;
-						//audioSouce.clip = moveSE;
-						//audioSouce.PlayOneShot(moveSE);
-					}
-				}
 			}
-			//右入力時
-			else if (value.Get<float>() > 0)
+			//右入力処理
+			else if (value.Get<float>() > 0.0f)
 			{
-				if (push == false)
+				if (push == false && isRightPush == false)  //押された時の処理（1度だけ反応させるため）
 				{
 					push = true;
 					isRightPush = true;
-					//キャラクター番号がキャラ総数より大きい値になったら、一番最後のキャラクター番号に変更する（マンタ->クマノミ）
-					if (++characterNum > maxCharacter - 1) characterNum = 0;
+
+					while (LoopArray((++currentCharNum) % maxCharacter)) { }
+
+					characterNum = currentCharNum % maxCharacter;
+
+					//SE（移動音）
 					//audioSouce.clip = moveSE;
 					//audioSouce.PlayOneShot(moveSE);
 				}
-				else
-				{
-					count++;
-					if (count % interval == 0)
-					{
-						//キャラクター番号がキャラ総数より大きい値になったら、一番最後のキャラクター番号に変更する（マンタ->クマノミ）
-						if (++characterNum > maxCharacter - 1) characterNum = 0;
-						//audioSouce.clip = moveSE;
-						//audioSouce.PlayOneShot(moveSE);
-					}
-				}
 			}
-			//何も押されていない時
-			else
+			else    //何も押されていない時
 			{
 				//リセット
 				push = false;
@@ -415,27 +466,37 @@ public class CharSelectManager : MonoBehaviour
 		}
 	}
 
-	//UI用の決定処理（ゲームパッド：Bボタン）
+	//UI用の決定処理（ゲームパッド：Aボタン）
 	public void OnSubmit(InputValue value)
 	{
-		//キャラクターが選択されていないかつ、現在がキャラクターセレクトである
+		//キャラクターが選択されていないかつ、現在がキャラクターセレクトである場合
 		if (!isCharSelected && gameStartSys.isCharSelect)
 		{
 			//キャラクターを選択（決定）する
 			isCharSelected = true;
-			for (int i = 0; i < gameStartSys.selectCharacterNumber.Length; i++)
+
+			//既に選択されたキャラクターがいたときの処理
+			int currentCharNum = characterNum;
+
+			while (LoopArray((currentCharNum) % maxCharacter))
+			{
+				--currentCharNum;
+			}
+
+			characterNum = currentCharNum % maxCharacter;
+
+			for (int i = 0; i < dataRetation.characterNum.Length; i++)
 			{
 				//キャラクターを決定していないかつ、格納する場所がキャラクター番号と同じ場所なら
-				if (gameStartSys.selectCharacterNumber[i] == -1 && characterNum == i)
+				if (dataRetation.characterNum[i] != characterNum && dataRetation.playerList[i] == this.gameObject)
 				{
-					gameStartSys.selectCharacterNumber[i] = characterNum;   //選択されたキャラクター番号を格納する（同じキャラクター番号のものを選択できないようにするため）
-					break;
+					dataRetation.characterNum[i] = characterNum;
 				}
 			}
 		}
 	}
 
-	//UI用のキャンセル処理（ゲームパッド：Aボタン）
+	//UI用のキャンセル処理（ゲームパッド：Bボタン）
 	public void OnCancel(InputValue value)
 	{
 		//現在がキャラクターセレクト画面かつ、キャラクターが選択されている場合
@@ -443,12 +504,13 @@ public class CharSelectManager : MonoBehaviour
 		{
 			//キャラクター選択を解除する
 			isCharSelected = false;
-			for (int i = 0; i < gameStartSys.selectCharacterNumber.Length; i++)
+
+			for (int i = 0; i < dataRetation.characterNum.Length; i++)
 			{
 				//キャラクターが決定されているかつ、同じ添え字の場所に入っているのがこのオブジェクトなら
-				if (gameStartSys.selectCharacterNumber[i] != -1 && dataRetation.playerList[i] == this.gameObject)
+				if (dataRetation.characterNum[i] == characterNum && dataRetation.playerList[i] == this.gameObject)
 				{
-					gameStartSys.selectCharacterNumber[i] = -1;   //決定されたキャラクター番号を削除する（-1を入れる）
+					dataRetation.characterNum[i] = -1;   //決定されたキャラクター番号を削除する（-1を入れる）
 					break;
 				}
 			}
@@ -462,5 +524,5 @@ public class CharSelectManager : MonoBehaviour
 		isTrigger = true;
 	}
 
-	//--------------------------------------------------
+	/*-----------ActionInput(End)-----------*/
 }

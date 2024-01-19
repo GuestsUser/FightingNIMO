@@ -11,6 +11,7 @@ using System;
 [RequireComponent(typeof(PlayerJump))]
 [RequireComponent(typeof(PlayerPunch))]
 [RequireComponent(typeof(PlayerLift))]
+[RequireComponent(typeof(PlayerHeadbutt))]
 
 public class TestPlayer : MonoBehaviour
 {
@@ -31,8 +32,9 @@ public class TestPlayer : MonoBehaviour
     PlayerRotation rotation;
     PlayerMoving moving;
     PlayerJump jump;
-    PlayerPunch rPunch;
+    PlayerPunch punch;
     PlayerLift lift;
+    PlayerHeadbutt head;
 
     // Start is called before the first frame update
     void Start()
@@ -46,22 +48,32 @@ public class TestPlayer : MonoBehaviour
         rotation = GetComponent<PlayerRotation>();
         moving = GetComponent<PlayerMoving>();
         jump = GetComponent<PlayerJump>();
-        rPunch = GetComponent<PlayerPunch>();
+        punch = GetComponent<PlayerPunch>();
         lift = GetComponent<PlayerLift>();
+        head = GetComponent<PlayerHeadbutt>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        down.RunFunction();
-        if (down.isDown) { return; } //ダウンしていれば他処理は実行しない
-        jump.RunFunction();
+        if (Time.timeScale <= 0) { return; } //停止中は実行しない
 
+        down.RunFunction();
+        if (down.isDown)  //ダウン中の場合特定処理のみを実行する
+        {
+            jump.RunFunction();
+            punch.RunFunction();
+            return;
+        }
+
+        jump.RunFunction();
         rotation.RunFunction();
         moving.RunFunction();
-        
-        rPunch.RunFunction();
+
+        punch.RunFunction();
         lift.RunFunction();
+
+        head.RunFunction();
     }
     void FixedUpdate()
     {
