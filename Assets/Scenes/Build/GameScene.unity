@@ -20968,6 +20968,7 @@ MonoBehaviour:
   characterPrefab:
   - {fileID: 5864138581396830017, guid: 33f7d6a0ddec2484a9cf0cc42a68e4db, type: 3}
   - {fileID: 689449441099393866, guid: 8128a639852bcca42925f68df34dcd93, type: 3}
+  - {fileID: 1585816247415330583, guid: da105f9607831554cac736700803f079, type: 3}
   player: []
   playerSpawnPos:
   - {fileID: 297046705}
