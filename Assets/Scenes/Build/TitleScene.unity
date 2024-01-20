@@ -617,12 +617,12 @@ GameObject:
   - component: {fileID: 339377341}
   - component: {fileID: 339377340}
   m_Layer: 5
-  m_Name: Image
+  m_Name: BackGroundUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &339377339
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1429,6 +1429,7 @@ MonoBehaviour:
   - {fileID: 1784917037}
   logo: {fileID: 121486938}
   characterUI: {fileID: 1836525178}
+  backGroundUI: {fileID: 339377338}
   creditUI: {fileID: 1696162623}
   controlsUI: {fileID: 1377510505}
   cam: {fileID: 2039909886}
@@ -2958,6 +2959,8 @@ MonoBehaviour:
   isNextScene: 0
   isReady: 0
   selectCharacterNumber: 
+  conectCount: 0
+  submitCharCount: 0
 --- !u!4 &1703595131
 Transform:
   m_ObjectHideFlags: 0
