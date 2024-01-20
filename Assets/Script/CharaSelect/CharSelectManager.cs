@@ -491,6 +491,11 @@ public class CharSelectManager : MonoBehaviour
 				if (dataRetation.characterNum[i] != characterNum && dataRetation.playerList[i] == this.gameObject)
 				{
 					dataRetation.characterNum[i] = characterNum;
+
+					// ここに処理
+					Color color;
+					ColorUtility.TryParseHtmlString("#A1A1A1", out color);
+					characterUI[characterNum].GetComponent<Image>().color = color;
 				}
 			}
 		}
@@ -511,6 +516,8 @@ public class CharSelectManager : MonoBehaviour
 				if (dataRetation.characterNum[i] == characterNum && dataRetation.playerList[i] == this.gameObject)
 				{
 					dataRetation.characterNum[i] = -1;   //決定されたキャラクター番号を削除する（-1を入れる）
+
+					characterUI[characterNum].GetComponent<Image>().color = Color.white;
 					break;
 				}
 			}
