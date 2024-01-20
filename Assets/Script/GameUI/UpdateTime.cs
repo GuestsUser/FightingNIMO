@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UpdateTime : MonoBehaviour
 {
+    [SerializeField] private GameState gameState;
+
     [Tooltip("分のテキスト")]
     [SerializeField] private Text[] minutesText;
     [Tooltip("秒のテキスト")]
@@ -32,18 +34,19 @@ public class UpdateTime : MonoBehaviour
 
         timeLimit = (minutes * 60) + seconds;
 
-        tMinutes = $"00";
+        tMinutes = $"03";
         tSeconds = $"00";
 
         finished = false;
+        minutesText[1].text = "3";
     }
 
     // Update is called once per frame
     void Update()
     {
         // ゲームの進行状況を管理しているスクリプトから取得、試合進行状況を取得
-        //if (isGame)
-        //{
+        if (gameState.isGame && gameState.isResult == false)
+        {
             // 制限時間が0秒以下なら何もしない
             if (timeLimit <= 0f)
             {
@@ -57,7 +60,7 @@ public class UpdateTime : MonoBehaviour
             {
                 ChangeTime();
             }
-        //}
+        }
     }
 
     void ChangeTime()

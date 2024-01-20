@@ -33,6 +33,8 @@ public class MenuTest : MonoBehaviour
     [SerializeField] private GameObject logo;
     [Tooltip("各キャラクターUIを入れてください")]
     [SerializeField] private GameObject characterUI;
+    [Tooltip("キャラクターの背景UIを入れてください")]
+    [SerializeField] private GameObject backGroundUI;
     [Tooltip("CreditのUIを入れてください")]
     [SerializeField] private GameObject creditUI;
     [Tooltip("ControlsのUIを入れてください")]
@@ -121,6 +123,7 @@ public class MenuTest : MonoBehaviour
         //    characterUI[i].SetActive(false);    //各キャラクターUIを非表示にする
         //}
         characterUI.SetActive(false);    //各キャラクターUIを非表示にする
+        backGroundUI.SetActive(false);
 
         currentMenuName = items[0];  //選択されているメニュ名を1番上に初期化
         oldMenuName = currentMenuName;
@@ -252,6 +255,7 @@ public class MenuTest : MonoBehaviour
                         //    characterUI[i].SetActive(false); 
                         //}
                         characterUI.SetActive(false);
+                        backGroundUI.SetActive(false);
 
                         gameStartSys.isCharSelect = false; // キャラクターセレクトを無効化
 
@@ -591,7 +595,7 @@ public class MenuTest : MonoBehaviour
             //    characterUI[i].SetActive(true); // キャラクターセレクトを表示する
             //}
             characterUI.SetActive(true); // キャラクターセレクトを表示する
-
+            backGroundUI.SetActive(true);
             gameStartSys.isCharSelect = true;
 
             logo.SetActive(false);
