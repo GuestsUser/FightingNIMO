@@ -11,6 +11,7 @@ public class DataRetation : MonoBehaviour
     public GameObject[] playerList; //プレイヤー番号順に格納するための配列
     public int[] controllerID;          //プレイヤー番号を格納するための配列
     public int[] characterNum;      //各プレイヤーが選択したキャラクター番号を格納するための配列
+    public int round;
 
     private void Awake()
     {

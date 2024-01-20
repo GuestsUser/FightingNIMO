@@ -14,6 +14,8 @@ public class Result : MonoBehaviour
     // 表示・座標関連
     [Tooltip("Player毎のScoreのUIを入れてください")]
     [SerializeField] private GameObject[] playerScore;
+    [Tooltip("紙吹雪Particleを追加")]
+    [SerializeField] private GameObject particle;
     [Tooltip("ScorePanelのUIを入れてください")]
     [SerializeField] private RectTransform scorePanel; // インスペクターから代入
     [Tooltip("ScorePanelの初期位置を指定してください")]
@@ -59,20 +61,26 @@ public class Result : MonoBehaviour
     [Tooltip("easingの演出の所要時間")]
     [SerializeField] private float scoreDuration; // インスペクターから調整
 
+
+
     // Start is called before the first frame update
     void Start()
     {
         dataRetation = GameObject.Find("DataRetation").GetComponent<DataRetation>();
 
         //initPos = scorePanel.anchoredPosition;   // 調整段階で使用
-        scorePanel.anchoredPosition = initPos; // 調整し終わったら逆にinitPosには先にインスペクターから代入しておき、初期位置を固定
+        scorePanel.anchoredPosition = initPos;     // 調整し終わったら逆にinitPosには先にインスペクターから代入しておき、初期位置を固定
+
+        particle = GameObject.FindWithTag("Particle");
+        particle.SetActive(false);
+
         easTime = 0.0f;
         addScore = false;
         show = false;
         isFinishing = false;
 
         /*【仮の処理】*/
-        playerNum = Gamepad.all.Count;      // 接続人数の確認
+        playerNum = Gamepad.all.Count;      　　　　　// 接続人数の確認
 
         // 人数分のscoreUIをアクティブに
         for (int i = 0; i < playerNum; i++)
@@ -113,7 +121,7 @@ public class Result : MonoBehaviour
         }
         else
         {
-            Debug.Log("Scene遷移");
+            //Debug.Log("Scene遷移");
             fadePanel.CrossFadeAlpha(1.0f, sceneTime,true);
         }
         
@@ -127,7 +135,10 @@ public class Result : MonoBehaviour
             if(addScore == false)
             {
                 addScore = true;
-                if (++score[winner] == 3) gameState.isGameSet = true;
+                if (++score[winner] == 3) {
+                    gameState.isGameSet = true;
+                    particle.SetActive(true);
+                }
             }
             
 
@@ -183,7 +194,6 @@ public class Result : MonoBehaviour
             if (winner > -1) // 勝者がいた場合 (1pが0,2pが1と仮定して -1は引き分け時(タイムアップ))
             {
                 point = playerScore[winner].transform.GetChild(0).transform.GetComponentsInChildren<Transform>(true);
-                //Debug.Log(point[0].name);
                 point[score[winner]].gameObject.SetActive(true);
 
                 // 設定した所要時間に対してeasTimeが小さい場合easTimeを加算
@@ -205,6 +215,7 @@ public class Result : MonoBehaviour
         }
         
     }
+
 
     private IEnumerator NextRound()
     {
