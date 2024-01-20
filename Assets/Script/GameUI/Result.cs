@@ -162,6 +162,7 @@ public class Result : MonoBehaviour
                     // Œˆ’…‚ª‚Â‚¢‚Ä‚¢‚È‚¯‚ê‚ÎŽŸ‚Ìƒ‰ƒEƒ“ƒh
                     if(gameState.isGameSet == false)
                     {
+                        //dataRetation.
                         StartCoroutine("NextRound");
                     }
                     else
