@@ -329,6 +329,7 @@ public class CharSelectManager : MonoBehaviour
         {
             if (dataRetation.characterNum[i] != -1 && dataRetation.playerList[i] == this.gameObject)
             {
+				characterUI[dataRetation.characterNum[i]].GetComponent<Image>().color = Color.white;
 				dataRetation.controllerID[i] = -1;			//コントローラーIDをを削除する
 				dataRetation.characterNum[i] = -1;			//選択されていたキャラクター番号を削除する
 				gameStartSys.selectCharacterNumber[i] = -1;	//決定されていたキャラクター番号を削除する

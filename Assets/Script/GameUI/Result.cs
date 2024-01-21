@@ -25,6 +25,7 @@ public class Result : MonoBehaviour
     [Tooltip("キャラクターアイコンを入れてください")]
     [SerializeField] private Sprite[] icon;            // キャラクターアイコン
     [SerializeField] private Image fadePanel;
+    [SerializeField] private Text win;
 
     // スコア関連
     [SerializeField] private Transform[] point; // ★UIが入る
@@ -107,7 +108,8 @@ public class Result : MonoBehaviour
             
             
         }
-        
+        win.text = "";
+        win.CrossFadeAlpha(0.0f, 0.0f, true);
         //fadePanel.CrossFadeAlpha(0.0f, 0.0f, true);
     }
 
@@ -137,7 +139,13 @@ public class Result : MonoBehaviour
                 addScore = true;
                 if (++score[winner] == 3) {
                     gameState.isGameSet = true;
+                    win.text = $"{winner + 1}P WIN!";
+                    win.CrossFadeAlpha(1.0f, 1.0f, true);
                     particle.SetActive(true);
+                }
+                else
+                {
+                    win.text = "";
                 }
             }
             

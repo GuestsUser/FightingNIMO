@@ -72,7 +72,7 @@ public class GameStartSystem : MonoBehaviour
         foreach (CharSelectManager obj in objectsWithScripts)
         {
             if (obj.isCharSelected) { submitCharCount++; } //確定されていればカウント加算
-            Debug.Log(submitCharCount);
+            //Debug.Log(submitCharCount);
         }
 
         //キャラクターセレクト画面かつ1人でもキャラクターを選択していない,または接続数が1以下の場合
