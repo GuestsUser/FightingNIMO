@@ -152,15 +152,13 @@ public class MenuTest : MonoBehaviour
 
             Decision();     //各メニューボタンが押されたときの処理
 
-            
-
             moveUI = false;
         }
         // 『CREDIT』と『CONTROLS』を選択した時
         else if (decision == true && (currentMenuNum > 0 && currentMenuNum < menuItems.Length - 1) && moveUI)
         {
 
-            Debug.Log(" 決定された ");
+            //Debug.Log(" 決定された ");
 
             easTime++;
 
@@ -170,7 +168,7 @@ public class MenuTest : MonoBehaviour
                 easTime = duration[1] * 60.0f; // easTimeを(duration * 60.0f)に固定
 
                 // Bボタンを押したとき
-                if (Gamepad.current.bButton.wasPressedThisFrame)
+                if (Gamepad.all.Count != 0 && Gamepad.current.bButton.wasPressedThisFrame)
                 {
                     backUI = true; // UIが戻る演出ON
                     easTime = 0;   // easTime初期化
@@ -247,7 +245,7 @@ public class MenuTest : MonoBehaviour
                 if (moveUI == false && !gameStartSys.isReady)
                 {
                     // Bボタンを押したら
-                    if (Gamepad.current.bButton.wasPressedThisFrame && gameStartSys.submitCharCount <= 0)
+                    if (Gamepad.all.Count != 0 && Gamepad.current.bButton.wasPressedThisFrame && gameStartSys.submitCharCount <= 0)
                     {
                         // キャラクターUIを非表示にする
                         //for (int i = 0; i < characterUI.Length; i++)
@@ -265,21 +263,13 @@ public class MenuTest : MonoBehaviour
                         easTime = 0;                       // easTime初期化
                     }
                 }
-
+                
             }
             else
             {
                 ZoomOut(duration[0], easTime); // メニューの状態に戻る
             }
         }
-
-        //if (backUI == true && ui.anchoredPosition.x == 0.0f)
-        //{
-        //    decision = false;
-        //    backUI = false;
-        //    Debug.Log("a");
-        //}
-
     }
 
     //カーソルの移動関連処理
@@ -287,7 +277,7 @@ public class MenuTest : MonoBehaviour
     {
         
         //GamePad（左スティック上入力時 or 十字キー上入力時）
-        if (Gamepad.current.leftStick.y.ReadValue() > 0 || Gamepad.current.dpad.up.isPressed)
+        if (Gamepad.all.Count != 0 && Gamepad.current.leftStick.y.ReadValue() > 0 || Gamepad.current.dpad.up.isPressed)
         {
             if (isPush == false)    //押された時の処理
             {
@@ -326,7 +316,7 @@ public class MenuTest : MonoBehaviour
             
         }
         //GamePad（左スティック下入力時 or 十字キー下入力時）
-        else if (Gamepad.current.leftStick.y.ReadValue() < 0 || Gamepad.current.dpad.down.isPressed)
+        else if (Gamepad.all.Count != 0 && Gamepad.current.leftStick.y.ReadValue() < 0 || Gamepad.current.dpad.down.isPressed)
         {
             if (isPush == false)    //押された時の処理
             {
@@ -403,7 +393,7 @@ public class MenuTest : MonoBehaviour
     {
         
         // 決定ボタン(aボタン)を押したとき
-        if (Gamepad.current.aButton.wasPressedThisFrame/* && inner.GetComponent<RawImage>().canvasRenderer.GetAlpha() == 1*/)
+        if (Gamepad.all.Count != 0 && Gamepad.current.aButton.wasPressedThisFrame/* && inner.GetComponent<RawImage>().canvasRenderer.GetAlpha() == 1*/)
         {
             CursorFade();
             easTime = 0;
