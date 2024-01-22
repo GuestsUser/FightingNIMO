@@ -20,6 +20,8 @@ public class TestPlayer : MonoBehaviour
     [SerializeField] [Tooltip("ヒット判定を取るオブジェクトレイヤー")] string[] hitLayer;
     [SerializeField] [Tooltip("地面扱いのレイヤーを指定できる")] string[] floorLayer = { "Default" };
 
+    private GameState gameState;
+
     int _hitMask; //ヒット判定を取るレイヤーを実際に利用可能にした形
     int _floorMask; //地面ヒットを取るレイヤーを実際に利用可能にした形
 
@@ -39,6 +41,8 @@ public class TestPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameState = GameObject.Find("GameState").GetComponent<GameState>();
+
         foreach (string name in hitLayer) { _hitMask = _hitMask | LayerMask.GetMask(name); } //hitMaskへ取得したビットを格納
         foreach (string name in floorLayer) { _floorMask = _floorMask | LayerMask.GetMask(name); }
 
@@ -56,6 +60,7 @@ public class TestPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!gameState.isGame) { return; }   //ゲームが開始されていない時は実行しない
         if (Time.timeScale <= 0) { return; } //停止中は実行しない
 
         down.RunFunction();

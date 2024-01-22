@@ -16,7 +16,7 @@ public class CharSelectManager : MonoBehaviour
 	[Tooltip("このプレイヤーのカーソルテキストを入れてください")]
 	[SerializeField] private GameObject cursor;
 	[Tooltip("このプレイヤーのカーソルテキストを入れてください（RT取得用）")]
-	[SerializeField] private RectTransform cursorImage; // 変更箇所 cursorText → cursorImage
+	[SerializeField] private RectTransform cursorImage;
 	[Tooltip("プレイヤー番号UI用のテキストを入れてください")]
 	[SerializeField] private Text playerNumText;
 	[Tooltip("自身のPlayerInputを取得(自動取得)")]
@@ -93,34 +93,30 @@ public class CharSelectManager : MonoBehaviour
 			//1P
 			case 0:
 				characterNum = 0;   //プレイヤーの最初の初期キャラクター設定
-				/* 追加・変更箇所 */
+
 				cursorImage.anchoredPosition = new Vector2(-(offset[0]), (offset[1]));
 				playerNumText.text = "<color=#ff6363>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
-				/* ---------- */
 				break;
 			//2P
 			case 1:
 				characterNum = 1;
-				/* 追加・変更箇所 */
+
 				cursorImage.anchoredPosition = new Vector2((offset[0]), (offset[1]));
 				playerNumText.text = "<color=#33b0ff>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
-				/* ---------- */
 				break;
 			//3P
 			case 2:
 				characterNum = 2;
-				/* 追加・変更箇所 */
+
 				cursorImage.anchoredPosition = new Vector2(-(offset[0]), -(offset[1]));
 				playerNumText.text = "<color=#f4f54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
-				/* ---------- */
 				break;
 			//4P
 			case 3:
 				characterNum = 3;
-				/* 追加・変更箇所 */
+
 				cursorImage.anchoredPosition = new Vector2((offset[0]), -(offset[1]));
 				playerNumText.text = "<color=#4cf54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
-				/* ---------- */
 				break;
 		}
 
@@ -158,7 +154,6 @@ public class CharSelectManager : MonoBehaviour
 		//		break;
 		//}
 
-		//AddCharacterNum();      //キャラクター番号保持関数
 		RemovePlayer();         //プレイヤー削除関数
 		CharacterVisibility();  //キャラクター（表示/非表示）関数
 		LongPress();            //長押し入力関数
@@ -294,46 +289,21 @@ public class CharSelectManager : MonoBehaviour
 		}
 	}
 
-	//キャラクター番号更新保持関数
-	//	//private void AddCharacterNum()
-	//   {
-	//       for (int i = 0; i < dataRetation.characterNum.Length; i++)
-	//       {
-	//		//まだ値が格納されていないかつ、プレイヤーオブジェクト配列内に格納されているオブジェクトと同じものなら
-	//           if (dataRetation.characterNum[i] == -1 && dataRetation.playerList[i] == this.gameObject)
-	//           {
-	//			//その配列の値の場所に、キャラクター番号を格納する
-	//               dataRetation.characterNum[i] = characterNum;
-	//			break;
-	//           }
-	//		//現在のcharacterNumと配列内の値が一緒でなく、配列内に入っているオブジェクトがこのオブジェクト同じなら
-	//		else if (dataRetation.characterNum[i] != characterNum && dataRetation.playerList[i] == this.gameObject)
-	//		{
-	//			//キャラクタ番号を更新する
-	//			dataRetation.characterNum[i] = characterNum;
-	//			break;
-	//		}
-	//		//配列内の値が-1(既に値が格納されている)でないならば
-	//		else if (dataRetation.characterNum[i] != -1)
-	//           {
-	//			//既に値が格納されているのでループを継続する
-	//               continue;
-	//           }
-	//       }
-	//   }
-
-
+	//キャラクター番号削除関数
 	private void RemoveCharacterNum()
     {
         for (int i = 0; i < dataRetation.characterNum.Length; i++)
         {
-            if (dataRetation.characterNum[i] != -1 && dataRetation.playerList[i] == this.gameObject)
+			if (dataRetation.controllerID[i] != -1 && dataRetation.playerList[i] == this.gameObject)
+			{
+				dataRetation.controllerID[i] = -1;          //コントローラーIDをを削除する
+			}
+
+			if (dataRetation.characterNum[i] != -1 && dataRetation.playerList[i] == this.gameObject)
             {
 				characterUI[dataRetation.characterNum[i]].GetComponent<Image>().color = Color.white;
-				dataRetation.controllerID[i] = -1;			//コントローラーIDをを削除する
 				dataRetation.characterNum[i] = -1;			//選択されていたキャラクター番号を削除する
 				gameStartSys.selectCharacterNumber[i] = -1;	//決定されていたキャラクター番号を削除する
-				break;
             }
         }
     }
@@ -506,7 +476,7 @@ public class CharSelectManager : MonoBehaviour
 	public void OnCancel(InputValue value)
 	{
 		//現在がキャラクターセレクト画面かつ、キャラクターが選択されている場合
-		if (isCharSelected && gameStartSys.isCharSelect)
+		if (isCharSelected && gameStartSys.isCharSelect && !gameStartSys.isNextScene)
 		{
 			//キャラクター選択を解除する
 			isCharSelected = false;
