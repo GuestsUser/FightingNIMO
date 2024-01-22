@@ -11,7 +11,7 @@ public class PlayerControll : MonoBehaviour
     void Start()
     {
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
-        this.GetComponent<PlayerInput>().enabled = false;
+        //this.GetComponent<PlayerInput>().enabled = false;
     }
 
     // Update is called once per frame

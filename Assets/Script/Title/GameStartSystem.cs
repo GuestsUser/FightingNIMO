@@ -18,9 +18,9 @@ public class GameStartSystem : MonoBehaviour
     [Tooltip("現在の画面がキャラクター")]
     public bool isCharSelect;
     [Tooltip("ゲームシーン移動フラグ")]
-    [SerializeField] private bool isNextScene;
+    public bool isNextScene;
     [Tooltip("準備OKかどうか")]
-    [SerializeField] public bool isReady;
+    public bool isReady;
     [Tooltip("選択されたキャラクター番号を格納する")]
     public int[] selectCharacterNumber;
 
@@ -45,7 +45,7 @@ public class GameStartSystem : MonoBehaviour
 
     void Update()
     {
-        CheckReady();
+        CheckReady();   //Ready状態ONとOFFの条件関数
 
         //GameSceneへ行くための処理
         if (isNextScene == false)
@@ -62,7 +62,6 @@ public class GameStartSystem : MonoBehaviour
     //Ready状態ONとOFFの条件関数
     private void CheckReady()
     {
-        //新バージョン
         //hierarchyにあるCharSelectManagerを持つオブジェクトの配列を作成
         CharSelectManager[] objectsWithScripts = FindObjectsOfType<CharSelectManager>();
 

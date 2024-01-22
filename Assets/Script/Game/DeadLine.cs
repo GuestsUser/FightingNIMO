@@ -29,26 +29,27 @@ public class DeadLine : MonoBehaviour
                 {
                     //クマノミ
                     case 0:
-                        playerIns.playerList.RemoveAt(i);   //Listから削除する
+                        //playerIns.playerList.RemoveAt(i);   //Listから削除する
+                        //playerIns.playerNum.Remove(0);
                         cinemachineTargetGroup.RemoveMember(other.transform);
-                        //other.gameObject.SetActive(false);  //非アクティブにする
                         break;
                     //サメ
                     case 1:
-                        playerIns.playerList.RemoveAt(i);   //Listから削除する
+                        //playerIns.playerList.RemoveAt(i);   //Listから削除する
+                        //playerIns.playerNum.Remove(1);
                         cinemachineTargetGroup.RemoveMember(other.transform);
-                        //other.gameObject.SetActive(false);  //非アクティブにする
                         break;
                     //カメ
                     case 2:
-                        playerIns.playerList.RemoveAt(i);   //Listから削除する
+                        //playerIns.playerList.RemoveAt(i);   //Listから削除する
+                        //playerIns.playerNum.Remove(2);
                         cinemachineTargetGroup.RemoveMember(other.transform);
-                        //other.gameObject.SetActive(false);  //非アクティブにする
                         break;
                     //マンタ
                     case 3:
-                        playerIns.playerList.RemoveAt(i);   //Listから削除する
-                        //other.gameObject.SetActive(false);  //非アクティブにする
+                        //playerIns.playerList.RemoveAt(i);   //Listから削除する
+                        //playerIns.playerNum.Remove(3);
+                        cinemachineTargetGroup.RemoveMember(other.transform);
                         break;
                 }
             }
