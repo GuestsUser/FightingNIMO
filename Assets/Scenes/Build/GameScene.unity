@@ -4435,6 +4435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 732824575e4fe004fb7069fa3778056a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameState: {fileID: 1924894177}
   ui: {fileID: 2080844676}
   pauseMenu: {fileID: 1106222049}
   cursor: {fileID: 31719298}
@@ -6123,6 +6124,7 @@ MonoBehaviour:
   - {fileID: 561296536}
   - {fileID: 917656055}
   playerList: []
+  playerNum: 
 --- !u!1001 &916667552
 PrefabInstance:
   m_ObjectHideFlags: 0

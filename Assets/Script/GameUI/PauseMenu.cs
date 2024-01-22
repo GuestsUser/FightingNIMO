@@ -11,7 +11,10 @@ public class PauseMenu : MonoBehaviour
     #region インスペクターからの代入が必要or調整をするもの
     [Header("【事前に入れるもの】")]
     /*【事前の代入が必須】*/
-    
+
+    [Tooltip("GameStateをアタッチしてください")]
+    [SerializeField] private GameState gameState;
+
     [Tooltip("UIという名前のオブジェクトをアタッチしてください")]
     [SerializeField] private GameObject ui;
     [Tooltip("PauseMenuという名前のオブジェクトをアタッチしてください")]
@@ -253,7 +256,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         /* 【非表示状態】 */
-        else
+        else if(gameState.isGame == true)
         {
             // 誰かしらがStartボタンを押した時
             if (Gamepad.current.startButton.wasPressedThisFrame)
