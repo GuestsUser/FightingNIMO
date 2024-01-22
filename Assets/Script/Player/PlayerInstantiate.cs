@@ -29,7 +29,7 @@ public class PlayerInstantiate : MonoBehaviour
 
     private void CreatePlayer()
     {
-        for (int i = 0; i < 2/*プレイヤー数*/; i++)
+        for (int i = 0; i < 3/*プレイヤー数*/; i++)
         {
             InputDevice current = null;
             foreach (var gamepad in Gamepad.all)
