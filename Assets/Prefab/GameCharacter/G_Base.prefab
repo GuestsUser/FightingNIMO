@@ -590,7 +590,7 @@ MonoBehaviour:
   animeParaName:
   - isRPunch
   - isLPunch
-  stickStartTime: 1
+  stickStartTime: 0.5
   searchRad: 2.5
   gripRad: 1.1
   gatherPower: 15
@@ -1961,7 +1961,7 @@ ConfigurableJoint:
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
   m_MassScale: 2
-  m_ConnectedMassScale: 0.7
+  m_ConnectedMassScale: 1
 --- !u!136 &2083260748838233428
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2612,7 +2612,7 @@ ConfigurableJoint:
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
   m_MassScale: 2
-  m_ConnectedMassScale: 0.7
+  m_ConnectedMassScale: 1
 --- !u!136 &1141022762720987623
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2925,8 +2925,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90787182e65daae40bc1606ab4e1df5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 40
-  _knockBack: 200
+  _damage: 25
+  _knockBack: 125
   _isAttack: 0
 --- !u!1 &4576813781495819100
 GameObject:
@@ -3347,7 +3347,7 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 1
+  m_MassScale: 3
   m_ConnectedMassScale: 1
 --- !u!114 &8817992571768565940
 MonoBehaviour:
@@ -3825,7 +3825,7 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 1
+  m_MassScale: 3
   m_ConnectedMassScale: 1
 --- !u!114 &5568219924608972272
 MonoBehaviour:
@@ -4971,7 +4971,7 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 1
+  m_MassScale: 3
   m_ConnectedMassScale: 1
 --- !u!114 &3664178226086734960
 MonoBehaviour:
