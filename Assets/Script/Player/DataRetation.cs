@@ -29,14 +29,10 @@ public class DataRetation : MonoBehaviour
 
     private void Start()
     {
-        //Array.Resize(ref playerList, 4);    //最大プレイ人数分の大きさに変更
-        //Array.Resize(ref characterNum, 4);  //最大プレイ人数分の大きさに変更
-        //Array.Resize(ref controllerID, 4);  //最大プレイ人数分の大きさに変更
-    }
+        Array.Resize(ref playerList, 4);    //最大プレイ人数分の大きさに変更
+        Array.Resize(ref characterNum, 4);  //最大プレイ人数分の大きさに変更
+        Array.Resize(ref controllerID, 4);  //最大プレイ人数分の大きさに変更
 
-    //配列の初期化
-    public void InitializeArray()
-    {
         int maxPlayer = 4;  //最大プレイ人数分の大きさ
         playerList = new GameObject[maxPlayer];
         characterNum = new int[maxPlayer];
@@ -49,4 +45,20 @@ public class DataRetation : MonoBehaviour
             controllerID[i] = -1;  //各プレイヤーのコントローラーIDの初期化
         }
     }
+
+    //配列の初期化
+    //public void InitializeArray()
+    //{
+    //    int maxPlayer = 4;  //最大プレイ人数分の大きさ
+    //    playerList = new GameObject[maxPlayer];
+    //    characterNum = new int[maxPlayer];
+    //    controllerID = new int[maxPlayer];
+
+    //    for (int i = 0; i < 4; i++)
+    //    {
+    //        playerList[i] = null;   //プレイヤーリストの初期化
+    //        characterNum[i] = -1;  //各プレイヤーのキャラクター番号の初期化
+    //        controllerID[i] = -1;  //各プレイヤーのコントローラーIDの初期化
+    //    }
+    //}
 }

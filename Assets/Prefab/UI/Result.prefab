@@ -975,7 +975,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6e49e66445604a440ac0f99d5c51cc3f, type: 3}
   - {fileID: 21300000, guid: 436604349c21a924a94b931b4d43a804, type: 3}
   - {fileID: 21300000, guid: 2289473cbb1e2f2458189bd6f1bad9c9, type: 3}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: b9665fe999271774390d226e93873ebd, type: 3}
   fadePanel: {fileID: 1168994640686703439}
   win: {fileID: 2580363743775521261}
   point: []
