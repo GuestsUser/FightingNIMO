@@ -275,18 +275,18 @@ public class CharSelectManager : MonoBehaviour
 					}
                 }
                 break;
-				//マンタ
-				//case 3:
-				//Smr[characterNum].enabled = true;	//マンタを表示
-				//for (int i = 0; i < maxCharacter; i++)
-				//{
-				//		if (i != characterNum)
-				//		{
-				//			Smr[i].enabled = false;	//マンタを非表示
-				//		}
-				//	}
-				//	break;
-		}
+            //マンタ
+            case 3:
+                Smr[characterNum].enabled = true;   //マンタを表示
+                for (int i = 0; i < maxCharacter; i++)
+                {
+                    if (i != characterNum)
+                    {
+                        Smr[i].enabled = false; //マンタを非表示
+                    }
+                }
+                break;
+        }
 	}
 
 	//キャラクター番号削除関数
@@ -397,7 +397,7 @@ public class CharSelectManager : MonoBehaviour
 						{
 							//一番最後のキャラクター番号に変更する（クマノミ->マンタ）
 							//マンタモデルができたら-1削除
-							currentCharNum = maxCharacter - 1;
+							currentCharNum = maxCharacter;
 						}
 						if (!LoopArray(currentCharNum)) { break; }
 					}

@@ -201,15 +201,17 @@ MonoBehaviour:
   gameStartSys: {fileID: 0}
   receiveNotificationExample: {fileID: 0}
   dataRetation: {fileID: 0}
-  maxCharacter: 3
+  maxCharacter: 4
   interval: 0
   characterNum: 0
-  isCharSelected: 0
-  count: 0
-  push: 0
   offset:
   - 80
   - 50
+  count: 0
+  isCharSelected: 0
+  push: 0
+  isLeftPush: 0
+  isRightPush: 0
 --- !u!114 &3849973506942090643
 MonoBehaviour:
   m_ObjectHideFlags: 0
