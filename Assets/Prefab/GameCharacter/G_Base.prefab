@@ -504,6 +504,7 @@ MonoBehaviour:
   - Wepon
   floorLayer:
   - Default
+  playerNumber: -1
 --- !u!114 &4730511598523669091
 MonoBehaviour:
   m_ObjectHideFlags: 0

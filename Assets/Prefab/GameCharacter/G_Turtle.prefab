@@ -129,6 +129,14 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3256175969077874914, guid: 4e5dc903f8ad28c41a453d4d8064477c, type: 3}
+      propertyPath: playerNumber
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3256175969077874914, guid: 4e5dc903f8ad28c41a453d4d8064477c, type: 3}
+      propertyPath: _playerNumber
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3256175969077874914, guid: 4e5dc903f8ad28c41a453d4d8064477c, type: 3}
       propertyPath: hitLayer.Array.data[2]
       value: Chara
       objectReference: {fileID: 0}

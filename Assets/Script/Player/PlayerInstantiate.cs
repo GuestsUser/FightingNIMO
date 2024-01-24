@@ -46,8 +46,7 @@ public class PlayerInstantiate : MonoBehaviour
             PlayerInput input1 = PlayerInput.Instantiate(characterPrefab[dataRetation.characterNum[i]], -1, null, -1, current);    //生成
             input1.gameObject.transform.position = playerSpawnPos[i].position;  //位置
             input1.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0); //回転
-            playerList.Add(input1); //Listに追加
-            playerNum.Add(dataRetation.characterNum[i]);
+            playerNum.Add(dataRetation.characterNum[i]);    //プレイヤー（キャラクター番号）をListに追加（勝敗に使用するため）
             AddTargetToGroup(input1.gameObject.transform, 1.0f, 10.0f);  //追従カメラ候補Listに追加
 
             //Debug.Log(input1.gameObject.GetComponent<TestPlayer>().pInput.devices[0].deviceId);

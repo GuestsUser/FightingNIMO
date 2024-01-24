@@ -24,9 +24,8 @@ public class UpdateTime : MonoBehaviour
     string tMinutes;
     string tSeconds;
 
-    bool finished;
+    public bool finished;
 
-    // Start is called before the first frame update
     void Start()
     {
         minutes = 3;
@@ -41,7 +40,6 @@ public class UpdateTime : MonoBehaviour
         minutesText[1].text = "3";
     }
 
-    // Update is called once per frame
     void Update()
     {
         // ゲームの進行状況を管理しているスクリプトから取得、試合進行状況を取得
@@ -88,7 +86,5 @@ public class UpdateTime : MonoBehaviour
         minutesText[1].text = tMinutes.Substring(1, 1); // 分の1文字目から1文字取得
         secondsText[0].text = tSeconds.Substring(0, 1); // 秒の0文字目から1文字取得
         secondsText[1].text = tSeconds.Substring(1, 1); // 秒の1文字目から1文字取得
-
     }
-
 }
