@@ -364,6 +364,7 @@ GameObject:
   - component: {fileID: 1126416565011404631}
   - component: {fileID: 4081971574880104302}
   - component: {fileID: 8302950815721220161}
+  - component: {fileID: 8288276224066654923}
   m_Layer: 7
   m_Name: G_Base
   m_TagString: Untagged
@@ -504,6 +505,8 @@ MonoBehaviour:
   - Wepon
   floorLayer:
   - Default
+  _playerNumber: 0
+  isDead: 0
 --- !u!114 &4730511598523669091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -760,6 +763,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &8288276224066654923
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421828136598702146}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.6, y: 7.7, z: 4}
+  m_Center: {x: 0, y: 3.8, z: 0}
 --- !u!1 &804571046691423538
 GameObject:
   m_ObjectHideFlags: 0

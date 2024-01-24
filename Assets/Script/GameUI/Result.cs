@@ -31,7 +31,7 @@ public class Result : MonoBehaviour
     [SerializeField] private Transform[] point; // šUI‚ª“ü‚é
     [SerializeField] static private int[] score; // “¾“_
     [SerializeField] private int playerNum; // Ú‘±l”
-    [SerializeField] private int winner; // ŸÒ
+    [SerializeField] public int winner; // ŸÒ
 
 
 
@@ -234,6 +234,10 @@ public class Result : MonoBehaviour
     private IEnumerator BackMenu()
     {
         yield return new WaitForSecondsRealtime(3);
+        for(int i = 0; i < 4; i++)
+        {
+            score[i] = 0;
+        }
         SceneManager.LoadScene("TitleScene");
     }
 

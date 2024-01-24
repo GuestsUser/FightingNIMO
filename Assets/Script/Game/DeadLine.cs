@@ -5,14 +5,12 @@ using UnityEngine;
 
 public class DeadLine : MonoBehaviour
 {
-    [SerializeField] PlayerInstantiate playerIns;
-    [SerializeField] DataRetation dataRetation;
+    [SerializeField] private PlayerInstantiate playerIns;
     [SerializeField] private CinemachineTargetGroup cinemachineTargetGroup;
 
     private void Start()
     {
         playerIns = GameObject.Find("CreatePlayer").GetComponent<PlayerInstantiate>();  //PlayerInstantiate取得
-        dataRetation = GameObject.Find("DataRetation").GetComponent<DataRetation>();    //DataRetation取得
         cinemachineTargetGroup = GameObject.Find("TargetGroup").GetComponent<CinemachineTargetGroup>(); //CinemachineTargetGroup取得
 
     }
@@ -23,36 +21,16 @@ public class DeadLine : MonoBehaviour
         //「Player」タグを持つコリジョンと接触した場合(落下)
         if (other.CompareTag("Player"))
         {
-            for (int i = 0; i < 3/*プレイヤー数*/; i++)
+            TestPlayer player = other.GetComponent<TestPlayer>();
+
+            //残りのプレイヤーが1より多い場合は（1人の時はリストから削除しない）
+            if (playerIns.playerNum.Count > 1)
             {
-                switch (dataRetation.characterNum[i])
-                {
-                    //クマノミ
-                    case 0:
-                        //playerIns.playerList.RemoveAt(i);   //Listから削除する
-                        //playerIns.playerNum.Remove(0);
-                        cinemachineTargetGroup.RemoveMember(other.transform);
-                        break;
-                    //サメ
-                    case 1:
-                        //playerIns.playerList.RemoveAt(i);   //Listから削除する
-                        //playerIns.playerNum.Remove(1);
-                        cinemachineTargetGroup.RemoveMember(other.transform);
-                        break;
-                    //カメ
-                    case 2:
-                        //playerIns.playerList.RemoveAt(i);   //Listから削除する
-                        //playerIns.playerNum.Remove(2);
-                        cinemachineTargetGroup.RemoveMember(other.transform);
-                        break;
-                    //マンタ
-                    case 3:
-                        //playerIns.playerList.RemoveAt(i);   //Listから削除する
-                        //playerIns.playerNum.Remove(3);
-                        cinemachineTargetGroup.RemoveMember(other.transform);
-                        break;
-                }
+                playerIns.playerNum.Remove(player.playerNumber);  //死んだプレイヤー（キャラクター番号）を削除する
             }
+
+            player.isDead = true; //死亡させる
+            cinemachineTargetGroup.RemoveMember(other.transform);   //追従カメラのListから削除する
         }
     }
 }

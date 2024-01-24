@@ -13,8 +13,6 @@ public class MenuTest : MonoBehaviour
     // CS系
     [Tooltip("GameStartSystem.csを持っているオブジェクトを入れてください")]
     [SerializeField] private GameStartSystem gameStartSys;
-    //[Tooltip("PlayerInputManager.csを持つオブジェクトを入れてください")]
-    //[SerializeField] private PlayerInputManager playerInputManager;
 
     // UI系
     [Tooltip("UIという名前のオブジェクトをアタッチしてください")]

@@ -9,12 +9,13 @@ public class DataRetation : MonoBehaviour
     public static DataRetation instance;
 
     public GameObject[] playerList; //プレイヤー番号順に格納するための配列
-    public int[] controllerID;          //プレイヤー番号を格納するための配列
+    public int[] controllerID;      //各プレイヤーのコントローラーIDを格納するための配列
     public int[] characterNum;      //各プレイヤーが選択したキャラクター番号を格納するための配列
-    public int round;
+    public int round;               //ラウンド回数（今は使用していない）
 
     private void Awake()
     {
+        //シングルトン作成
         if(instance == null)
         {
             instance = this;
@@ -32,14 +33,32 @@ public class DataRetation : MonoBehaviour
         Array.Resize(ref characterNum, 4);  //最大プレイ人数分の大きさに変更
         Array.Resize(ref controllerID, 4);  //最大プレイ人数分の大きさに変更
 
-        for (int i = 0; i < characterNum.Length; i++)
-        {
-            characterNum[i] = -1;
-        }
+        int maxPlayer = 4;  //最大プレイ人数分の大きさ
+        playerList = new GameObject[maxPlayer];
+        characterNum = new int[maxPlayer];
+        controllerID = new int[maxPlayer];
 
-        for (int i = 0; i < controllerID.Length; i++)
+        for (int i = 0; i < 4; i++)
         {
-            controllerID[i] = -1;
+            playerList[i] = null;   //プレイヤーリストの初期化
+            characterNum[i] = -1;  //各プレイヤーのキャラクター番号の初期化
+            controllerID[i] = -1;  //各プレイヤーのコントローラーIDの初期化
         }
     }
+
+    //配列の初期化
+    //public void InitializeArray()
+    //{
+    //    int maxPlayer = 4;  //最大プレイ人数分の大きさ
+    //    playerList = new GameObject[maxPlayer];
+    //    characterNum = new int[maxPlayer];
+    //    controllerID = new int[maxPlayer];
+
+    //    for (int i = 0; i < 4; i++)
+    //    {
+    //        playerList[i] = null;   //プレイヤーリストの初期化
+    //        characterNum[i] = -1;  //各プレイヤーのキャラクター番号の初期化
+    //        controllerID[i] = -1;  //各プレイヤーのコントローラーIDの初期化
+    //    }
+    //}
 }

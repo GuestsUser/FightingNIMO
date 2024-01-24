@@ -109,14 +109,14 @@ public class CharSelectManager : MonoBehaviour
 				characterNum = 2;
 
 				cursorImage.anchoredPosition = new Vector2(-(offset[0]), -(offset[1]));
-				playerNumText.text = "<color=#f4f54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
+				playerNumText.text = "<color=#4cf54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
 				break;
 			//4P
 			case 3:
 				characterNum = 3;
 
 				cursorImage.anchoredPosition = new Vector2((offset[0]), -(offset[1]));
-				playerNumText.text = "<color=#4cf54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
+				playerNumText.text = "<color=#f4f54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorTextをP1/P2/P3/P4に設定
 				break;
 		}
 
@@ -170,7 +170,7 @@ public class CharSelectManager : MonoBehaviour
 				characterUI[0] = GameObject.Find("BaseButton");
 				characterUI[1] = GameObject.Find("SharkButton");
 				characterUI[2] = GameObject.Find("TurtleButton");
-				//characterUI[3] = GameObject.Find("MantaButton");
+				characterUI[3] = GameObject.Find("MantaButton");
 				cursor.SetActive(true);
 			}
 
@@ -275,18 +275,18 @@ public class CharSelectManager : MonoBehaviour
 					}
                 }
                 break;
-				//マンタ
-				//case 3:
-				//Smr[characterNum].enabled = true;	//マンタを表示
-				//for (int i = 0; i < maxCharacter; i++)
-				//{
-				//		if (i != characterNum)
-				//		{
-				//			Smr[i].enabled = false;	//マンタを非表示
-				//		}
-				//	}
-				//	break;
-		}
+            //マンタ
+            case 3:
+                Smr[characterNum].enabled = true;   //マンタを表示
+                for (int i = 0; i < maxCharacter; i++)
+                {
+                    if (i != characterNum)
+                    {
+                        Smr[i].enabled = false; //マンタを非表示
+                    }
+                }
+                break;
+        }
 	}
 
 	//キャラクター番号削除関数
@@ -357,7 +357,6 @@ public class CharSelectManager : MonoBehaviour
 						if (testNum2 < 0)
 						{
 							//一番最後のキャラクター番号に変更する（クマノミ->マンタ）
-							//マンタモデルができたら-1削除
 							testNum2 = maxCharacter - 1;
 						}
 						if (!LoopArray(testNum2)) { break; }
@@ -396,8 +395,7 @@ public class CharSelectManager : MonoBehaviour
 						if (currentCharNum < 0)
 						{
 							//一番最後のキャラクター番号に変更する（クマノミ->マンタ）
-							//マンタモデルができたら-1削除
-							currentCharNum = maxCharacter - 1;
+							currentCharNum = maxCharacter-1;
 						}
 						if (!LoopArray(currentCharNum)) { break; }
 					}
@@ -446,6 +444,12 @@ public class CharSelectManager : MonoBehaviour
 			//キャラクターを選択（決定）する
 			isCharSelected = true;
 
+			// ここに処理
+			Color color;
+			ColorUtility.TryParseHtmlString("#A1A1A1", out color);
+			characterUI[characterNum].GetComponent<Image>().color = color;
+			Debug.Log("色変更");
+
 			//既に選択されたキャラクターがいたときの処理
 			int currentCharNum = characterNum;
 
@@ -463,10 +467,7 @@ public class CharSelectManager : MonoBehaviour
 				{
 					dataRetation.characterNum[i] = characterNum;
 
-					// ここに処理
-					Color color;
-					ColorUtility.TryParseHtmlString("#A1A1A1", out color);
-					characterUI[characterNum].GetComponent<Image>().color = color;
+					
 				}
 			}
 		}
@@ -480,6 +481,7 @@ public class CharSelectManager : MonoBehaviour
 		{
 			//キャラクター選択を解除する
 			isCharSelected = false;
+			characterUI[characterNum].GetComponent<Image>().color = Color.white;
 
 			for (int i = 0; i < dataRetation.characterNum.Length; i++)
 			{
@@ -487,8 +489,6 @@ public class CharSelectManager : MonoBehaviour
 				if (dataRetation.characterNum[i] == characterNum && dataRetation.playerList[i] == this.gameObject)
 				{
 					dataRetation.characterNum[i] = -1;   //決定されたキャラクター番号を削除する（-1を入れる）
-
-					characterUI[characterNum].GetComponent<Image>().color = Color.white;
 					break;
 				}
 			}

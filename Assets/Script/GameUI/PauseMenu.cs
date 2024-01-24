@@ -93,7 +93,6 @@ public class PauseMenu : MonoBehaviour
 
     //private float fps;
 
-    // Start is called before the first frame update
     void Start()
     {
         /*Titleと共通*/
@@ -161,7 +160,6 @@ public class PauseMenu : MonoBehaviour
         cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0f, true);                           // カーソルを徐々に戻す
     }
 
-    // Update is called once per frame
     void Update()
     {
         //fps = 1f / Time.deltaTime;
@@ -256,7 +254,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         /* 【非表示状態】 */
-        else if(gameState.isGame == true)
+        else if(gameState.isGame && !gameState.isResult)
         {
             // 誰かしらがStartボタンを押した時
             if (Gamepad.current.startButton.wasPressedThisFrame)
@@ -286,6 +284,7 @@ public class PauseMenu : MonoBehaviour
         show = false;                   // メニューを 非表示状態 にする
         ui.SetActive(false);     // UIオブジェクトを無効化する
     }
+
     void CursorMove()
     {
         #region 選択項目の変更
@@ -501,7 +500,6 @@ public class PauseMenu : MonoBehaviour
         Initialize();
     }
 
-
     float easing(float duration, float time, float length)
     {
         float frame = 60.0f;                      // fps
@@ -558,5 +556,4 @@ public class PauseMenu : MonoBehaviour
             return source - ((float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero) * (symbol_num * -1)) * Mathf.Abs(max - source);
         }
     }
-    
 }
