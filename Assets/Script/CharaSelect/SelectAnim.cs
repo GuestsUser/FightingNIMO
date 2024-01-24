@@ -102,13 +102,13 @@ public class SelectAnim : MonoBehaviour
             //3P
             case 2:
                 characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2((space / 2.0f), posY);
-                playerNumText.text = "<color=#f4f54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorText‚ğP1/P2/P3/P4‚Éİ’è
+                playerNumText.text = "<color=#4cf54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorText‚ğP1/P2/P3/P4‚Éİ’è
                 /* ---------- */
                 break;
             //4P
             case 3:
                 characterState.GetComponent<RectTransform>().anchoredPosition = new Vector2(((space / 2.0f) + space), posY);
-                playerNumText.text = "<color=#4cf54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorText‚ğP1/P2/P3/P4‚Éİ’è
+                playerNumText.text = "<color=#f4f54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorText‚ğP1/P2/P3/P4‚Éİ’è
                 /* ---------- */
                 break;
         }

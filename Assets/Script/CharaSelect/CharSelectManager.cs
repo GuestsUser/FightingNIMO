@@ -109,14 +109,14 @@ public class CharSelectManager : MonoBehaviour
 				characterNum = 2;
 
 				cursorImage.anchoredPosition = new Vector2(-(offset[0]), -(offset[1]));
-				playerNumText.text = "<color=#f4f54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorText‚ğP1/P2/P3/P4‚Éİ’è
+				playerNumText.text = "<color=#4cf54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorText‚ğP1/P2/P3/P4‚Éİ’è
 				break;
 			//4P
 			case 3:
 				characterNum = 3;
 
 				cursorImage.anchoredPosition = new Vector2((offset[0]), -(offset[1]));
-				playerNumText.text = "<color=#4cf54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorText‚ğP1/P2/P3/P4‚Éİ’è
+				playerNumText.text = "<color=#f4f54b>" + (input.playerIndex + 1) + "P</color>"; //PlayerCursorText‚ğP1/P2/P3/P4‚Éİ’è
 				break;
 		}
 
