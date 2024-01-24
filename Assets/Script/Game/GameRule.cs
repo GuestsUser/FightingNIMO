@@ -28,7 +28,7 @@ public class GameRule : MonoBehaviour
     //勝利条件
     private void IsWin()
     {
-        //試合
+        //まだ制限時間以内かつ、試合中かつ、プレイヤー（キャラクター番号）リストが1以下の場合
         if (!updateTime.finished && gameState.isGame && playerIns.playerNum.Count <= 1)
         {
             for (int i = 0; i < dataRetation.characterNum.Length; i++)
@@ -37,7 +37,7 @@ public class GameRule : MonoBehaviour
                 {
                     result.winner = i;
                     gameState.isResult = true;
-                    Debug.Log(gameState.isResult);
+                    break;
                 }
             }
         }

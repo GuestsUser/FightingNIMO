@@ -21,6 +21,7 @@ public class TestPlayer : MonoBehaviour
     [SerializeField] [Tooltip("地面扱いのレイヤーを指定できる")] string[] floorLayer = { "Default" };
 
     [SerializeField] [Tooltip("キャラを識別する為の番号")] int _playerNumber;
+    [Tooltip("trueにすると死亡という事で動けなくなる")] public bool isDead = false;
 
     private GameState gameState;
 
@@ -63,7 +64,8 @@ public class TestPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!gameState.isGame) { return; }   //ゲームが開始されていない時は実行しない
+        if (isDead) { return; }   //死亡していれば実行しない
+        if (!gameState.isGame) { return; }   //ゲームが開始されていない時は実行しない
         if (Time.timeScale <= 0) { return; } //停止中は実行しない
 
         down.RunFunction();
