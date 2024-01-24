@@ -29,7 +29,7 @@ public class PlayerInstantiate : MonoBehaviour
 
     private void CreatePlayer()
     {
-        for (int i = 0; i < 3/*プレイヤー数*/; i++)
+        for (int i = 0; i < Gamepad.all.Count/*プレイヤー数*/; i++)   //ここの値をちゃんとしたプレイヤー人数にしないと大きさの範囲を超えてエラーにつながる
         {
             InputDevice current = null;
             foreach (var gamepad in Gamepad.all)
