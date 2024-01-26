@@ -20,7 +20,7 @@ public class DownTest : MonoBehaviour
         if (Time.timeScale <= 0) { return; } //停止中は実行しない
 
         down.RunFunction();
-        if (down.isDown) { return; } //ダウンしていれば他処理は実行しない
+        //if (down.isDown) { return; } //ダウンしていれば他処理は実行しない
     }
     void FixedUpdate()
     {
