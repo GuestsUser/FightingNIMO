@@ -30,6 +30,7 @@ public class Result : MonoBehaviour
     //SE関連
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip scoreUpSE;       //星がつくときのSE
+    [SerializeField] private AudioClip allScoreSE;      //3つ星を獲得して勝利したときのSE
     [SerializeField] private AudioClip resultHideSE;    //リザルトパネルを隠すときのSE
     [SerializeField] private AudioClip resultRevealSE;  //リザルトパネルを出すときのSE
     private int seNum;  //同じ処理の場所で別のSeをタイミングをずらして鳴らすための変数
@@ -138,10 +139,15 @@ public class Result : MonoBehaviour
             {
                 addScore = true;
                 if (++score[winner] == 3) {
-                    gameState.isGameSet = true;
-                    win.text = $"{winner + 1}P WIN!";
+                    gameState.isGameSet = true; //ゲームの決着がつく
+                    win.text = $"{winner + 1}P WIN!";   //勝利したプレイヤーのテキストを表示する
                     win.CrossFadeAlpha(1.0f, 1.0f, true);
-                    particle.SetActive(true);
+
+                    //SE（3つ星を獲得して勝利したときの音）
+                    audioSource.clip = allScoreSE;
+                    audioSource.PlayOneShot(allScoreSE);
+
+                    particle.SetActive(true);   //勝利時の紙吹雪パーティクルを表示する
                 }
                 else
                 {

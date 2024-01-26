@@ -20,6 +20,10 @@ public class GameState : MonoBehaviour
     [Tooltip("決着がついたかどうか")]
     [SerializeField] public bool isGameSet;
 
+    //SE関連
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip gameStartSE;      //FIGHTのタイミングの音
+
     // 時間系
     [Tooltip("試合開始までの待機時間")]
     [SerializeField] private float waitTime; // インスペクターから調整
@@ -57,6 +61,10 @@ public class GameState : MonoBehaviour
             {
                 coundDownText.text = "FIGHT!";
                 coundDownText.CrossFadeAlpha(0.0f, 1.0f, true);
+
+                //SE（FIGHTのタイミングの音）
+                audioSource.clip = gameStartSE;
+                audioSource.PlayOneShot(gameStartSE);
                 isStart = true;
                 isGame = true;
             }
