@@ -29,15 +29,16 @@ public class Result : MonoBehaviour
 
     //SE関連
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip scoreUpSE;      //星がつくときのSE
+    [SerializeField] private AudioClip scoreUpSE;       //星がつくときのSE
+    [SerializeField] private AudioClip resultHideSE;    //リザルトパネルを隠すときのSE
+    [SerializeField] private AudioClip resultRevealSE;  //リザルトパネルを出すときのSE
+    private int seNum;  //同じ処理の場所で別のSeをタイミングをずらして鳴らすための変数
 
     // スコア関連
     [SerializeField] private Transform[] point; // ★UIが入る
     [SerializeField] static private int[] score; // 得点
     [SerializeField] private int playerNum; // 接続人数
     [SerializeField] public int winner; // 勝者
-
-
 
     // ゲームの進行状況系・制御関連
     [Tooltip("Scoreを加算したかどうか")]
@@ -66,9 +67,6 @@ public class Result : MonoBehaviour
     [Tooltip("easingの演出の所要時間")]
     [SerializeField] private float scoreDuration; // インスペクターから調整
 
-
-
-    // Start is called before the first frame update
     void Start()
     {
         dataRetation = GameObject.Find("DataRetation").GetComponent<DataRetation>();
@@ -83,6 +81,8 @@ public class Result : MonoBehaviour
         addScore = false;
         show = false;
         isFinishing = false;
+
+        seNum = 0;
 
         /*【仮の処理】*/
         playerNum = Gamepad.all.Count;      　　　　　// 接続人数の確認
@@ -108,16 +108,12 @@ public class Result : MonoBehaviour
                     point[j+1].gameObject.SetActive(true);
                 }
             }
-            
-            
-            
         }
         win.text = "";
         win.CrossFadeAlpha(0.0f, 0.0f, true);
         //fadePanel.CrossFadeAlpha(0.0f, 0.0f, true);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(isFinishing == false)
@@ -129,10 +125,10 @@ public class Result : MonoBehaviour
         {
             //Debug.Log("Scene遷移");
             fadePanel.CrossFadeAlpha(1.0f, sceneTime,true);
-        }
-        
+        }   
     }
 
+    //スコア表が出てくる時のアニメーション
     void SlideInAnim()
     {
         // リザルトの表示が許可されたなら
@@ -153,11 +149,11 @@ public class Result : MonoBehaviour
                 }
             }
             
-
             // 待機時間が0.0fよりも大きかった場合、waitTimeから経過した時間を引いていく (どのタイミングでもwaitTimeに0.0f以上の値が代入されれば演出がストップする)
             if (waitTime > 0.0f)
             {
                 waitTime -= Time.deltaTime;
+                
             }
             else
             {
@@ -165,6 +161,22 @@ public class Result : MonoBehaviour
                 if (easTime / 60.0f < duration) // 60.0はfps
                 {
                     easTime++;
+
+                    //リザルトパネルの出るとき、戻るときのSE処理
+                    if (seNum == 0)
+                    {
+                        seNum = 1;
+                        //SE（リザルトパネルを隠すとき）
+                        audioSource.clip = resultHideSE;
+                        audioSource.PlayOneShot(resultHideSE);
+                    }
+                    else if(seNum == 1 && show == true)
+                    {
+                        seNum = 2;
+                        //SE（リザルトパネルを出すときのSE）
+                        audioSource.clip = resultRevealSE;
+                        audioSource.PlayOneShot(resultRevealSE);
+                    }
                 }
                 else // easTimeがduration以上になった場合
                 {
@@ -180,26 +192,25 @@ public class Result : MonoBehaviour
                     else
                     {
                         StartCoroutine("BackMenu");
-                    }
-                    
+                    }  
                 }
 
                 // sin波が0.5fの地点を超えた かつ まだResultを表示させていなかったら  ※sin波の説明(sin波が0.0fからスタートして1.0fに戻ってくるまでの長さを1.0fとしている)
                 if (sinRate >= 0.5f && show == false)
                 {
                     show = true;
-                    waitTime = showTime;
+                    waitTime = showTime;    //パネルを見せている時間
 
-                    //SE（星がつくときの音）
+                    //SE（星がつくとき）
                     audioSource.clip = scoreUpSE;
                     audioSource.PlayOneShot(scoreUpSE);
                 }
-
                 scorePanel.anchoredPosition = new Vector2(initPos.x + (Vector2.Distance(initPos, targetPos) * easing(duration, easTime, 1.0f)), initPos.y);
             }
         }
     }
 
+    //スコア加算アニメーション
     void ScoreAnim()
     {
         float scale = 1.0f;
@@ -222,8 +233,6 @@ public class Result : MonoBehaviour
                     scoreEasTime = scoreDuration * 60.0f; // 固定
                 }
 
-                
-
                 // scaleの拡大縮小アニメーション
                 scale = 1.0f + easing(scoreDuration, scoreEasTime, 1.0f);
                 point[score[winner]].gameObject.GetComponent<RectTransform>().localScale = new Vector3(scale, scale, scale);
@@ -232,12 +241,14 @@ public class Result : MonoBehaviour
         
     }
 
-
+    //次のラウンドのためのコルーチン
     private IEnumerator NextRound()
     {
         yield return new WaitForSecondsRealtime(2.0f);
         SceneManager.LoadScene("GameScene");
     }
+
+    //タイトルに戻るためのコルーチン
     private IEnumerator BackMenu()
     {
         yield return new WaitForSecondsRealtime(3);
@@ -248,6 +259,7 @@ public class Result : MonoBehaviour
         SceneManager.LoadScene("TitleScene");
     }
 
+    //アニメーションの時の緩急を付けるための関数
     float easing(float duration, float time, float length)
     {
         float frame = 60.0f;                      // fps

@@ -12,6 +12,8 @@ public class DeadLine : MonoBehaviour
     //SE関連
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip dieSE;   //死亡音
+
+    [SerializeField] private GameObject targetObj;
                                                         
     private void Start()
     {
@@ -33,6 +35,12 @@ public class DeadLine : MonoBehaviour
             {
                 playerIns.playerNum.Remove(player.playerNumber);  //死んだプレイヤー（キャラクター番号）を削除する
             }
+
+            if(cinemachineTargetGroup.m_Targets.Length == 1)
+            {
+                playerIns.AddTargetToGroup(targetObj.transform, 1.0f, 10.0f);
+            }
+
 
             //SE（死亡音）
             audioSource.clip = dieSE;

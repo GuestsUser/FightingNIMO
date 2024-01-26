@@ -35,7 +35,6 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private AudioClip cancelSE;        // キャンセル音
     [SerializeField] private AudioClip moveSE;          // カーソル移動音
     [SerializeField] private AudioClip openMenuSE;      // メニュー表示オン
-    [SerializeField] private AudioClip closeMenuSE;     // メニュー非表示オン
 
     /*--------------------*/
     /*【調整するところ】*/
@@ -266,13 +265,18 @@ public class PauseMenu : MonoBehaviour
                     if (gamePad[i].startButton.wasPressedThisFrame)
                     {
                         Debug.Log($"GamePad{i}が入力しました");
-                        controlNum = i;                        // ポーズの操作権限をiPにする
+                        controlNum = i; // ポーズの操作権限をiPにする
                     }
                 }
-                show = true;                                   // ポーズメニューを表示状態のフラグにする
-                Time.timeScale = 0;                            // ポーズ(時間を止める)
-                ui.SetActive(true);                     // UIオブジェクトを有効化する
-                inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                                           // カーソルを徐々に消す
+                show = true;        // ポーズメニューを表示状態のフラグにする
+                Time.timeScale = 0; // ポーズ(時間を止める)
+                ui.SetActive(true); // UIオブジェクトを有効化する
+
+                //SE（Pauseを開く）
+                audioSource.clip = openMenuSE;
+                audioSource.PlayOneShot(openMenuSE);
+
+                inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);   // カーソルを徐々に消す
                 cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);
             }
         }

@@ -540,9 +540,9 @@ MonoBehaviour:
   - {fileID: 4333435277698812560}
   downPower: 35
   damageSound:
-  - {fileID: 8300000, guid: 27f9e2c9aa9d3704ea6b67292cc14091, type: 3}
-  - {fileID: 8300000, guid: 0b09189efad06cd48b43b5d5f7c6a2f2, type: 3}
-  - {fileID: 8300000, guid: 95cdaebd81bf5464b9d9d3b89f59bfb7, type: 3}
+  - {fileID: 8300000, guid: 21697d5f1e2e8a5488519f645e5289ce, type: 3}
+  - {fileID: 8300000, guid: 6bc8e627b748ec748abe50e4727f0659, type: 3}
+  - {fileID: 8300000, guid: 06bace05d3eb7d1469db722b49bb3e07, type: 3}
   downSound: {fileID: 8300000, guid: 8ea2b41b818ad10439dc8a005ebbcfd7, type: 3}
 --- !u!114 &6852014778668681137
 MonoBehaviour:

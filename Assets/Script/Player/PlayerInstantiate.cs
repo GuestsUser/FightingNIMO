@@ -54,7 +54,7 @@ public class PlayerInstantiate : MonoBehaviour
     }
 
     //追従カメラ候補に追加する関数
-    void AddTargetToGroup(Transform targetTransform, float weight, float radius)
+    public void AddTargetToGroup(Transform targetTransform, float weight, float radius)
     {
         //ターゲットを新しく作成し、リストに追加する
         CinemachineTargetGroup.Target target = new CinemachineTargetGroup.Target();

@@ -207,7 +207,7 @@ MonoBehaviour:
   dataRetation: {fileID: 0}
   audioSource: {fileID: 8605002134638712607}
   decisionSE: {fileID: 8300000, guid: 6de3007a375b80a498571ddcdfd8c866, type: 3}
-  cancelSE: {fileID: 8300000, guid: 6de3007a375b80a498571ddcdfd8c866, type: 3}
+  cancelSE: {fileID: 8300000, guid: 72154be610526b440a1e1a7353e6187c, type: 3}
   moveSE: {fileID: 8300000, guid: b7605feb036e76f4db71c89fd48a271c, type: 3}
   maxCharacter: 4
   interval: 0
