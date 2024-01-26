@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +34,12 @@ public class CharSelectManager : MonoBehaviour
 	[SerializeField] private ReceiveNotificationExample receiveNotificationExample;
 	[Tooltip("DataRetation.csを持ったオブジェクトの自動取得")]
 	[SerializeField] private DataRetation dataRetation;
+
+	//SE BGM関連
+	[SerializeField] private AudioSource audioSource;   //自身のAudioSourceを入れる
+	[SerializeField] private AudioClip decisionSE;      //決定音 decision
+	[SerializeField] private AudioClip cancelSE;        //キャンセル音
+	[SerializeField] private AudioClip moveSE;          //移動音
 
 	[Header("---------------------------------------------")]
 	[Space(20)]
@@ -241,7 +248,6 @@ public class CharSelectManager : MonoBehaviour
 			//クマノミ
 			case 0:
 				Smr[characterNum].enabled = true;	//クマノミを表示
-
 				//キャラクターの総数分ループし、現在選択されているキャラクター番号以外のキャラクターを非表示にする
 				for (int i = 0; i < maxCharacter; i++)
 				{
@@ -259,7 +265,6 @@ public class CharSelectManager : MonoBehaviour
 					if (i != characterNum)
 					{
 						Smr[i].enabled = false;		//サメを非表示
-
 					}
 				}
 				break;
@@ -328,7 +333,7 @@ public class CharSelectManager : MonoBehaviour
 	{
 
 		int testNum2 = characterNum;
-		if (push == true)
+		if (push == true && isCharSelected == false)
 		{
 			count++;    //長押し間隔調整
 
@@ -341,8 +346,8 @@ public class CharSelectManager : MonoBehaviour
 
 					characterNum = testNum2 % maxCharacter;
 					//SE（移動音）
-					//audioSouce.clip = moveSE;
-					//audioSouce.PlayShot(moveSE);
+					audioSource.clip = moveSE;
+					audioSource.PlayOneShot(moveSE);
 				}
 			}
 			//左長押し
@@ -363,14 +368,16 @@ public class CharSelectManager : MonoBehaviour
 					}
 
 					characterNum = testNum2 % maxCharacter;
+
+					//SE（移動音）
+					audioSource.clip = moveSE;
+					audioSource.PlayOneShot(moveSE);
 				}
-				//audioSouce.clip = moveSE;
-				//audioSouce.PlayOneShot(moveSE);
+				
 			}
 		}
 	}
 
-	/*-----------ActionInput(Start)-----------*/
 
 	//プレイヤーカーソル移動処理（ゲームパッド：左スティック or 十字キー）
 	public void OnMove(InputValue value)
@@ -403,8 +410,8 @@ public class CharSelectManager : MonoBehaviour
 					characterNum = currentCharNum % maxCharacter;
 
 					//SE（移動音）
-					//audioSouce.clip = moveSE;
-					//audioSouce.PlayOneShot(moveSE);
+					audioSource.clip = moveSE;
+					audioSource.PlayOneShot(moveSE);
 				}
 			}
 			//右入力処理
@@ -420,8 +427,8 @@ public class CharSelectManager : MonoBehaviour
 					characterNum = currentCharNum % maxCharacter;
 
 					//SE（移動音）
-					//audioSouce.clip = moveSE;
-					//audioSouce.PlayOneShot(moveSE);
+					audioSource.clip = moveSE;
+					audioSource.PlayOneShot(moveSE);
 				}
 			}
 			else    //何も押されていない時
@@ -443,12 +450,17 @@ public class CharSelectManager : MonoBehaviour
 		{
 			//キャラクターを選択（決定）する
 			isCharSelected = true;
+			isRightPush = false;
+			isLeftPush = false;
 
-			// ここに処理
+			//SE（選択音）
+			audioSource.clip = decisionSE;
+			audioSource.PlayOneShot(decisionSE);
+
+			//選択されたキャラクターUIの色を暗くする（選択されたことが分かりやすいように）
 			Color color;
 			ColorUtility.TryParseHtmlString("#A1A1A1", out color);
 			characterUI[characterNum].GetComponent<Image>().color = color;
-			Debug.Log("色変更");
 
 			//既に選択されたキャラクターがいたときの処理
 			int currentCharNum = characterNum;
@@ -466,8 +478,6 @@ public class CharSelectManager : MonoBehaviour
 				if (dataRetation.characterNum[i] != characterNum && dataRetation.playerList[i] == this.gameObject)
 				{
 					dataRetation.characterNum[i] = characterNum;
-
-					
 				}
 			}
 		}
@@ -479,9 +489,13 @@ public class CharSelectManager : MonoBehaviour
 		//現在がキャラクターセレクト画面かつ、キャラクターが選択されている場合
 		if (isCharSelected && gameStartSys.isCharSelect && !gameStartSys.isNextScene)
 		{
-			//キャラクター選択を解除する
-			isCharSelected = false;
-			characterUI[characterNum].GetComponent<Image>().color = Color.white;
+			isCharSelected = false; //キャラクター選択を解除する
+
+			characterUI[characterNum].GetComponent<Image>().color = Color.white;    //選択されたキャラクターUIの色を元に戻す
+
+			//SE（キャンセル音）
+			audioSource.clip = cancelSE;
+			audioSource.PlayOneShot(cancelSE);
 
 			for (int i = 0; i < dataRetation.characterNum.Length; i++)
 			{
@@ -501,6 +515,4 @@ public class CharSelectManager : MonoBehaviour
 		//Debug.Log("ゲームパッドが切断されました。");
 		isTrigger = true;
 	}
-
-	/*-----------ActionInput(End)-----------*/
 }

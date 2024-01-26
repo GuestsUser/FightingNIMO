@@ -51,8 +51,8 @@ public class MenuTest : MonoBehaviour
     [SerializeField] private AudioClip decisionSE;      //決定音 decision
     [SerializeField] private AudioClip cancelSE;        //キャンセル音
     [SerializeField] private AudioClip moveSE;          //移動音
-    [SerializeField] private AudioClip openMenuSE;      //
-    [SerializeField] private AudioClip closeMenuSE;     //
+    [SerializeField] private AudioClip openMenuSE;      //メニューを開く音
+    [SerializeField] private AudioClip closeMenuSE;     //メニューを閉じる音
 
     // 値調整系
     [Tooltip("項目同士の縦の間隔(正の値を入力してください)")]

@@ -10,6 +10,11 @@ public class GameControll : MonoBehaviour
     [SerializeField] private DataRetation dataRetation;
     [SerializeField] private UpdateTime updateTime;
 
+    //SE関連
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip roundWinSE;      //1ラウンド勝った時の音
+
+
     private void Start()
     {
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
@@ -27,15 +32,21 @@ public class GameControll : MonoBehaviour
     //勝利条件
     private void IsWin()
     {
-        //試合
+        //制限時間以内かつ、固法のプレイヤーが1人だけの場合
         if (!updateTime.finished && gameState.isGame && playerIns.playerNum.Count <= 1)
         {
             for (int i = 0; i < dataRetation.characterNum.Length; i++)
             {
                 if (dataRetation.characterNum[i] == playerIns.playerNum[0])
                 {
+                    //SE（1ラウンド勝った時の音）
+                    audioSource.clip = roundWinSE;
+                    audioSource.PlayOneShot(roundWinSE);
+
+                    //iPの勝ちにする
                     result.winner = i;
                     gameState.isResult = true;
+                    gameState.isGame = false;
                 }
             }
         }
@@ -44,7 +55,7 @@ public class GameControll : MonoBehaviour
     //引き分け処理
     private void IsDraw()
     {
-        //ゲーム終了の合図をされた時かつ、残りのプレイヤーが2人以上残っている場合は
+        //ゲーム終了の合図をされた時かつ、残りのプレイヤーが2人以上残っている場合
         if (updateTime.finished && playerIns.playerNum.Count >= 2)
         {
             //引き分けにする

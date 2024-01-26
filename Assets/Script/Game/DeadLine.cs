@@ -5,9 +5,14 @@ using UnityEngine;
 
 public class DeadLine : MonoBehaviour
 {
+    //cs関連
     [SerializeField] private PlayerInstantiate playerIns;
     [SerializeField] private CinemachineTargetGroup cinemachineTargetGroup;
 
+    //SE関連
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip dieSE;   //死亡音
+                                                        
     private void Start()
     {
         playerIns = GameObject.Find("CreatePlayer").GetComponent<PlayerInstantiate>();  //PlayerInstantiate取得
@@ -28,6 +33,10 @@ public class DeadLine : MonoBehaviour
             {
                 playerIns.playerNum.Remove(player.playerNumber);  //死んだプレイヤー（キャラクター番号）を削除する
             }
+
+            //SE（死亡音）
+            audioSource.clip = dieSE;
+            audioSource.PlayOneShot(dieSE);
 
             player.isDead = true; //死亡させる
             cinemachineTargetGroup.RemoveMember(other.transform);   //追従カメラのListから削除する

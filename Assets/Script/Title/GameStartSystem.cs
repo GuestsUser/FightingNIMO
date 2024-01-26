@@ -15,6 +15,11 @@ public class GameStartSystem : MonoBehaviour
     [Tooltip("シーン移動時の待機時間(この間にSEが鳴る)")]
     [SerializeField] private float waitTime; //シーン移動時に使用する処理待機時間(SEが鳴り終わるまで)
 
+    //SE関連
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip readySE;      //Readyになった時の音
+    [SerializeField] private AudioClip gameStartSE;  //Readyになった時の音
+
     [Tooltip("現在の画面がキャラクター")]
     public bool isCharSelect;
     [Tooltip("ゲームシーン移動フラグ")]
@@ -54,6 +59,10 @@ public class GameStartSystem : MonoBehaviour
             if (isReady == true && Gamepad.current.startButton.isPressed)
             {
                 isNextScene = true;
+
+                //SE（キャンセル音）
+                audioSource.clip = gameStartSE;
+                audioSource.PlayOneShot(gameStartSE);
                 StartCoroutine("GotoGameScene");
             }
         }
@@ -77,14 +86,23 @@ public class GameStartSystem : MonoBehaviour
         //キャラクターセレクト画面かつ1人でもキャラクターを選択していない,または接続数が1以下の場合
         if (isCharSelect && submitCharCount < conectCount || conectCount <= 1)
         {
-            readyUI.SetActive(false);   //ReadyのUIを非表示にする
-            isReady = false;            //Ready状態を解除する
+            if (isReady)
+            {
+                readyUI.SetActive(false);   //ReadyのUIを非表示にする
+                isReady = false;            //Ready状態を解除する
+            }
         }
         //キャラクターセレクト画面かつ全員がキャラクターを選択している、接続数が1以上の場合
         else if (isCharSelect && submitCharCount >= conectCount && conectCount > 1)
         {
-            readyUI.SetActive(true);    //ReadyのUIを表示する
-            isReady = true;             //Ready状態にする
+            if (isReady == false)
+            {
+                audioSource.clip = readySE;
+                audioSource.PlayOneShot(readySE);
+                readyUI.SetActive(true);    //ReadyのUIを表示する
+                isReady = true;             //Ready状態にする
+            }
+            
         }
     }
 

@@ -7,6 +7,11 @@ public class UpdateTime : MonoBehaviour
 {
     [SerializeField] private GameState gameState;
 
+    //SE関連
+    [SerializeField] private AudioSource audioSource;   //自身のAudioSourceを入れる
+    [SerializeField] private AudioClip timeRemainingSE;      //残り時間を知らせる音（何分にするかは相談する）
+    private bool isTimeRemaining;   //一度だけ実行させるための変数
+
     [Tooltip("分のテキスト")]
     [SerializeField] private Text[] minutesText;
     [Tooltip("秒のテキスト")]
@@ -37,6 +42,7 @@ public class UpdateTime : MonoBehaviour
         tSeconds = $"00";
 
         finished = false;
+        isTimeRemaining = false;
         minutesText[1].text = "3";
     }
 
@@ -69,6 +75,14 @@ public class UpdateTime : MonoBehaviour
         seconds = (int)timeLimit - minutes * 60;
 
         tMinutes = $"0{minutes.ToString()}";
+
+        if(minutes == 1 && seconds == 0 && !isTimeRemaining)
+        {
+            //SE（残り時間を知らせる音）
+            audioSource.clip = timeRemainingSE;
+            audioSource.PlayOneShot(timeRemainingSE);
+            isTimeRemaining = true;
+        }
 
         // secondsが2桁の場合
         if(seconds >= 10)

@@ -27,6 +27,10 @@ public class Result : MonoBehaviour
     [SerializeField] private Image fadePanel;
     [SerializeField] private Text win;
 
+    //SE関連
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip scoreUpSE;      //星がつくときのSE
+
     // スコア関連
     [SerializeField] private Transform[] point; // ★UIが入る
     [SerializeField] static private int[] score; // 得点
@@ -185,7 +189,10 @@ public class Result : MonoBehaviour
                 {
                     show = true;
                     waitTime = showTime;
-                    
+
+                    //SE（星がつくときの音）
+                    audioSource.clip = scoreUpSE;
+                    audioSource.PlayOneShot(scoreUpSE);
                 }
 
                 scorePanel.anchoredPosition = new Vector2(initPos.x + (Vector2.Distance(initPos, targetPos) * easing(duration, easTime, 1.0f)), initPos.y);

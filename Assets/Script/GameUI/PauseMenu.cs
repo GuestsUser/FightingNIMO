@@ -29,7 +29,7 @@ public class PauseMenu : MonoBehaviour
     [Tooltip("Controls‚ÌUI‚ð“ü‚ê‚Ä‚­‚¾‚³‚¢")]
     [SerializeField] private GameObject controlsUI;
 
-    // ‰¹
+    //SEŠÖ˜A
     private AudioSource audioSource;
     [SerializeField] private AudioClip decisionSE;      // Œˆ’è‰¹
     [SerializeField] private AudioClip cancelSE;        // ƒLƒƒƒ“ƒZƒ‹‰¹

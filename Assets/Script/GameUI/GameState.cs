@@ -24,7 +24,6 @@ public class GameState : MonoBehaviour
     [Tooltip("試合開始までの待機時間")]
     [SerializeField] private float waitTime; // インスペクターから調整
 
-    // Start is called before the first frame update
     void Start()
     {
         isStart = false;
@@ -37,7 +36,6 @@ public class GameState : MonoBehaviour
         fadePanel.CrossFadeAlpha(0.0f, 0.5f, true);
     }
 
-    // Update is called once per frame
     void Update()
     {
         // 試合開始前の場合

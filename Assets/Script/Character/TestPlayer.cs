@@ -65,7 +65,7 @@ public class TestPlayer : MonoBehaviour
     void Update()
     {
         if (isDead) { return; }   //死亡していれば実行しない
-        if (!gameState.isGame) { return; }   //ゲームが開始されていない時は実行しない
+        if (!gameState.isGame && !gameState.isResult) { return; }   //ゲームが開始されていない時は実行しない
         if (Time.timeScale <= 0) { return; } //停止中は実行しない
 
         down.RunFunction();
