@@ -1984,7 +1984,7 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 2
+  m_MassScale: 1
   m_ConnectedMassScale: 1
 --- !u!136 &2083260748838233428
 CapsuleCollider:
@@ -2635,7 +2635,7 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 2
+  m_MassScale: 1
   m_ConnectedMassScale: 1
 --- !u!136 &1141022762720987623
 CapsuleCollider:
@@ -3371,7 +3371,7 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 3
+  m_MassScale: 1
   m_ConnectedMassScale: 1
 --- !u!114 &8817992571768565940
 MonoBehaviour:
@@ -3849,7 +3849,7 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 3
+  m_MassScale: 1
   m_ConnectedMassScale: 1
 --- !u!114 &5568219924608972272
 MonoBehaviour:
@@ -4995,7 +4995,7 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 3
+  m_MassScale: 1
   m_ConnectedMassScale: 1
 --- !u!114 &3664178226086734960
 MonoBehaviour:

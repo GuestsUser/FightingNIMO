@@ -50,25 +50,24 @@ public class PlayerJump : MonoBehaviour
         parent.animator.SetBool("triggerJump", false); //平常時は常にfalse
         parent.animator.SetFloat("airTime", (parent.animator.GetFloat("airTime") + Time.deltaTime) * Convert.ToInt32(!isGround)); //落下していれば滞空時間を記録
 
-        bool pushJump = false; //ダウンしていれば入力に関わらずfalseとなる
-        if (!down.isDown) //ダウンしていれば入力系判定を取る
+        bool pushJump = parent.pInput.actions["Jump"].ReadValue<float>() > 0;
+        if (parent.animator.GetCurrentAnimatorStateInfo(1).IsName("wait"))
         {
-            pushJump = parent.pInput.actions["Jump"].ReadValue<float>() > 0;
-            if (parent.animator.GetCurrentAnimatorStateInfo(1).IsName("wait"))
+            if (isGround)
             {
-                if (isGround)
+                bool pullJump = pushJump == false && oldPushJump == true; //ジャンプボタンを離した瞬間ならtrue
+                bool noDash = moving.GetMoveMode() != PlayerMoving.MoveMode.dash; //ダッシュ状態ではない場合true
+                if (pullJump && noDash)
                 {
-                    bool pullJump = pushJump == false && oldPushJump == true; //ジャンプボタンを離した瞬間ならtrue
-                    bool noDash = moving.GetMoveMode() != PlayerMoving.MoveMode.dash; //ダッシュ状態ではない場合true
-                    if (pullJump && noDash)
+                    if (!down.isDown)
                     {
                         run = Section.jumpUp;
                         nowPower = jumpPower;
                         parent.animator.SetBool("triggerJump", true); //ボタン入力があった且つ接地していればtrue
                     }
                 }
-                else { run = Section.jumpDown; }
             }
+            else { run = Section.jumpDown; }
         }
         oldPushJump = pushJump;
 
