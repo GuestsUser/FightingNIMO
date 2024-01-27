@@ -4121,8 +4121,8 @@ MonoBehaviour:
   readyUI: {fileID: 1915877587}
   waitTime: 0
   audioSource: {fileID: 1703595132}
-  readySE: {fileID: 8300000, guid: cf41246c601eca644a2de92986c89e0a, type: 3}
-  gameStartSE: {fileID: 0}
+  readySE: {fileID: 8300000, guid: ed4b8430f0a296e48ac39985fcb33c0a, type: 3}
+  gameStartSE: {fileID: 8300000, guid: 8d0d73f5db0e4fa43a1ca5142c60210d, type: 3}
   isCharSelect: 0
   isNextScene: 0
   isReady: 0

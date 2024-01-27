@@ -10,6 +10,7 @@ public class Result : MonoBehaviour
 {
     [SerializeField] private GameState gameState;
     [SerializeField] private DataRetation dataRetation;
+    [SerializeField] private GameControll gameControll;
 
     // 表示・座標関連
     [Tooltip("Player毎のScoreのUIを入れてください")]
@@ -37,7 +38,7 @@ public class Result : MonoBehaviour
 
     // スコア関連
     [SerializeField] private Transform[] point; // ★UIが入る
-    [SerializeField] static private int[] score; // 得点
+    static public int[] score; // 得点
     [SerializeField] private int playerNum; // 接続人数
     [SerializeField] public int winner; // 勝者
 
@@ -111,7 +112,7 @@ public class Result : MonoBehaviour
             }
         }
         win.text = "";
-        win.CrossFadeAlpha(0.0f, 0.0f, true);
+        win.CrossFadeAlpha(0.0f, 0.5f, true);
         //fadePanel.CrossFadeAlpha(0.0f, 0.0f, true);
     }
 
@@ -153,6 +154,7 @@ public class Result : MonoBehaviour
                 {
                     win.text = "";
                 }
+                gameControll.playWinSound();
             }
             
             // 待機時間が0.0fよりも大きかった場合、waitTimeから経過した時間を引いていく (どのタイミングでもwaitTimeに0.0f以上の値が代入されれば演出がストップする)
@@ -273,5 +275,15 @@ public class Result : MonoBehaviour
         sinRate = t * length;
 
         return (float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero);
+    }
+
+    public bool AllScore()
+    {
+        if(score[winner] == 3)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

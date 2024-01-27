@@ -27,26 +27,26 @@ public class GameControll : MonoBehaviour
     {
         IsWin();
         IsDraw();
+
+        
     }
 
     //勝利条件
     private void IsWin()
     {
-        //制限時間以内かつ、固法のプレイヤーが1人だけの場合
+        //制限時間以内かつ、残りのプレイヤーが1人だけの場合
         if (!updateTime.finished && gameState.isGame && playerIns.playerNum.Count <= 1)
         {
             for (int i = 0; i < dataRetation.characterNum.Length; i++)
             {
                 if (dataRetation.characterNum[i] == playerIns.playerNum[0])
                 {
-                    //SE（1ラウンド勝った時の音）
-                    audioSource.clip = roundWinSE;
-                    audioSource.PlayOneShot(roundWinSE);
-
                     //iPの勝ちにする
                     result.winner = i;
                     gameState.isResult = true;
                     gameState.isGame = false;
+
+                    
                 }
             }
         }
@@ -61,6 +61,16 @@ public class GameControll : MonoBehaviour
             //引き分けにする
             result.winner = -1;
             gameState.isResult = true;
+        }
+    }
+
+    public void playWinSound()
+    {
+        if (!gameState.isGameSet && !result.AllScore())
+        {
+            //SE（1ラウンド勝った時の音）
+            audioSource.clip = roundWinSE;
+            audioSource.PlayOneShot(roundWinSE);
         }
     }
 }

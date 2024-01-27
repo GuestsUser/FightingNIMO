@@ -4852,7 +4852,7 @@ Transform:
   - {fileID: 1803030472}
   - {fileID: 147461870}
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &673814436
 MonoBehaviour:
@@ -4872,7 +4872,7 @@ MonoBehaviour:
   dataRetation: {fileID: 0}
   updateTime: {fileID: 1750075773}
   audioSource: {fileID: 673814437}
-  roundWinSE: {fileID: 8300000, guid: b7605feb036e76f4db71c89fd48a271c, type: 3}
+  roundWinSE: {fileID: 8300000, guid: a8b9de254ab7cb54cb00bc6b06aa8bf8, type: 3}
 --- !u!82 &673814437
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6265,7 +6265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4391763075778495420, guid: a0e5b392b0a05574b867c61734c48be5, type: 3}
       propertyPath: m_RootOrder
-      value: 20
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 4391763075778495420, guid: a0e5b392b0a05574b867c61734c48be5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7086,6 +7086,14 @@ PrefabInstance:
       propertyPath: gameState
       value: 
       objectReference: {fileID: 1924894177}
+    - target: {fileID: 1647052292662561976, guid: 37da537ecee79714d9b831b8d309fbea, type: 3}
+      propertyPath: allScoreSE
+      value: 
+      objectReference: {fileID: 8300000, guid: ed4b8430f0a296e48ac39985fcb33c0a, type: 3}
+    - target: {fileID: 1647052292662561976, guid: 37da537ecee79714d9b831b8d309fbea, type: 3}
+      propertyPath: gameControll
+      value: 
+      objectReference: {fileID: 673814436}
     - target: {fileID: 1647052292662561976, guid: 37da537ecee79714d9b831b8d309fbea, type: 3}
       propertyPath: resultHideSE
       value: 
@@ -13658,7 +13666,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1693786777 stripped
 GameObject:
