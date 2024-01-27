@@ -42,7 +42,7 @@ public class MenuTest : MonoBehaviour
     [Tooltip("カメラオブジェクトを入れてください")]
     [SerializeField] private Camera cam;
     [Tooltip("『GAME』を押した時のカメラのターゲットポジションを入れてください")]
-    [SerializeField] private Vector3 tPos;
+    [SerializeField] private Vector3[] tPos;
     private float camPosY;
     private float camPosZ;
 
@@ -228,10 +228,11 @@ public class MenuTest : MonoBehaviour
             controlsUI.GetComponentInChildren<RawImage>().CrossFadeAlpha(0.0f, 0.0f, true);
 
             easTime++;
+            // キャラクターセレクトの位置に固定
             if (easTime / 60.0f > duration[0])
             {
                 easTime = duration[0] * 60.0f;
-                cam.transform.position = tPos;
+                cam.transform.position = tPos[1];
             }
 
             if (backUI == false)
@@ -545,13 +546,13 @@ public class MenuTest : MonoBehaviour
         {
             float ui_old_pos = easing3(duration, TurningTime(duration, length, 0.5f), length, false, 1.0f, ui_zoom_scale[0], false);
 
-            float old_cam_scaleY = easing3(duration, TurningTime(duration, length, 0.5f), length, false, 50.0f, targetPosY[0], false);
-            float old_cam_scaleZ = easing3(duration, TurningTime(duration, length, 0.5f), length, true, -200.0f, targetPosZ[0], false);
+            float old_cam_scaleY = easing3(duration, TurningTime(duration, length, 0.5f), length, false, 50.0f, /*tPos[0].y*/targetPosY[0], false);
+            float old_cam_scaleZ = easing3(duration, TurningTime(duration, length, 0.5f), length, true, -200.0f, /*tPos[0].z*/targetPosZ[0], false);
 
             uiScale = easing3(duration, time, length, true, ui_old_pos, ui_zoom_scale[1], true);
 
-            camPosY = easing3(duration, time, length, false, old_cam_scaleY, targetPosY[1], true);
-            camPosZ = easing3(duration, time, length, true, old_cam_scaleZ, targetPosZ[1], true);
+            camPosY = easing3(duration, time, length, false, old_cam_scaleY, tPos[1].y/*targetPosY[1]*/, true);
+            camPosZ = easing3(duration, time, length, true, old_cam_scaleZ, tPos[1].z/*targetPosZ[1]*/, true);
 
         }
         /*--------------------------*/
@@ -572,10 +573,10 @@ public class MenuTest : MonoBehaviour
         /*----------------------*/
 
         // カメラの目標地点を更新
-        tPos = new Vector3(0, targetPosY[1], targetPosZ[1]);
+        //tPos = new Vector3(0, targetPosY[1], targetPosZ[1]);
 
         /*【キャラクターセレクト画面のUIの有効化】*/
-        if (cam.transform.position == tPos)
+        if (cam.transform.position == tPos[1])
         {
             moveUI = false;
             //for (int i = 0; i < characterUI.Length; i++)
@@ -594,8 +595,8 @@ public class MenuTest : MonoBehaviour
     void ZoomOut(float duration, float time)
     {
         /*【カメラとUIの引きと寄りの時に欲しい値】*/
-        float[] targetPosY = new float[2] { -15.0f, 50.0f };
-        float[] targetPosZ = new float[2] { 40.0f, -200.0f };
+        // float[] targetPosY = new float[2] { -15.0f, 50.0f };
+        // float[] targetPosZ = new float[2] { 40.0f, -200.0f };
 
         float[] ui_zoom_scale = new float[2] { 68.0f, 1.0f };
         /*----------------------------------------*/
@@ -604,8 +605,8 @@ public class MenuTest : MonoBehaviour
 
         uiScale = easing3(duration, time, length, false, 40.0f, ui_zoom_scale[1], false);
 
-        camPosY = easing3(duration, time, length, true, 5.0f, targetPosY[1], false);
-        camPosZ = easing3(duration, time, length, false, -20.0f, targetPosZ[1], false);
+        camPosY = easing3(duration, time, length, true, 5.0f, tPos[0].y/*targetPosY[1]*/, false);
+        camPosZ = easing3(duration, time, length, false, -20.0f, tPos[0].z/*targetPosZ[1]*/, false);
 
         cam.transform.position = new Vector3(0, camPosY, camPosZ);
 
@@ -622,10 +623,10 @@ public class MenuTest : MonoBehaviour
         }
         /*----------------------*/
 
-        tPos = new Vector3(0, targetPosY[1], targetPosZ[1]);
+        //tPos = new Vector3(0, targetPosY[1], targetPosZ[1]);
 
-        /*【キャラクターセレクト画面のUIの有効化】*/
-        if (cam.transform.position == tPos)
+        /*【キャラクターセレクト画面のUIの無効化】*/
+        if (cam.transform.position == tPos[0])
         {
             game = false;
             backUI = false;

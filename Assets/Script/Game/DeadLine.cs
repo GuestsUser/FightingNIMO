@@ -30,6 +30,12 @@ public class DeadLine : MonoBehaviour
         {
             TestPlayer player = other.GetComponent<TestPlayer>();
 
+            if (playerIns.playerNum.Count > 2)
+            {
+                audioSource.clip = dieSE;       //SE（死亡音）
+                audioSource.PlayOneShot(dieSE);
+            }
+
             //残りのプレイヤーが1より多い場合は（1人の時はリストから削除しない）
             if (playerIns.playerNum.Count > 1)
             {
@@ -41,10 +47,6 @@ public class DeadLine : MonoBehaviour
                 playerIns.AddTargetToGroup(targetObj.transform, 1.0f, 10.0f);
             }
 
-
-            //SE（死亡音）
-            audioSource.clip = dieSE;
-            audioSource.PlayOneShot(dieSE);
 
             player.isDead = true; //死亡させる
             cinemachineTargetGroup.RemoveMember(other.transform);   //追従カメラのListから削除する
