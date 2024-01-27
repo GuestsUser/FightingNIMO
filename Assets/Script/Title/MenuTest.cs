@@ -51,8 +51,6 @@ public class MenuTest : MonoBehaviour
     [SerializeField] private AudioClip decisionSE;      //決定音 decision
     [SerializeField] private AudioClip cancelSE;        //キャンセル音
     [SerializeField] private AudioClip moveSE;          //移動音
-    [SerializeField] private AudioClip openMenuSE;      //メニューを開く音
-    [SerializeField] private AudioClip closeMenuSE;     //メニューを閉じる音
 
     // 値調整系
     [Tooltip("項目同士の縦の間隔(正の値を入力してください)")]
@@ -147,7 +145,6 @@ public class MenuTest : MonoBehaviour
         if (decision == false && ui.anchoredPosition.x == 0.0f)
         {
             CursorMove();   //メニューカーソル移動処理
-
             Decision();     //各メニューボタンが押されたときの処理
 
             moveUI = false;
@@ -155,9 +152,6 @@ public class MenuTest : MonoBehaviour
         // 『CREDIT』と『CONTROLS』を選択した時
         else if (decision == true && (currentMenuNum > 0 && currentMenuNum < menuItems.Length - 1) && moveUI)
         {
-
-            //Debug.Log(" 決定された ");
-
             easTime++;
 
             // (easTime / 60.0f)が指定した演出にかかる所要時間を超えた時
@@ -170,6 +164,10 @@ public class MenuTest : MonoBehaviour
                 {
                     backUI = true; // UIが戻る演出ON
                     easTime = 0;   // easTime初期化
+
+                    //SE（『CREDIT』と『CONTROLS』からタイトルに戻るときの音）
+                    audioSource.clip = cancelSE;
+                    audioSource.PlayOneShot(cancelSE);
                 }
             }
 
@@ -216,8 +214,6 @@ public class MenuTest : MonoBehaviour
                 }
 
                 StartCoroutine("BackMenu");
-
-                
             }
         }
 
@@ -247,22 +243,21 @@ public class MenuTest : MonoBehaviour
                     if (Gamepad.all.Count != 0 && Gamepad.current.bButton.wasPressedThisFrame && gameStartSys.submitCharCount <= 0)
                     {
                         // キャラクターUIを非表示にする
-                        //for (int i = 0; i < characterUI.Length; i++)
-                        //{
-                        //    characterUI[i].SetActive(false); 
-                        //}
                         characterUI.SetActive(false);
                         backGroundUI.SetActive(false);
 
                         gameStartSys.isCharSelect = false; // キャラクターセレクトを無効化
+
+                        //SE（キャラクターセレクトから戻るときの音）
+                        audioSource.clip = cancelSE;
+                        audioSource.PlayOneShot(cancelSE);
 
                         logo.SetActive(true);              // Logoを表示
                         menu.SetActive(true);              // メニューを表示
                         backUI = true;                     // メニュー画面に戻る演出 ON
                         easTime = 0;                       // easTime初期化
                     }
-                }
-                
+                }  
             }
             else
             {
@@ -434,6 +429,7 @@ public class MenuTest : MonoBehaviour
         }
     }
 
+    //カーソルのフェード処理
     void CursorFade()
     {
         inner.GetComponent<RawImage>().CrossFadeAlpha(0, 0.2f, true);                                           // カーソルを徐々に消す
@@ -441,32 +437,35 @@ public class MenuTest : MonoBehaviour
         menuItems[currentMenuNum].GetComponent<Text>().CrossFadeColor(notSelectionItemColor, 0.2f, true, true); // 文字を徐々に白色に戻す
     }
 
+    //ゲームUIを選択した時
     private IEnumerator PushGame()
     {
         //CursorFade();
-
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
 
         game = true;
-
         moveUI = true;
     }
+
+    //クレジットUIを選択した時
     private IEnumerator PushCredit()
     {
         //CursorFade();
-
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
-
+        
         moveUI = true;
     }
+
+    //コントロールUIを選択した時
     private IEnumerator PushControls()
     {
         //CursorFade();
-
         yield return new WaitForSecondsRealtime(0.25f);                                                        // 処理を待機 ボタンを押した演出のため
 
         moveUI = true;
     }
+
+    //タイトル画面に戻る時
     private IEnumerator BackMenu()
     {
         yield return new WaitForSecondsRealtime(duration[1]);

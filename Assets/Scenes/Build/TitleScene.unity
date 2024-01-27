@@ -1758,9 +1758,9 @@ MonoBehaviour:
   - {x: 0, y: 50, z: -200}
   - {x: 0, y: 3, z: -20}
   audioSource: {fileID: 732366460}
-  decisionSE: {fileID: 8300000, guid: 6de3007a375b80a498571ddcdfd8c866, type: 3}
-  cancelSE: {fileID: 0}
-  moveSE: {fileID: 8300000, guid: b7605feb036e76f4db71c89fd48a271c, type: 3}
+  decisionSE: {fileID: 8300000, guid: 1850d921198f4574ebac35627a54f30b, type: 3}
+  cancelSE: {fileID: 8300000, guid: 72154be610526b440a1e1a7353e6187c, type: 3}
+  moveSE: {fileID: 8300000, guid: cb7a4a316bc299b48a40c788e57c1dc0, type: 3}
   openMenuSE: {fileID: 0}
   closeMenuSE: {fileID: 0}
   itemSpace: 120
@@ -3122,7 +3122,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ff979a5aef14d0c479b77bbf1a5e59f9, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.13
+  m_Volume: 0.35
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -3218,7 +3218,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 180815d797885534d94201760e0b100d, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.03
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
   Mute: 0

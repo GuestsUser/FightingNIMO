@@ -34,6 +34,7 @@ public class Result : MonoBehaviour
     [SerializeField] private AudioClip allScoreSE;      //3つ星を獲得して勝利したときのSE
     [SerializeField] private AudioClip resultHideSE;    //リザルトパネルを隠すときのSE
     [SerializeField] private AudioClip resultRevealSE;  //リザルトパネルを出すときのSE
+    [SerializeField] private AudioClip sceneChangeSE;     //次のラウンドに行く際のフェードのSE
     private int seNum;  //同じ処理の場所で別のSeをタイミングをずらして鳴らすための変数
 
     // スコア関連
@@ -194,12 +195,19 @@ public class Result : MonoBehaviour
                     // 決着がついていなければ次のラウンド
                     if(gameState.isGameSet == false)
                     {
-                        //dataRetation.
                         StartCoroutine("NextRound");
+
+                        //SE（次のシーンに行くときのフェードの音）
+                        audioSource.clip = sceneChangeSE;
+                        audioSource.PlayOneShot(sceneChangeSE);
                     }
                     else
                     {
                         StartCoroutine("BackMenu");
+
+                        //SE（次のシーンに行くときのフェードの音）ない方がいい感じかも
+                        //audioSource.clip = sceneChangeSE;
+                        //audioSource.PlayOneShot(sceneChangeSE);
                     }  
                 }
 
@@ -277,13 +285,13 @@ public class Result : MonoBehaviour
         return (float)Math.Round(Mathf.Sin(t * Mathf.PI * length), 4, MidpointRounding.AwayFromZero);
     }
 
+    //3つの星を獲得したことを知らせるための関数
     public bool AllScore()
     {
         if(score[winner] == 3)
         {
             return true;
         }
-
         return false;
     }
 }

@@ -203,7 +203,6 @@ public class PauseMenu : MonoBehaviour
                         uiGroup.alpha = 1.0f - easing(duration[0],easTime,0.5f);
                         break;
                     case 1:
-                        
                         // 戻る演出フラグが立っていない時
                         if (backUI == false)
                         {
@@ -219,13 +218,15 @@ public class PauseMenu : MonoBehaviour
                                     {
                                         backUI = true; // UIが戻る演出ON
                                         easTime = 0;   // easTime初期化
-                                        Debug.Log("通りました");
+
+                                        //SE（戻るときの音）
+                                        audioSource.clip = cancelSE;
+                                        audioSource.PlayOneShot(cancelSE);
                                     }
                                 }
                             }
                             
                         }
-
                         // 戻る演出フラグが立っている時
                         else
                         {
@@ -233,19 +234,16 @@ public class PauseMenu : MonoBehaviour
                             {
                                 pauseMenu.anchoredPosition = new Vector2(-1920.0f + (easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f), 0.0f);
                             }
-
                             if (Mathf.Abs(pauseMenu.anchoredPosition.x) < 1.0f)
                             {
                                 moveUI = false;
                                 decision = false;
                                 backUI = false;
 
-                                cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
-                                inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);                           // カーソルを徐々に戻す
+                                cursor.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);  // カーソルを徐々に戻す
+                                inner.GetComponent<RawImage>().CrossFadeAlpha(1, 0.2f, true);   // カーソルを徐々に戻す
                             }
-
                             StartCoroutine("BackMenu");
-
                         }
                         break;
                 }
@@ -264,7 +262,7 @@ public class PauseMenu : MonoBehaviour
                 {
                     if (gamePad[i].startButton.wasPressedThisFrame)
                     {
-                        Debug.Log($"GamePad{i}が入力しました");
+                        //Debug.Log($"GamePad{i}が入力しました");
                         controlNum = i; // ポーズの操作権限をiPにする
                     }
                 }

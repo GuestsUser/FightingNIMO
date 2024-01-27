@@ -206,9 +206,9 @@ MonoBehaviour:
   receiveNotificationExample: {fileID: 0}
   dataRetation: {fileID: 0}
   audioSource: {fileID: 8605002134638712607}
-  decisionSE: {fileID: 8300000, guid: 6de3007a375b80a498571ddcdfd8c866, type: 3}
+  decisionSE: {fileID: 8300000, guid: 1850d921198f4574ebac35627a54f30b, type: 3}
   cancelSE: {fileID: 8300000, guid: 72154be610526b440a1e1a7353e6187c, type: 3}
-  moveSE: {fileID: 8300000, guid: b7605feb036e76f4db71c89fd48a271c, type: 3}
+  moveSE: {fileID: 8300000, guid: cb7a4a316bc299b48a40c788e57c1dc0, type: 3}
   maxCharacter: 4
   interval: 0
   characterNum: 0
