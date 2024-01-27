@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2705827966078109686}
   - component: {fileID: 5698038588919797167}
   - component: {fileID: 6687974479753032959}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: DeadLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,6 +123,7 @@ MonoBehaviour:
   cinemachineTargetGroup: {fileID: 0}
   audioSource: {fileID: 6687974479753032959}
   dieSE: {fileID: 8300000, guid: 76f326981c30be14c961f1365402ae4a, type: 3}
+  targetObj: {fileID: 0}
 --- !u!82 &6687974479753032959
 AudioSource:
   m_ObjectHideFlags: 0
