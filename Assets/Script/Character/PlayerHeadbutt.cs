@@ -21,10 +21,10 @@ public class PlayerHeadbutt : MonoBehaviour
 
     public void RunFunction() //このコンポーネントのメイン機能
     {
-        bool run = count >= wait && parent.pInput.actions["Head"].ReadValue<float>() > 0; //入力を受けられる且つ入力があればtrue
+        bool run = count >= wait && parent.pInput.actions["Head"].ReadValue<float>() > 0 && (!parent.isDisableInput); //入力を受けられる且つ入力があればtrue
         parent.animator.SetBool("triggerHead", run);
 
-        head.isAttack = parent.animator.GetCurrentAnimatorStateInfo(4).IsName("head"); //アニメが再生中ならアタック許可を出す
+        head.isAttack = parent.animator.GetCurrentAnimatorStateInfo(4).IsName("head") && (!parent.isDisableInput); //アニメが再生中且つ動ける状態ならアタック許可を出す
         count = (count + Time.deltaTime) * Convert.ToInt32(!run); //実行を行った場合countを0にし、しなければ経過時間の加算を行う
     }
 }

@@ -46,7 +46,7 @@ public class PlayerPunch : MonoBehaviour
         for (int i = 0; i < stickJoint.Length; ++i)
         {
             bool isPunch = false; //ダウン状態なら強制false
-            if (!down.isDown) { isPunch = parent.pInput.actions[punchParaName[i]].ReadValue<float>() != 0; } //パンチ入力があったか記録
+            if (!parent.isDisableInput) { isPunch = parent.pInput.actions[punchParaName[i]].ReadValue<float>() != 0; } //パンチ入力があったか記録
 
             if ((!isPunch) && stick[i] != null)  //掴んでいた場合掴み用ジョイントを削除し掴み対象の情報もリセットする
             {
@@ -56,7 +56,7 @@ public class PlayerPunch : MonoBehaviour
             holdTime[i] = (holdTime[i] + Time.deltaTime) * Convert.ToInt32(isPunch); //実行を行った場合0にし、しなければ経過時間の加算を行う
 
             parent.animator.SetBool(animeParaName[i], isPunch);
-            if (down.isDown) { continue; } //ダウン状態の場合実行はここまで
+            if (parent.isDisableInput) { continue; } //ダウン状態の場合実行はここまで
 
             handAttack[i].isAttack = isPunch && holdTime[i] < stickStartTime; //パンチを押している且つくっつきに移行しない段階ならダメージ発生
             if (holdTime[i] < stickStartTime) { continue; }

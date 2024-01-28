@@ -22,6 +22,9 @@ public class PlayerDown : MonoBehaviour
     [SerializeField] [Tooltip("ダウン時に戻る力を弱める対象とするジョイント")] ConfigurableJoint[] downJoint;
     [SerializeField] [Tooltip("ダウン時の戻る力")] float downPower = 5;
 
+    [SerializeField] [Tooltip("体を構成するリジットボディを入れるとダウン時に質量を下げて掴みやすくしてくれる")] Rigidbody[] body;
+    [SerializeField] [Tooltip("ダウン時の質量")] float downMass = 0.2f;
+
     [SerializeField] [Tooltip("ダメージを受けた時流すサウンド")] AudioClip[] damageSound;
     [SerializeField] [Tooltip("ダウンした時に流すサウンド")] AudioClip downSound;
 
@@ -32,11 +35,15 @@ public class PlayerDown : MonoBehaviour
     public bool isDown { get { return _isDown; } }
     int downCt = 0; //ダウンした回数を記録
 
+    float[] originMass; //bodyの元質量記録用
+
     JointDrive[] iniXDrive; //ダウン用ジョイントの初期のx軸の戻す力を記憶
     JointDrive[] iniYZDrive; //上記のyz用
 
     JointDrive iniHipXDrive; //上記のhip用
     JointDrive iniHipYZDrive; //上記のyz用
+
+    TestPlayer parent; //このスクリプトを制御する親スクリプトを保持
 
     // Start is called before the first frame update
     void Start()
@@ -52,8 +59,12 @@ public class PlayerDown : MonoBehaviour
             iniYZDrive[i] = downJoint[i].angularYZDrive;
         }
 
+        Array.Resize(ref originMass, body.Length);
+        for (int i = 0; i < originMass.Length; ++i) { originMass[i] = body[i].mass; }
+
         iniHp = hp;
         audioPlayer = GetComponent<AudioSource>();
+        parent = GetComponent<TestPlayer>();
     }
 
     public void RunFunction() //このコンポーネントのメイン機能
@@ -62,6 +73,7 @@ public class PlayerDown : MonoBehaviour
         {
             hp = iniHp;
             _isDown = false;
+            DownReturn(); //復帰させる
         }
 
         if (count <= healTime)
@@ -72,41 +84,43 @@ public class PlayerDown : MonoBehaviour
         }
 
         count -= Time.deltaTime;
-
-        //_isDown = parent.pInput.actions["DebugDown"].ReadValue<float>() != 0;
-        if (isDown) //ここ辺りの処理は後で分割予定
-        {
-            JointDrive jd = hipJoint.angularXDrive;
-            jd.positionSpring = 0;
-            hipJoint.angularXDrive = jd;
-
-            jd = hipJoint.angularYZDrive;
-            jd.positionSpring = 0;
-            hipJoint.angularYZDrive = jd;
-            foreach (ConfigurableJoint cj in downJoint)
-            {
-                jd = cj.angularXDrive;
-                jd.positionSpring = downPower;
-                cj.angularXDrive = jd;
-
-                jd = cj.angularYZDrive;
-                jd.positionSpring = downPower;
-                cj.angularYZDrive = jd;
-            }
-            return; //ダウン状態なら他の入力を受け付けない
-        }
-        else
-        {
-            hipJoint.angularXDrive = iniHipXDrive;
-            hipJoint.angularYZDrive = iniHipYZDrive;
-            foreach (ConfigurableJoint cj in downJoint)
-            {
-                cj.angularXDrive = iniHipXDrive;
-                cj.angularYZDrive = iniHipYZDrive;
-            }
-
-        }
     }
+
+    void DownRun() //ダウンさせる
+    {
+        JointDrive jd = hipJoint.angularXDrive;
+        jd.positionSpring = 0;
+        hipJoint.angularXDrive = jd;
+
+        jd = hipJoint.angularYZDrive;
+        jd.positionSpring = 0;
+        hipJoint.angularYZDrive = jd;
+        foreach (ConfigurableJoint cj in downJoint)
+        {
+            jd = cj.angularXDrive;
+            jd.positionSpring = downPower;
+            cj.angularXDrive = jd;
+
+            jd = cj.angularYZDrive;
+            jd.positionSpring = downPower;
+            cj.angularYZDrive = jd;
+        }
+
+        for (int i = 0; i < body.Length; ++i) { body[i].mass = downMass; } //質量をダウン用に設定
+    }
+
+    void DownReturn() //ダウンから復帰させる
+    {
+        hipJoint.angularXDrive = iniHipXDrive;
+        hipJoint.angularYZDrive = iniHipYZDrive;
+        foreach (ConfigurableJoint cj in downJoint)
+        {
+            cj.angularXDrive = iniHipXDrive;
+            cj.angularYZDrive = iniHipYZDrive;
+        }
+        for (int i = 0; i < body.Length; ++i) { body[i].mass = originMass[i]; } //質量を元に戻す
+    }
+
 
     public void Damage(float dmg) //dmg分だけダメージを受ける
     {
@@ -122,12 +136,12 @@ public class PlayerDown : MonoBehaviour
             count = downTimeBase * rate; //ダウン用の無敵時間を入れる
 
             audioPlayer.PlayOneShot(downSound);
+            DownRun(); //ダウンさせる
             return;
         }
 
         count = invincible; //ここまで来た場合通常の無敵時間
     }
-
 
     public bool IsInvincible() { return count > 0; } //countが0を超えている場合無敵状態としてtrueを返す
 
@@ -139,4 +153,5 @@ public class PlayerDown : MonoBehaviour
         }
         return false; //ここまでこれればfalse
     }
+
 }

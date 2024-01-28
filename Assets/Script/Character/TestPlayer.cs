@@ -23,11 +23,13 @@ public class TestPlayer : MonoBehaviour
     [SerializeField] [Tooltip("キャラを識別する為の番号")] int _playerNumber;
     [Tooltip("trueにすると死亡という事で動けなくなる")] public bool isDead = false;
 
+    bool _isDisableInput = false; //trueだと入力が受けられない状態として処理する
     private GameState gameState;
 
     int _hitMask; //ヒット判定を取るレイヤーを実際に利用可能にした形
     int _floorMask; //地面ヒットを取るレイヤーを実際に利用可能にした形
 
+    public bool isDisableInput { get { return _isDisableInput; } }
     public int playerNumber { get { return _playerNumber; } }
     public int hitMask { get { return _hitMask; } }
     public int floorMask { get { return _floorMask; } }
@@ -64,15 +66,15 @@ public class TestPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isDead) { return; }   //死亡していれば実行しない
-        if (!gameState.isGame && !gameState.isResult) { return; }   //ゲームが開始されていない時は実行しない
         if (Time.timeScale <= 0) { return; } //停止中は実行しない
-
         down.RunFunction();
-        if (down.isDown)  //ダウン中の場合特定処理のみを実行する
+
+        _isDisableInput = isDead || down.isDown || (!gameState.isGame && !gameState.isResult); //死亡、ダウン、ゲーム非実行状態ならtrue
+        if (isDisableInput)  //入力が受けられない場合専用処理
         {
             jump.RunFunction();
             punch.RunFunction();
+            head.RunFunction();
             return;
         }
 
