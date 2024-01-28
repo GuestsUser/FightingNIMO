@@ -7089,7 +7089,7 @@ PrefabInstance:
     - target: {fileID: 1647052292662561976, guid: 37da537ecee79714d9b831b8d309fbea, type: 3}
       propertyPath: allScoreSE
       value: 
-      objectReference: {fileID: 8300000, guid: ed4b8430f0a296e48ac39985fcb33c0a, type: 3}
+      objectReference: {fileID: 8300000, guid: 29d3a78c2437cd348bbd6725455f99d1, type: 3}
     - target: {fileID: 1647052292662561976, guid: 37da537ecee79714d9b831b8d309fbea, type: 3}
       propertyPath: gameControll
       value: 
