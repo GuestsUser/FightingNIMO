@@ -171,19 +171,21 @@ public class MenuTest : MonoBehaviour
                 }
             }
 
+            float camX = 7.0f;
+
             // 戻る演出フラグが立っていない時
-            if(backUI == false)
+            if (backUI == false)
             {
                 switch (currentMenuNum)
                 {
                     case 1: // 『CREDIT』への画面に移動する演出
                         ui.anchoredPosition = new Vector2(easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f, 0);
-                        cam.transform.localRotation = Quaternion.Euler(0.0f, easing(duration[1], easTime, (1.0f / 2.0f)) * -90.0f, 0.0f);
+                        cam.transform.localRotation = Quaternion.Euler(camX, easing(duration[1], easTime, (1.0f / 2.0f)) * -90.0f, 0.0f);
                         break;
 
                     case 2: // 『CONTROLS』への画面に移動する演出
                         ui.anchoredPosition = new Vector2(easing(duration[1], easTime, (1.0f / 2.0f)) * -1920.0f, 0);
-                        cam.transform.localRotation = Quaternion.Euler(0.0f, easing(duration[1], easTime, (1.0f / 2.0f)) * 90.0f, 0.0f);
+                        cam.transform.localRotation = Quaternion.Euler(camX, easing(duration[1], easTime, (1.0f / 2.0f)) * 90.0f, 0.0f);
                         break;
                 }
             }
@@ -195,11 +197,11 @@ public class MenuTest : MonoBehaviour
                 {
                     case 1:
                         ui.anchoredPosition = new Vector2(1920.0f - (easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f), 0.0f);
-                        cam.transform.localRotation = Quaternion.Euler(0.0f, -90.0f + easing(duration[1], easTime, (1.0f / 2.0f)) * 90.0f, 0.0f);
+                        cam.transform.localRotation = Quaternion.Euler(camX, -90.0f + easing(duration[1], easTime, (1.0f / 2.0f)) * 90.0f, 0.0f);
                         break;
                     case 2:
                         ui.anchoredPosition = new Vector2(-1920.0f + (easing(duration[1], easTime, (1.0f / 2.0f)) * 1920.0f), 0.0f);
-                        cam.transform.localRotation = Quaternion.Euler(0.0f, 90.0f - easing(duration[1], easTime, (1.0f / 2.0f)) * 90, 0.0f);
+                        cam.transform.localRotation = Quaternion.Euler(camX, 90.0f - easing(duration[1], easTime, (1.0f / 2.0f)) * 90, 0.0f);
                         break;
                 }
 
