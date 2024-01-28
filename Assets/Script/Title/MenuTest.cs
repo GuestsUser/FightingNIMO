@@ -222,7 +222,7 @@ public class MenuTest : MonoBehaviour
         if(game == true)
         {
             /*ÅyåªèÛÇÕÇ±ÇÍÇ≈ëŒâû creditÇÕç°å„RawImageÇ…Ç»ÇÈó\íËÅz*/
-            creditUI.GetComponentInChildren<Text>().CrossFadeAlpha(0.0f, 0.0f, true);
+            creditUI.GetComponentInChildren<RawImage>().CrossFadeAlpha(0.0f, 0.0f, true);
             controlsUI.GetComponentInChildren<RawImage>().CrossFadeAlpha(0.0f, 0.0f, true);
 
             easTime++;
@@ -471,7 +471,7 @@ public class MenuTest : MonoBehaviour
     private IEnumerator BackMenu()
     {
         yield return new WaitForSecondsRealtime(duration[1]);
-        creditUI.GetComponentInChildren<Text>().CrossFadeAlpha(1.0f, 0.0f, true);
+        creditUI.GetComponentInChildren<RawImage>().CrossFadeAlpha(1.0f, 0.0f, true);
         controlsUI.GetComponentInChildren<RawImage>().CrossFadeAlpha(1.0f, 0.0f, true);
         //decision = false;
     }
