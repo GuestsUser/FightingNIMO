@@ -114,7 +114,7 @@ public class Result : MonoBehaviour
         }
         win.text = "";
         win.CrossFadeAlpha(0.0f, 0.5f, true);
-        //fadePanel.CrossFadeAlpha(0.0f, 0.0f, true);
+        //fadePanel.CrossFadeAlpha(0.0f, 0.8f, true);
     }
 
     void Update()

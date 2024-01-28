@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameStartSystem : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class GameStartSystem : MonoBehaviour
     [SerializeField] private ReceiveNotificationExample receiveNotificationExample;
     [Tooltip("ReadyUIオブジェクトを入れる")]
     [SerializeField] private GameObject readyUI;
+    [SerializeField] private RawImage fadePanel;
 
     [Tooltip("シーン移動時の待機時間(この間にSEが鳴る)")]
     [SerializeField] private float waitTime; //シーン移動時に使用する処理待機時間(SEが鳴り終わるまで)
@@ -46,6 +48,8 @@ public class GameStartSystem : MonoBehaviour
         isNextScene = false;
         isReady = false;
         isCharSelect = false;
+        fadePanel.color = Color.black;
+        fadePanel.CrossFadeAlpha(0.0f, 0.0f, true);
     }
 
     void Update()
@@ -63,12 +67,13 @@ public class GameStartSystem : MonoBehaviour
                 //SE（キャンセル音）
                 audioSource.clip = gameStartSE;
                 audioSource.PlayOneShot(gameStartSE);
+                fadePanel.CrossFadeAlpha(1.0f, 0.8f, true);
                 StartCoroutine("GotoGameScene");
             }
         }
     }
 
-    //Ready状態ONとOFFの条件関数
+    // Ready状態ONとOFFの条件関数
     private void CheckReady()
     {
         //hierarchyにあるCharSelectManagerを持つオブジェクトの配列を作成

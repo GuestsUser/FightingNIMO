@@ -37,7 +37,9 @@ public class GameState : MonoBehaviour
 
         coundDownText.text = "3";
         coundDownText.CrossFadeAlpha(0.0f, 0.0f, true);
-        fadePanel.CrossFadeAlpha(0.0f, 0.5f, true);
+
+        fadePanel.color = Color.black;
+        fadePanel.CrossFadeAlpha(0.0f, 1.0f, true);
     }
 
     void Update()
