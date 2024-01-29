@@ -963,6 +963,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameState: {fileID: 0}
   dataRetation: {fileID: 0}
+  gameControll: {fileID: 0}
   playerScore:
   - {fileID: 2354855292603504739}
   - {fileID: 38082248830981541}
@@ -981,6 +982,10 @@ MonoBehaviour:
   win: {fileID: 2580363743775521261}
   audioSource: {fileID: 7827842284191030457}
   scoreUpSE: {fileID: 8300000, guid: cf41246c601eca644a2de92986c89e0a, type: 3}
+  allScoreSE: {fileID: 8300000, guid: 29d3a78c2437cd348bbd6725455f99d1, type: 3}
+  resultHideSE: {fileID: 8300000, guid: a11050a397de327468d6a61672d98eb6, type: 3}
+  resultRevealSE: {fileID: 8300000, guid: a8ccb274107fa5948b76bc9944501553, type: 3}
+  sceneChangeSE: {fileID: 8300000, guid: 8d0d73f5db0e4fa43a1ca5142c60210d, type: 3}
   point: []
   playerNum: 0
   winner: 0
