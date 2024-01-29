@@ -25,8 +25,6 @@ public class SelectAnim : MonoBehaviour
 
     [SerializeField] private float space;
 
-    [SerializeField] private bool complete;
-
     [Tooltip("©g‚ÌPlayerInput‚ğæ“¾(©“®)")]
     [SerializeField] private PlayerInput input;
 
@@ -44,8 +42,6 @@ public class SelectAnim : MonoBehaviour
             easTimes[i] = 45.0f;
         }
         SetPlayerInfo();
-
-        complete = false;
     }
 
     // Update is called once per frame

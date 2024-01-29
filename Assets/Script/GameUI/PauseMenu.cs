@@ -14,6 +14,8 @@ public class PauseMenu : MonoBehaviour
 
     [Tooltip("GameStateをアタッチしてください")]
     [SerializeField] private GameState gameState;
+    [Tooltip("GameStateをアタッチしてください")]
+    [SerializeField] private Result result;
 
     [Tooltip("UIという名前のオブジェクトをアタッチしてください")]
     [SerializeField] private GameObject ui;
@@ -428,6 +430,7 @@ public class PauseMenu : MonoBehaviour
                 /*【タイトルに戻る】*/
                 case 2:
                     pushQuit = true;
+                    result.ScoreInit();
                     StartCoroutine("BacktoTitleScene");
                     break;
                 /*-------------*/

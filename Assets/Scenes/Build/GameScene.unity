@@ -4936,6 +4936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: {fileID: 1924894177}
+  result: {fileID: 1142297286}
   ui: {fileID: 2080844676}
   pauseMenu: {fileID: 1106222049}
   cursor: {fileID: 31719298}
@@ -9670,6 +9671,17 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &1142297286 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1647052292662561976, guid: 37da537ecee79714d9b831b8d309fbea, type: 3}
+  m_PrefabInstance: {fileID: 1014861459}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c00eeae1c2689cb4f8f627a9f952cc97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1143681019
 GameObject:
   m_ObjectHideFlags: 0

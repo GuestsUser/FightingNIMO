@@ -294,4 +294,11 @@ public class Result : MonoBehaviour
         }
         return false;
     }
+    public void ScoreInit()
+    {
+        for(int i = 0;i < 4; i++)
+        {
+            score[i] = 0;
+        }
+    }
 }
